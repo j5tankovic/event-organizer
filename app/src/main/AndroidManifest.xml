@@ -19,7 +19,8 @@
         <activity android:name=".MainActivity" />
         <activity android:name=".PlaceOfferOverviewActivity" />
         <activity android:name=".ShoppingListActivity" />
-        <activity android:name=".ShoppingItemOverviewActivity"></activity>
+        <activity android:name=".ShoppingItemOverviewActivity" />
+        <activity android:name=".NewPlaceOfferActivity"></activity>
     </application>
 
 </manifest>

@@ -1,21 +1,29 @@
 package rs.ac.uns.ftn.pma.event_organizer;
 
+import android.content.Intent;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import rs.ac.uns.ftn.pma.event_organizer.adapter.PlaceOffersAdapter;
+import rs.ac.uns.ftn.pma.event_organizer.listener.RecyclerTouchListener;
 
 public class PlaceOffersActivity extends AppCompatActivity {
     private List<String> testData = new ArrayList<String>();
     private RecyclerView recyclerView;
     private RecyclerView.Adapter adapter;
     private RecyclerView.LayoutManager layoutManager;
+
+    private FloatingActionButton addPlaceOffer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,7 +37,25 @@ public class PlaceOffersActivity extends AppCompatActivity {
         recyclerView.setAdapter(adapter);
         recyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
 
+        recyclerView.addOnItemTouchListener(new RecyclerTouchListener(getApplicationContext(), recyclerView, new RecyclerTouchListener.ClickListener() {
+            @Override
+            public void onClick(View view, int position) {
+                String text = testData.get(position);
+                Toast.makeText(getApplicationContext(), "Selected "+ text, Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onLongClick(View view, int position) {
+
+            }
+        }));
+
         prepareTestData();
+    }
+
+    public void openNewPlaceOfferForm(View view) {
+        Intent intent = new Intent(this, NewPlaceOfferActivity.class);
+        startActivity(intent);
     }
 
     private void prepareTestData() {
