@@ -17,10 +17,14 @@
             </intent-filter>
         </activity>
         <activity android:name=".MainActivity" />
-        <activity android:name=".PlaceOfferOverviewActivity" />
+        <activity
+            android:name=".PlaceOfferOverviewActivity"
+            android:parentActivityName=".PlaceOffersActivity" />
         <activity android:name=".ShoppingListActivity" />
         <activity android:name=".ShoppingItemOverviewActivity" />
-        <activity android:name=".NewPlaceOfferActivity"></activity>
+        <activity
+            android:name=".NewPlaceOfferActivity"
+            android:parentActivityName=".PlaceOffersActivity" />
     </application>
 
 </manifest>

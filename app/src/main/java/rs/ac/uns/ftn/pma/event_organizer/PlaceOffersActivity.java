@@ -18,6 +18,8 @@ import rs.ac.uns.ftn.pma.event_organizer.adapter.PlaceOffersAdapter;
 import rs.ac.uns.ftn.pma.event_organizer.listener.RecyclerTouchListener;
 
 public class PlaceOffersActivity extends AppCompatActivity {
+    public static final String PLACE_OFFER = "rs.ac.uns.ftn.pma.event_organizer.PLACE_OFFER";
+
     private List<String> testData = new ArrayList<String>();
     private RecyclerView recyclerView;
     private RecyclerView.Adapter adapter;
@@ -40,8 +42,9 @@ public class PlaceOffersActivity extends AppCompatActivity {
         recyclerView.addOnItemTouchListener(new RecyclerTouchListener(getApplicationContext(), recyclerView, new RecyclerTouchListener.ClickListener() {
             @Override
             public void onClick(View view, int position) {
-                String text = testData.get(position);
-                Toast.makeText(getApplicationContext(), "Selected "+ text, Toast.LENGTH_SHORT).show();
+               Intent intent = new Intent(PlaceOffersActivity.this, PlaceOfferOverviewActivity.class);
+               intent.putExtra(PLACE_OFFER, testData.get(position));
+               startActivity(intent);
             }
 
             @Override
