@@ -5,4 +5,10 @@
     <string name="new_placeoffer_notes">Notes</string>
     <string name="new_placeoffer_price">Price</string>
     <string name="add_placeoffer">Add</string>
+    <!-- str values for shopping list -->
+    <string name="new_shoppingitem_category">Category</string>
+    <string name="new_shoppingitem_name">Name</string>
+    <string name="new_shoppingitem_description">Description</string>
+    <string name="new_shoppingitem_quantity">Quantity</string>
+    <string name="new_shoppingitem_price">Price</string>
 </resources>
