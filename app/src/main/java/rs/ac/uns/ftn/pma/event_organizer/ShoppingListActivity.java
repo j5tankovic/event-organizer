@@ -14,11 +14,12 @@ import java.util.List;
 
 import rs.ac.uns.ftn.pma.event_organizer.adapter.ShoppingListAdapter;
 import rs.ac.uns.ftn.pma.event_organizer.listener.RecyclerTouchListener;
+import rs.ac.uns.ftn.pma.event_organizer.model.ShoppingItem;
 
 public class ShoppingListActivity extends AppCompatActivity {
     public static final String SHOPPING_ITEM = "rs.ac.uns.ftn.pma.event_organizer.SHOPPING_ITEM";
 
-    private List<String> testData = new ArrayList<String>();
+    private List<ShoppingItem> testData = new ArrayList<>();
     private RecyclerView recyclerView;
     private RecyclerView.Adapter adapter;
     private RecyclerView.LayoutManager layoutManager;
@@ -45,6 +46,7 @@ public class ShoppingListActivity extends AppCompatActivity {
                 startActivity(intent);
             }
 
+
             @Override
             public void onLongClick(View view, int position) {
 
@@ -60,15 +62,15 @@ public class ShoppingListActivity extends AppCompatActivity {
     }
 
     private void prepareTestData() {
-        String shoppingItem1 = "Shopping item 1";
-        String shoppingItem2 = "Shopping item 2";
-        String shoppingItem3 = "Shopping item 3";
-        String shoppingItem4 = "Shopping item 4";
+        ShoppingItem item1 = new ShoppingItem("Pileca krilca", "Fina ukusna pileca krilca", 1, 1000, false);
+        ShoppingItem item2 = new ShoppingItem("Gurmanska pljeskavica", "Fina ukusna gurmanska pljeskavica", 2, 1000, false);
+        ShoppingItem item3 = new ShoppingItem("Cevapcici", "Fina ukusni cevapcici", 10, 2000, false);
+        ShoppingItem item4 = new ShoppingItem("Pivce za zivce", "Fina pitko pivce", 3, 300, false);
 
-        this.testData.add(shoppingItem1);
-        this.testData.add(shoppingItem2);
-        this.testData.add(shoppingItem3);
-        this.testData.add(shoppingItem4);
+        testData.add(item1);
+        testData.add(item2);
+        testData.add(item3);
+        testData.add(item4);
 
         adapter.notifyDataSetChanged();
     }
