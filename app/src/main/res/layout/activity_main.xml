@@ -6,4 +6,29 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/my_events_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/primary"
+        android:elevation="4dp"
+
+        app:title="@string/my_events"
+        app:titleTextColor="@color/primary_text">
+
+        <ImageView
+            android:id="@+id/my_events_profile_image"
+            android:layout_width="40sp"
+            android:layout_height="match_parent"
+            android:layout_gravity="right"
+            android:src="@drawable/profile" />
+    </android.support.v7.widget.Toolbar>
+
+    <ListView
+        android:id="@+id/list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true" />
+
 </android.support.constraint.ConstraintLayout>
