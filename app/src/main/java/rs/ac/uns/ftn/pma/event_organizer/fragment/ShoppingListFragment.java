@@ -1,23 +1,34 @@
-package rs.ac.uns.ftn.pma.event_organizer;
+package rs.ac.uns.ftn.pma.event_organizer.fragment;
+
 
 import android.content.Intent;
-import android.support.design.widget.FloatingActionButton;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import rs.ac.uns.ftn.pma.event_organizer.NewShoppingItemActivity;
+import rs.ac.uns.ftn.pma.event_organizer.R;
+import rs.ac.uns.ftn.pma.event_organizer.ShoppingItemOverviewActivity;
 import rs.ac.uns.ftn.pma.event_organizer.adapter.ShoppingListAdapter;
 import rs.ac.uns.ftn.pma.event_organizer.listener.RecyclerTouchListener;
 import rs.ac.uns.ftn.pma.event_organizer.model.ShoppingItem;
 
-public class ShoppingListActivity extends AppCompatActivity {
+/**
+ * A simple {@link Fragment} subclass.
+ */
+public class ShoppingListFragment extends Fragment {
     public static final String SHOPPING_ITEM = "rs.ac.uns.ftn.pma.event_organizer.SHOPPING_ITEM";
+
+    private View view;
 
     private List<ShoppingItem> testData = new ArrayList<>();
     private RecyclerView recyclerView;
@@ -26,22 +37,30 @@ public class ShoppingListActivity extends AppCompatActivity {
 
     private FloatingActionButton addShoppingItem;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_shopping_list);
-        recyclerView = (RecyclerView) findViewById(R.id.shopping_list_rv);
 
-        layoutManager = new LinearLayoutManager(this);
+    public ShoppingListFragment() {
+        // Required empty public constructor
+    }
+
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        view = inflater.inflate(R.layout.fragment_shopping_list, container, false);
+        recyclerView = view.findViewById(R.id.shopping_list_rv);
+        addShoppingItem = view.findViewById(R.id.add_shopping_item);
+
+        layoutManager = new LinearLayoutManager(getContext());
         adapter = new ShoppingListAdapter(testData);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
-        recyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
+        recyclerView.addItemDecoration(new DividerItemDecoration(getContext(), LinearLayoutManager.VERTICAL));
 
-        recyclerView.addOnItemTouchListener(new RecyclerTouchListener(getApplicationContext(), recyclerView, new RecyclerTouchListener.ClickListener() {
+        recyclerView.addOnItemTouchListener(new RecyclerTouchListener(getContext(), recyclerView, new RecyclerTouchListener.ClickListener() {
             @Override
             public void onClick(View view, int position) {
-                Intent intent = new Intent(ShoppingListActivity.this, ShoppingItemOverviewActivity.class);
+                Intent intent = new Intent(getContext(), ShoppingItemOverviewActivity.class);
                 intent.putExtra(SHOPPING_ITEM, testData.get(position));
                 startActivity(intent);
             }
@@ -53,12 +72,16 @@ public class ShoppingListActivity extends AppCompatActivity {
             }
         }));
 
-        prepareTestData();
-    }
+        addShoppingItem.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getContext(), NewShoppingItemActivity.class);
+                startActivity(intent);
+            }
+        });
 
-    public void openNewShoppingItemForm(View view) {
-        Intent intent = new Intent(this, NewShoppingItemActivity.class);
-        startActivity(intent);
+        prepareTestData();
+        return view;
     }
 
     private void prepareTestData() {
@@ -74,4 +97,5 @@ public class ShoppingListActivity extends AppCompatActivity {
 
         adapter.notifyDataSetChanged();
     }
+
 }

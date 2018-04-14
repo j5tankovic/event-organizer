@@ -3,7 +3,6 @@ package rs.ac.uns.ftn.pma.event_organizer.fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DividerItemDecoration;
@@ -18,7 +17,6 @@ import java.util.List;
 
 import rs.ac.uns.ftn.pma.event_organizer.NewPlaceOfferActivity;
 import rs.ac.uns.ftn.pma.event_organizer.PlaceOfferOverviewActivity;
-import rs.ac.uns.ftn.pma.event_organizer.PlaceOffersActivity;
 import rs.ac.uns.ftn.pma.event_organizer.R;
 import rs.ac.uns.ftn.pma.event_organizer.adapter.PlaceOffersAdapter;
 import rs.ac.uns.ftn.pma.event_organizer.listener.RecyclerTouchListener;
@@ -49,6 +47,7 @@ public class PlaceOffersFragment extends Fragment {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_place_offers, container, false);
         recyclerView = view.findViewById(R.id.place_offers_rv);
+        addPlaceOffer = view.findViewById(R.id.add_place_offer);
 
         layoutManager = new LinearLayoutManager(getContext());
         adapter = new PlaceOffersAdapter(testData);
@@ -70,13 +69,16 @@ public class PlaceOffersFragment extends Fragment {
             }
         }));
 
+        addPlaceOffer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getContext(), NewPlaceOfferActivity.class);
+                startActivity(intent);
+            }
+        });
+
         prepareTestData();
         return view;
-    }
-
-    public void openNewPlaceOfferForm(View view) {
-        Intent intent = new Intent(getContext(), NewPlaceOfferActivity.class);
-        startActivity(intent);
     }
 
     private void prepareTestData() {

@@ -5,6 +5,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.TextView;
 
+import rs.ac.uns.ftn.pma.event_organizer.fragment.PlaceOffersFragment;
+
 public class PlaceOfferOverviewActivity extends AppCompatActivity {
 
     @Override
@@ -13,7 +15,7 @@ public class PlaceOfferOverviewActivity extends AppCompatActivity {
         setContentView(R.layout.activity_place_offer_overview);
 
         Intent intent = getIntent();
-        String placeOffer = intent.getStringExtra(PlaceOffersActivity.PLACE_OFFER);
+        String placeOffer = intent.getStringExtra(PlaceOffersFragment.PLACE_OFFER);
 
         TextView tv = findViewById(R.id.placeoffer_location);
         tv.setText(placeOffer);
