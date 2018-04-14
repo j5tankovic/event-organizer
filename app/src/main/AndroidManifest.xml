@@ -9,7 +9,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
-        <activity android:name=".ShoppingListActivity">
+        <activity android:name=".EventActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -25,7 +25,8 @@
         <activity
             android:name=".NewPlaceOfferActivity"
             android:parentActivityName=".PlaceOffersActivity" />
-        <activity android:name=".NewShoppingItemActivity"></activity>
+        <activity android:name=".NewShoppingItemActivity" />
+        <activity android:name=".ShoppingListActivity"/>
     </application>
 
 </manifest>
