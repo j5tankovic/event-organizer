@@ -10,9 +10,10 @@ import android.widget.TextView;
 import java.util.List;
 
 import rs.ac.uns.ftn.pma.event_organizer.R;
+import rs.ac.uns.ftn.pma.event_organizer.model.PlaceOffer;
 
 public class PlaceOffersAdapter extends RecyclerView.Adapter<PlaceOffersAdapter.ViewHolder> {
-    private List<String> testSet;
+    private List<PlaceOffer> testSet;
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         public TextView textView;
@@ -23,7 +24,7 @@ public class PlaceOffersAdapter extends RecyclerView.Adapter<PlaceOffersAdapter.
         }
     }
 
-    public PlaceOffersAdapter(List<String> testSet) {
+    public PlaceOffersAdapter(List<PlaceOffer> testSet) {
         this.testSet = testSet;
     }
 
@@ -38,7 +39,7 @@ public class PlaceOffersAdapter extends RecyclerView.Adapter<PlaceOffersAdapter.
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        holder.textView.setText(testSet.get(position));
+        holder.textView.setText(testSet.get(position).getLocation().getAddress());
     }
 
     @Override

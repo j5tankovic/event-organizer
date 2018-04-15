@@ -25,10 +25,11 @@ public class ShoppingItemOverviewActivity extends AppCompatActivity {
         ab.setDisplayHomeAsUpEnabled(true);
 
         Intent intent = getIntent();
-        String placeOffer = intent.getStringExtra(ShoppingListFragment.SHOPPING_ITEM);
+        String shoppingItem = intent.getStringExtra(ShoppingListFragment.SHOPPING_ITEM);
 
         TextView tv = findViewById(R.id.shoppingitem_name);
-        tv.setText(placeOffer);
+        tv.setText(shoppingItem);
+        ab.setTitle(shoppingItem);
     }
 
     @Override

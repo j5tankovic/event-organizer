@@ -20,6 +20,8 @@ import rs.ac.uns.ftn.pma.event_organizer.PlaceOfferOverviewActivity;
 import rs.ac.uns.ftn.pma.event_organizer.R;
 import rs.ac.uns.ftn.pma.event_organizer.adapter.PlaceOffersAdapter;
 import rs.ac.uns.ftn.pma.event_organizer.listener.RecyclerTouchListener;
+import rs.ac.uns.ftn.pma.event_organizer.model.Location;
+import rs.ac.uns.ftn.pma.event_organizer.model.PlaceOffer;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -29,7 +31,7 @@ public class PlaceOffersFragment extends Fragment {
 
     private View view;
 
-    private List<String> testData = new ArrayList<String>();
+    private List<PlaceOffer> testData = new ArrayList<PlaceOffer>();
     private RecyclerView recyclerView;
     private RecyclerView.Adapter adapter;
     private RecyclerView.LayoutManager layoutManager;
@@ -82,15 +84,17 @@ public class PlaceOffersFragment extends Fragment {
     }
 
     private void prepareTestData() {
-        String placeOffer1 = "New place offer";
-        String placeOffer2 = "Again new placeOffer";
-        String placeOffer3 = "How you doin";
-        String placeOffer4 = "Fine day my friend";
+        Location loc1 = new Location(45.2505725, 19.845315, "Maksima Gorkog 17/a");
+        Location loc2 = new Location(45.2544913, 19.839304, "Pap Pavla 6");
+        Location loc3 = new Location(45.2491729, 19.8411698, "Sremska 9");
 
-        this.testData.add(placeOffer1);
-        this.testData.add(placeOffer2);
-        this.testData.add(placeOffer3);
-        this.testData.add(placeOffer4);
+        PlaceOffer po1 = new PlaceOffer(30, loc1, 1000);
+        PlaceOffer po2 = new PlaceOffer(10, loc2, 2000);
+        PlaceOffer po3 = new PlaceOffer(40, loc3, 3000);
+
+        testData.add(po1);
+        testData.add(po2);
+        testData.add(po3);
 
         adapter.notifyDataSetChanged();
     }

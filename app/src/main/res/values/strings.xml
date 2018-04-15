@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">event-organizer</string>
+    <string name="app_name">Event organizer</string>
     <string name="new_placeoffer_location">Location</string>
     <string name="new_placeoffer_capacity">Capacity</string>
     <string name="new_placeoffer_notes">Notes</string>
