@@ -40,8 +40,10 @@
         android:layout_marginEnd="16dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
+        android:drawablePadding="16dp"
+        android:drawableStart="@drawable/ic_info_black_24dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/shoppingitem_category" />
 
@@ -52,9 +54,12 @@
         android:layout_marginEnd="16dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
+        android:drawablePadding="16dp"
+        android:drawableStart="@drawable/ic_plus_one_black_24dp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/shoppingitem_name" />
+        app:layout_constraintTop_toBottomOf="@+id/shoppingitem_description" />
 
     <TextView
         android:id="@+id/shoppingitem_price"
@@ -63,8 +68,24 @@
         android:layout_marginEnd="16dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
+        android:drawableStart="@drawable/ic_attach_money_black_24dp"
+        android:drawablePadding="16dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/shoppingitem_quantity" />
+
+    <TextView
+        android:id="@+id/shoppingitem_description"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:drawablePadding="16dp"
+        android:drawableStart="@drawable/ic_description_black_24dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/shoppingitem_name" />
 
 </android.support.constraint.ConstraintLayout>

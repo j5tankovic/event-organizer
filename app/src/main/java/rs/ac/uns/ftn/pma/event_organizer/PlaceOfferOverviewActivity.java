@@ -28,7 +28,8 @@ public class PlaceOfferOverviewActivity extends AppCompatActivity implements OnM
     private PlaceOffer placeOffer;
 
     private static final String MAP_VIEW_BUNDLE_KEY = "MapViewBundleKey";
-    public static final String OFFER_ID = "rs.ac.uns.ftn.pma.event_organizer.OFFER_ID";
+    public static final String PLACE_OFFER_ID = "rs.ac.uns.ftn.pma.event_organizer.PLACE_OFFER_ID";
+    public static final String PLACE_OFFER = "rs.ac.uns.ftn.pma.event_organizer.PLACE_OFFER";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,19 +45,7 @@ public class PlaceOfferOverviewActivity extends AppCompatActivity implements OnM
         Intent intent = getIntent();
         placeOffer = (PlaceOffer) intent.getExtras().get(PlaceOffersFragment.PLACE_OFFER);
 
-        TextView location = findViewById(R.id.placeoffer_location);
-        location.setText(placeOffer.getLocation().getAddress());
-
-        TextView notes = findViewById(R.id.placeoffer_notes);
-        notes.setText(placeOffer.getNotes());
-
-        TextView capacity = findViewById(R.id.placeoffer_capacity);
-        capacity.setText(String.valueOf(placeOffer.getCapacity()));
-
-        TextView price = findViewById(R.id.placeoffer_price);
-        price.setText(String.valueOf(placeOffer.getPrice()));
-
-        ab.setTitle(placeOffer.getLocation().getAddress());
+        fillUi();
 
         Bundle mapViewBundle = null;
         if (savedInstanceState != null) {
@@ -137,12 +126,27 @@ public class PlaceOfferOverviewActivity extends AppCompatActivity implements OnM
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_placeoffer_edit:
+                openEditActivity();
                 return true;
             case R.id.action_placeoffer_delete:
                 openConfirmationDeleteDialog();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
+        }
+    }
+
+    private void openEditActivity() {
+        Intent intent = new Intent(this, EditPlaceOfferActivity.class);
+        intent.putExtra(PLACE_OFFER, placeOffer);
+        startActivityForResult(intent, 997);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == 997 && resultCode == RESULT_OK) {
+            placeOffer = (PlaceOffer) data.getExtras().get(EditPlaceOfferActivity.EDITED_OFFER);
+            fillUi();
         }
     }
 
@@ -165,9 +169,26 @@ public class PlaceOfferOverviewActivity extends AppCompatActivity implements OnM
                 }).show();
     }
 
+    private void fillUi() {
+        TextView location = findViewById(R.id.placeoffer_location);
+        location.setText(placeOffer.getLocation().getAddress());
+
+        TextView notes = findViewById(R.id.placeoffer_notes);
+        notes.setText(placeOffer.getNotes());
+
+        TextView capacity = findViewById(R.id.placeoffer_capacity);
+        capacity.setText(String.valueOf(placeOffer.getCapacity()));
+
+        TextView price = findViewById(R.id.placeoffer_price);
+        price.setText(String.valueOf(placeOffer.getPrice()));
+
+        getSupportActionBar().setTitle(placeOffer.getLocation().getAddress());
+
+    }
+
     private void formResult() {
         Intent i = new Intent();
-        i.putExtra(OFFER_ID, placeOffer.getId());
+        i.putExtra(PLACE_OFFER_ID, placeOffer.getId());
         setResult(RESULT_OK, i);
         finish();
     }

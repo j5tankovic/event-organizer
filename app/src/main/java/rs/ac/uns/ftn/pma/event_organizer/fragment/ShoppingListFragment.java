@@ -13,7 +13,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import rs.ac.uns.ftn.pma.event_organizer.NewShoppingItemActivity;
@@ -22,6 +21,7 @@ import rs.ac.uns.ftn.pma.event_organizer.ShoppingItemOverviewActivity;
 import rs.ac.uns.ftn.pma.event_organizer.adapter.ShoppingListAdapter;
 import rs.ac.uns.ftn.pma.event_organizer.listener.RecyclerTouchListener;
 import rs.ac.uns.ftn.pma.event_organizer.model.ShoppingItem;
+import rs.ac.uns.ftn.pma.event_organizer.model.enums.ShoppingItemCategory;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -100,10 +100,17 @@ public class ShoppingListFragment extends Fragment {
     }
 
     private void prepareTestData() {
-        ShoppingItem item1 = new ShoppingItem(1, "Pileca krilca", "Fina ukusna pileca krilca", 1, 1000, false);
-        ShoppingItem item2 = new ShoppingItem(2, "Gurmanska pljeskavica", "Fina ukusna gurmanska pljeskavica", 2, 1000, false);
-        ShoppingItem item3 = new ShoppingItem(3, "Cevapcici", "Fina ukusni cevapcici", 10, 2000, false);
-        ShoppingItem item4 = new ShoppingItem(4, "Pivce za zivce", "Fina pitko pivce", 3, 300, false);
+        ShoppingItemCategory food = ShoppingItemCategory.FOOD;
+        ShoppingItemCategory drink = ShoppingItemCategory.DRINK;
+
+        ShoppingItem item1 = new ShoppingItem(1, "Pileca krilca",
+                "Fina ukusna pileca krilca", 1, 1000, false, food);
+        ShoppingItem item2 = new ShoppingItem(2, "Gurmanska pljeskavica",
+                "Fina ukusna gurmanska pljeskavica", 2, 1000, false, food);
+        ShoppingItem item3 = new ShoppingItem(3, "Cevapcici",
+                "Fina ukusni cevapcici", 10, 2000, false, food);
+        ShoppingItem item4 = new ShoppingItem(4, "Pivce za zivce",
+                "Fina pitko pivce", 3, 300, false, drink);
 
         testData.add(item1);
         testData.add(item2);

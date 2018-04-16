@@ -15,6 +15,9 @@
     <string name="action_edit">Edit</string>
     <string name="action_settings">Settings</string>
     <string name="action_delete">Delete</string>
+    <string name="edit_placeoffer">Edit</string>
+    <string name="edit_shoppingitem">Edit</string>
+    <string name="add_shoppingitem">Add</string>
 
     <!-- str values for menu items -->
 

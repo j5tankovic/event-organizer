@@ -17,8 +17,10 @@ import rs.ac.uns.ftn.pma.event_organizer.model.ShoppingItem;
 
 public class ShoppingItemOverviewActivity extends AppCompatActivity {
 
-    public static final String ITEM_ID = "rs.ac.uns.ftn.pma.event_organizer.ITEM_ID";
     private ShoppingItem shoppingItem;
+
+    public static final String ITEM_ID = "rs.ac.uns.ftn.pma.event_organizer.ITEM_ID";
+    public static final String SHOPPING_ITEM = "rs.ac.uns.ftn.pma.event_organizer.SHOPPING_ITEM";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,18 +33,9 @@ public class ShoppingItemOverviewActivity extends AppCompatActivity {
         ActionBar ab = getSupportActionBar();
         ab.setDisplayHomeAsUpEnabled(true);
 
-        Intent intent = getIntent();
-        shoppingItem = (ShoppingItem) intent.getExtras().get(ShoppingListFragment.SHOPPING_ITEM);
+        shoppingItem = (ShoppingItem) getIntent().getExtras().get(ShoppingListFragment.SHOPPING_ITEM);
 
-        TextView name = findViewById(R.id.shoppingitem_name);
-        name.setText(shoppingItem.getName());
-        ab.setTitle(shoppingItem.getName());
-
-        TextView quantity = findViewById(R.id.shoppingitem_quantity);
-        quantity.setText(String.valueOf(shoppingItem.getQuantity()));
-
-        TextView price = findViewById(R.id.shoppingitem_price);
-        price.setText(String.valueOf(shoppingItem.getPrice()));
+        fillUi();
     }
 
     @Override
@@ -56,12 +49,27 @@ public class ShoppingItemOverviewActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_shoppingitem_edit:
+                openEditActivity();
                 return true;
             case R.id.action_shoppingitem_delete:
                 openConfirmationDeleteDialog();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
+        }
+    }
+
+    private void openEditActivity() {
+        Intent i = new Intent(this, EditShoppingItemActivity.class);
+        i.putExtra(SHOPPING_ITEM, shoppingItem);
+        startActivityForResult(i, 996);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == 996 && resultCode == RESULT_OK) {
+            shoppingItem = (ShoppingItem) data.getExtras().get(EditShoppingItemActivity.EDITED_ITEM);
+            fillUi();
         }
     }
 
@@ -82,6 +90,22 @@ public class ShoppingItemOverviewActivity extends AppCompatActivity {
                         dialog.cancel();
                     }
                 }).show();
+    }
+
+    private void fillUi() {
+        TextView name = findViewById(R.id.shoppingitem_name);
+        name.setText(shoppingItem.getName());
+
+        TextView quantity = findViewById(R.id.shoppingitem_quantity);
+        quantity.setText(String.valueOf(shoppingItem.getQuantity()));
+
+        TextView price = findViewById(R.id.shoppingitem_price);
+        price.setText(String.valueOf(shoppingItem.getPrice()));
+
+        TextView description = findViewById(R.id.shoppingitem_description);
+        description.setText(shoppingItem.getDescription());
+
+        getSupportActionBar().setTitle(shoppingItem.getName());
     }
 
     private void formResult() {

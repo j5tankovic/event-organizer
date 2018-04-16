@@ -38,6 +38,12 @@
             android:name=".NewShoppingItemActivity"
             android:label="New shopping item"
             android:parentActivityName=".EventActivity" />
+        <activity
+            android:name=".EditPlaceOfferActivity"
+            android:parentActivityName=".PlaceOfferOverviewActivity" />
+        <activity
+            android:name=".EditShoppingItemActivity"
+            android:parentActivityName=".ShoppingItemOverviewActivity" />
     </application>
 
 </manifest>

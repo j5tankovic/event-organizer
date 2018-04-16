@@ -22,7 +22,6 @@ import rs.ac.uns.ftn.pma.event_organizer.adapter.PlaceOffersAdapter;
 import rs.ac.uns.ftn.pma.event_organizer.listener.RecyclerTouchListener;
 import rs.ac.uns.ftn.pma.event_organizer.model.Location;
 import rs.ac.uns.ftn.pma.event_organizer.model.PlaceOffer;
-import rs.ac.uns.ftn.pma.event_organizer.model.ShoppingItem;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -89,7 +88,7 @@ public class PlaceOffersFragment extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == 998 && resultCode == RESULT_OK) {
-            long id = data.getLongExtra(PlaceOfferOverviewActivity.OFFER_ID, -1);
+            long id = data.getLongExtra(PlaceOfferOverviewActivity.PLACE_OFFER_ID, -1);
             PlaceOffer offer = findById(id);
             if (offer != null) {
                 removeFromList(offer);
