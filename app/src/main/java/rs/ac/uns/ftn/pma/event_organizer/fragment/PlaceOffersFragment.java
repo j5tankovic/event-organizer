@@ -77,7 +77,7 @@ public class PlaceOffersFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getContext(), NewPlaceOfferActivity.class);
-                startActivity(intent);
+                startActivityForResult(intent, 995);
             }
         });
 
@@ -94,6 +94,10 @@ public class PlaceOffersFragment extends Fragment {
                 removeFromList(offer);
                 adapter.notifyDataSetChanged();
             }
+        } else if (requestCode == 995 && resultCode == RESULT_OK) {
+            PlaceOffer offer = (PlaceOffer) data.getExtras().get(NewPlaceOfferActivity.ADDED_OFFER);
+            addToList(offer);
+            adapter.notifyDataSetChanged();
         }
     }
 
@@ -102,7 +106,7 @@ public class PlaceOffersFragment extends Fragment {
         Location loc2 = new Location(45.2544913, 19.839304, "Pap Pavla 6");
         Location loc3 = new Location(45.2491729, 19.8411698, "Sremska 9");
 
-        PlaceOffer po1 = new PlaceOffer(1,30, loc1, 1000);
+        PlaceOffer po1 = new PlaceOffer(1, 30, loc1, 1000);
         PlaceOffer po2 = new PlaceOffer(2, 10, loc2, 2000);
         PlaceOffer po3 = new PlaceOffer(3, 40, loc3, 3000);
 
@@ -124,6 +128,10 @@ public class PlaceOffersFragment extends Fragment {
 
     private void removeFromList(PlaceOffer offer) {
         testData.remove(offer);
+    }
+
+    private void addToList(PlaceOffer offer) {
+        testData.add(offer);
     }
 
 }

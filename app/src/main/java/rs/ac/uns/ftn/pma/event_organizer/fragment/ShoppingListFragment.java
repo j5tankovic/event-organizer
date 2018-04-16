@@ -79,7 +79,7 @@ public class ShoppingListFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getContext(), NewShoppingItemActivity.class);
-                startActivity(intent);
+                startActivityForResult(intent, 994);
             }
         });
 
@@ -96,6 +96,10 @@ public class ShoppingListFragment extends Fragment {
                 removeFromList(item);
                 adapter.notifyDataSetChanged();
             }
+        } else if (requestCode == 994 && resultCode == RESULT_OK) {
+            ShoppingItem item = (ShoppingItem) data.getExtras().get(NewShoppingItemActivity.ADDED_ITEM);
+            addToList(item);
+            adapter.notifyDataSetChanged();
         }
     }
 
@@ -131,6 +135,10 @@ public class ShoppingListFragment extends Fragment {
 
     private void removeFromList(ShoppingItem item) {
         testData.remove(item);
+    }
+
+    private void addToList(ShoppingItem item) {
+        testData.add(item);
     }
 
 }
