@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import rs.ac.uns.ftn.pma.event_organizer.NewShoppingItemActivity;
@@ -21,6 +22,8 @@ import rs.ac.uns.ftn.pma.event_organizer.ShoppingItemOverviewActivity;
 import rs.ac.uns.ftn.pma.event_organizer.adapter.ShoppingListAdapter;
 import rs.ac.uns.ftn.pma.event_organizer.listener.RecyclerTouchListener;
 import rs.ac.uns.ftn.pma.event_organizer.model.ShoppingItem;
+
+import static android.app.Activity.RESULT_OK;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -62,7 +65,7 @@ public class ShoppingListFragment extends Fragment {
             public void onClick(View view, int position) {
                 Intent intent = new Intent(getContext(), ShoppingItemOverviewActivity.class);
                 intent.putExtra(SHOPPING_ITEM, testData.get(position));
-                startActivity(intent);
+                startActivityForResult(intent, 999);
             }
 
 
@@ -84,11 +87,23 @@ public class ShoppingListFragment extends Fragment {
         return view;
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == 999 && resultCode == RESULT_OK) {
+            long id = data.getLongExtra(ShoppingItemOverviewActivity.ITEM_ID, -1);
+            ShoppingItem item = findById(id);
+            if (item != null) {
+                removeFromList(item);
+                adapter.notifyDataSetChanged();
+            }
+        }
+    }
+
     private void prepareTestData() {
-        ShoppingItem item1 = new ShoppingItem("Pileca krilca", "Fina ukusna pileca krilca", 1, 1000, false);
-        ShoppingItem item2 = new ShoppingItem("Gurmanska pljeskavica", "Fina ukusna gurmanska pljeskavica", 2, 1000, false);
-        ShoppingItem item3 = new ShoppingItem("Cevapcici", "Fina ukusni cevapcici", 10, 2000, false);
-        ShoppingItem item4 = new ShoppingItem("Pivce za zivce", "Fina pitko pivce", 3, 300, false);
+        ShoppingItem item1 = new ShoppingItem(1, "Pileca krilca", "Fina ukusna pileca krilca", 1, 1000, false);
+        ShoppingItem item2 = new ShoppingItem(2, "Gurmanska pljeskavica", "Fina ukusna gurmanska pljeskavica", 2, 1000, false);
+        ShoppingItem item3 = new ShoppingItem(3, "Cevapcici", "Fina ukusni cevapcici", 10, 2000, false);
+        ShoppingItem item4 = new ShoppingItem(4, "Pivce za zivce", "Fina pitko pivce", 3, 300, false);
 
         testData.add(item1);
         testData.add(item2);
@@ -96,6 +111,19 @@ public class ShoppingListFragment extends Fragment {
         testData.add(item4);
 
         adapter.notifyDataSetChanged();
+    }
+
+    private ShoppingItem findById(long id) {
+        for (ShoppingItem item : testData) {
+            if (item.getId() == id) {
+                return item;
+            }
+        }
+        return null;
+    }
+
+    private void removeFromList(ShoppingItem item) {
+        testData.remove(item);
     }
 
 }

@@ -1,12 +1,15 @@
 package rs.ac.uns.ftn.pma.event_organizer;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.widget.TextView;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -25,6 +28,7 @@ public class PlaceOfferOverviewActivity extends AppCompatActivity implements OnM
     private PlaceOffer placeOffer;
 
     private static final String MAP_VIEW_BUNDLE_KEY = "MapViewBundleKey";
+    public static final String OFFER_ID = "rs.ac.uns.ftn.pma.event_organizer.OFFER_ID";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -127,5 +131,44 @@ public class PlaceOfferOverviewActivity extends AppCompatActivity implements OnM
 
         LatLng coords = new LatLng(placeOffer.getLocation().getLat(), placeOffer.getLocation().getLng());
         gMap.moveCamera(CameraUpdateFactory.newLatLng(coords));
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_placeoffer_edit:
+                return true;
+            case R.id.action_placeoffer_delete:
+                openConfirmationDeleteDialog();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    private void openConfirmationDeleteDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(PlaceOfferOverviewActivity.this);
+
+        builder
+                .setMessage("Delete this item?")
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        formResult();
+                    }
+                })
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                }).show();
+    }
+
+    private void formResult() {
+        Intent i = new Intent();
+        i.putExtra(OFFER_ID, placeOffer.getId());
+        setResult(RESULT_OK, i);
+        finish();
     }
 }

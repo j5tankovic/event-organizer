@@ -2,19 +2,19 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/action_edit"
+        android:id="@+id/action_shoppingitem_edit"
         android:icon="@drawable/ic_edit_black_24dp"
         android:title="@string/action_edit"
         app:showAsAction="ifRoom" />
 
     <item
-        android:id="@+id/action_delete"
+        android:id="@+id/action_shoppingitem_delete"
         android:icon="@drawable/ic_delete_black_24dp"
         android:title="@string/action_delete"
         app:showAsAction="ifRoom" />
 
     <item
-        android:id="@+id/action_settings"
+        android:id="@+id/action_shoppingitem_settings"
         android:title="@string/action_settings"
         app:showAsAction="never" />
 

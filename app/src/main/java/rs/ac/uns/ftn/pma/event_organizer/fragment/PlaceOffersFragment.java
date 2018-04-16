@@ -22,6 +22,9 @@ import rs.ac.uns.ftn.pma.event_organizer.adapter.PlaceOffersAdapter;
 import rs.ac.uns.ftn.pma.event_organizer.listener.RecyclerTouchListener;
 import rs.ac.uns.ftn.pma.event_organizer.model.Location;
 import rs.ac.uns.ftn.pma.event_organizer.model.PlaceOffer;
+import rs.ac.uns.ftn.pma.event_organizer.model.ShoppingItem;
+
+import static android.app.Activity.RESULT_OK;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -62,7 +65,7 @@ public class PlaceOffersFragment extends Fragment {
             public void onClick(View view, int position) {
                 Intent intent = new Intent(getContext(), PlaceOfferOverviewActivity.class);
                 intent.putExtra(PLACE_OFFER, testData.get(position));
-                startActivity(intent);
+                startActivityForResult(intent, 998);
             }
 
             @Override
@@ -83,20 +86,45 @@ public class PlaceOffersFragment extends Fragment {
         return view;
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == 998 && resultCode == RESULT_OK) {
+            long id = data.getLongExtra(PlaceOfferOverviewActivity.OFFER_ID, -1);
+            PlaceOffer offer = findById(id);
+            if (offer != null) {
+                removeFromList(offer);
+                adapter.notifyDataSetChanged();
+            }
+        }
+    }
+
     private void prepareTestData() {
         Location loc1 = new Location(45.2505725, 19.845315, "Maksima Gorkog 17/a");
         Location loc2 = new Location(45.2544913, 19.839304, "Pap Pavla 6");
         Location loc3 = new Location(45.2491729, 19.8411698, "Sremska 9");
 
-        PlaceOffer po1 = new PlaceOffer(30, loc1, 1000);
-        PlaceOffer po2 = new PlaceOffer(10, loc2, 2000);
-        PlaceOffer po3 = new PlaceOffer(40, loc3, 3000);
+        PlaceOffer po1 = new PlaceOffer(1,30, loc1, 1000);
+        PlaceOffer po2 = new PlaceOffer(2, 10, loc2, 2000);
+        PlaceOffer po3 = new PlaceOffer(3, 40, loc3, 3000);
 
         testData.add(po1);
         testData.add(po2);
         testData.add(po3);
 
         adapter.notifyDataSetChanged();
+    }
+
+    private PlaceOffer findById(long id) {
+        for (PlaceOffer offer : testData) {
+            if (offer.getId() == id) {
+                return offer;
+            }
+        }
+        return null;
+    }
+
+    private void removeFromList(PlaceOffer offer) {
+        testData.remove(offer);
     }
 
 }
