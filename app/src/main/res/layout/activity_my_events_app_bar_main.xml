@@ -12,7 +12,7 @@
         android:layout_height="?attr/actionBarSize"
         android:background="@color/primary"
         android:elevation="4dp"
-        app:title="@string/my_events"
+        app:title="@string/my_events_title"
         app:titleTextColor="@color/primary_text">
 
         <ImageView
@@ -36,7 +36,7 @@
             android:layout_alignParentTop="true" />
 
         <android.support.design.widget.FloatingActionButton
-            android:id="@+id/add_new_event"
+            android:id="@+id/open_add_event"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
