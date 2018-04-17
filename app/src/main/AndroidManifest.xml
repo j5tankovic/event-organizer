@@ -16,7 +16,7 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyACF0eBzPtMZIbnjc0hAcnt3cnHh0L6VjQ" />
 
-        <activity android:name=".LoginActivity">
+        <activity android:name=".UserProfileActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -44,7 +44,6 @@
         <activity
             android:name=".EditShoppingItemActivity"
             android:parentActivityName=".ShoppingItemOverviewActivity" />
-        <activity android:name=".UserProfileActivity" />
         <activity android:name=".RegisterActivity"></activity>
     </application>
 
