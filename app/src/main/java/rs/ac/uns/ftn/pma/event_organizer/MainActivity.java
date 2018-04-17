@@ -15,7 +15,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 
-public class MainActivity extends Activity {
+public class MainActivity extends Activity  {
 
     ListView list;
 
@@ -33,6 +33,7 @@ public class MainActivity extends Activity {
             "20.04.2018",
             "15.04.2018"
     };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

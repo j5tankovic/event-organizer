@@ -6,6 +6,50 @@
     android:layout_height="match_parent"
     tools:context=".MyEventsActivity">
 
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/my_events_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/primary"
+        android:elevation="4dp"
+
+        app:title="@string/my_events"
+        app:titleTextColor="@color/primary_text">
+
+        <ImageView
+            android:id="@+id/my_events_profile_image"
+            android:layout_width="40sp"
+            android:layout_height="match_parent"
+            android:layout_gravity="right"
+            android:src="@drawable/profile" />
+    </android.support.v7.widget.Toolbar>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <ListView
+            android:id="@+id/list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true" />
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginBottom="16dp"
+            android:layout_marginRight="16dp"
+            android:clickable="true"
+            android:src="@drawable/ic_add_circle"
+            app:elevation="4dp" />
+
+    </RelativeLayout>
+
 
 
 </android.support.constraint.ConstraintLayout>
