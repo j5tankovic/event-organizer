@@ -7,12 +7,12 @@
     tools:context="rs.ac.uns.ftn.pma.event_organizer.RegisterActivity">
 
     <android.support.design.widget.AppBarLayout
-        android:id="@+id/login_appbar"
+        android:id="@+id/register_appbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
         <android.support.v7.widget.Toolbar
-            android:id="@+id/login_toolbar"
+            android:id="@+id/register_toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary"
@@ -35,7 +35,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/login_appbar" />
+        app:layout_constraintTop_toBottomOf="@+id/register_appbar" />
 
     <EditText
         android:id="@+id/text_input_password"
