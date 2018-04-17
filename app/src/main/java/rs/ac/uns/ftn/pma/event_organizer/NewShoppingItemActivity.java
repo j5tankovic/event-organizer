@@ -6,7 +6,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import rs.ac.uns.ftn.pma.event_organizer.model.PlaceOffer;
@@ -36,6 +38,13 @@ public class NewShoppingItemActivity extends AppCompatActivity {
                 formResult(item);
             }
         });
+
+        Spinner categories = findViewById(R.id.new_shoppingitem_category);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+                R.array.shoppingitem_categories, android.R.layout.simple_spinner_item);
+
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        categories.setAdapter(adapter);
     }
 
     private ShoppingItem formShoppingItem() {

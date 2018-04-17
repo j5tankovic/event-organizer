@@ -19,6 +19,9 @@
     <string name="edit_shoppingitem">Edit</string>
     <string name="add_shoppingitem">Add</string>
 
-    <!-- str values for menu items -->
+    <string-array name="shoppingitem_categories">
+        <item>Food</item>
+        <item>Drink</item>
+    </string-array>
 
 </resources>
