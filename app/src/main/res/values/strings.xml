@@ -4,6 +4,11 @@
     <string name="login">Login</string>
     <string name="logout">Logout</string>
     <string name="register">Register</string>
+    <string name="repeat_password">Repeat password</string>
+    <string name="email">Email</string>
+    <string name="first_name">First name</string>
+    <string name="last_name">Last name</string>
+    <string name="profile_picture">Upload picture</string>
 
     <string name="app_name">Event organizer</string>
     <string name="new_placeoffer_location">Location</string>

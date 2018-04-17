@@ -45,6 +45,7 @@
             android:name=".EditShoppingItemActivity"
             android:parentActivityName=".ShoppingItemOverviewActivity" />
         <activity android:name=".UserProfileActivity" />
+        <activity android:name=".RegisterActivity"></activity>
     </application>
 
 </manifest>
