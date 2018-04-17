@@ -31,7 +31,7 @@ public class MyEventsActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_my_events);
+        setContentView(R.layout.activity_my_events_app_bar_main);
 
         Toolbar myToolbar = (Toolbar) findViewById(R.id.my_events_toolbar);
         myToolbar.showOverflowMenu();
@@ -42,7 +42,7 @@ public class MyEventsActivity extends Activity {
         profileImage.setClickable(true);
 
         MyEventsListAdapter adapter = new MyEventsListAdapter(this, event_name, event_date);
-        list = (ListView) findViewById(R.id.list);
+        list = (ListView) findViewById(R.id.my_events_list);
         list.setAdapter(adapter);
 
         /*list.setOnItemClickListener(new AdapterView.OnItemClickListener() {

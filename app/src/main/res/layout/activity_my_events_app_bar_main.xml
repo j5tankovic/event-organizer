@@ -12,7 +12,6 @@
         android:layout_height="?attr/actionBarSize"
         android:background="@color/primary"
         android:elevation="4dp"
-
         app:title="@string/my_events"
         app:titleTextColor="@color/primary_text">
 
@@ -30,14 +29,14 @@
         android:orientation="vertical">
 
         <ListView
-            android:id="@+id/list"
+            android:id="@+id/my_events_list"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true" />
 
         <android.support.design.widget.FloatingActionButton
-            android:id="@+id/fab"
+            android:id="@+id/add_new_event"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
@@ -45,11 +44,9 @@
             android:layout_marginBottom="16dp"
             android:layout_marginRight="16dp"
             android:clickable="true"
+            android:backgroundTint="@color/primary"
             android:src="@drawable/ic_add_circle"
             app:elevation="4dp" />
 
     </RelativeLayout>
-
-
-
 </android.support.constraint.ConstraintLayout>
