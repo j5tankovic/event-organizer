@@ -16,7 +16,8 @@
         </activity>
         <activity android:name=".MyEventsActivity" />
         <activity android:name=".MyEventsListViewActivity" />
-        <activity android:name=".AddNewEventActivity"></activity>
+        <activity android:name=".AddNewEventActivity" />
+        <activity android:name=".EventOverviewActivity" />
     </application>
 
 </manifest>

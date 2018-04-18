@@ -1,4 +1,4 @@
-package rs.ac.uns.ftn.pma.event_organizer;
+package rs.ac.uns.ftn.pma.event_organizer.adapter;
 
 import android.app.Activity;
 import android.view.LayoutInflater;
@@ -7,6 +7,8 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import rs.ac.uns.ftn.pma.event_organizer.R;
 
 
 public class MyEventsListAdapter extends ArrayAdapter<String> {

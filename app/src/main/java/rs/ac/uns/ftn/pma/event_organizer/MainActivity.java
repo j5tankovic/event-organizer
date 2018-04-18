@@ -1,25 +1,21 @@
 package rs.ac.uns.ftn.pma.event_organizer;
 
-import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import rs.ac.uns.ftn.pma.event_organizer.adapter.MyEventsListAdapter;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -75,6 +71,15 @@ public class MainActivity extends AppCompatActivity {
         MyEventsListAdapter adapter = new MyEventsListAdapter(this, event_name, event_date);
         list = (ListView) findViewById(R.id.my_events_list);
         list.setAdapter(adapter);
+
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.open_add_event);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //here
+                startActivity(new Intent(MainActivity.this, AddNewEventActivity.class));
+            }
+        });
 
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         navigationView = (NavigationView) findViewById(R.id.nav_view);

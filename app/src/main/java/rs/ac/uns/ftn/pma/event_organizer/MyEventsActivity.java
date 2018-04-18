@@ -1,13 +1,14 @@
 package rs.ac.uns.ftn.pma.event_organizer;
 
 import android.app.Activity;
-import android.app.ListActivity;
-import android.support.v7.app.AppCompatActivity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.widget.ArrayAdapter;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.ListView;
+
+import rs.ac.uns.ftn.pma.event_organizer.adapter.MyEventsListAdapter;
 
 public class MyEventsActivity extends Activity {
 
@@ -58,4 +59,5 @@ public class MyEventsActivity extends Activity {
         });*/
 
     }
+
 }
