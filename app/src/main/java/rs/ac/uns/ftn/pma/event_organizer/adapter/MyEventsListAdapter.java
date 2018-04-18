@@ -5,7 +5,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import rs.ac.uns.ftn.pma.event_organizer.R;
@@ -18,7 +17,7 @@ public class MyEventsListAdapter extends ArrayAdapter<String> {
     private final String[] event_date;
 
     public MyEventsListAdapter(Activity context, String[] event_name, String[] event_date) {
-        super(context, R.layout.activity_my_events_list_view, event_name);
+        super(context, R.layout.activity_my_events_list_item, event_name);
 
         this.context = context;
         this.event_name = event_name;
@@ -27,7 +26,7 @@ public class MyEventsListAdapter extends ArrayAdapter<String> {
 
     public View getView(int position, View view, ViewGroup parent) {
         LayoutInflater inflater = context.getLayoutInflater();
-        View rowView = inflater.inflate(R.layout.activity_my_events_list_view, null,true);
+        View rowView = inflater.inflate(R.layout.activity_my_events_list_item, null,true);
 
         TextView name = (TextView) rowView.findViewById(R.id.event_name);
         TextView date = (TextView) rowView.findViewById(R.id.event_date);

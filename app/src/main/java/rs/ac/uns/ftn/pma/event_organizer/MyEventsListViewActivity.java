@@ -9,6 +9,6 @@ public class MyEventsListViewActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_my_events_list_view);
+        setContentView(R.layout.activity_my_events_list_item);
     }
 }

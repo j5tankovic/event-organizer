@@ -21,6 +21,7 @@ public class EventOverviewActivity extends AppCompatActivity {
         viewPager = findViewById(R.id.event_pager);
 
         tabAdapter = new TabAdapter(this);
+
         viewPager.setAdapter(tabAdapter);
         tabLayout.setupWithViewPager(viewPager);
     }
