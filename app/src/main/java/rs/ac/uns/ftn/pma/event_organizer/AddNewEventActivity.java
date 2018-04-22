@@ -13,9 +13,5 @@ public class AddNewEventActivity extends AppCompatActivity {
         setContentView(R.layout.activity_add_new_event);
     }
 
-    public void onClick(View view) {
 
-        Intent intent = new Intent(AddNewEventActivity.this, EventOverviewActivity.class);
-        startActivity(intent);
-    }
 }
