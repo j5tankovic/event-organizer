@@ -24,4 +24,34 @@
         <item>Drink</item>
     </string-array>
 
+    <string name="my_events_title">My events</string>
+    <string name="add_new_event_title">Add new event</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="openDrawer">open_drawer</string>
+    <string name="closeDrawer">close_drawer</string>
+
+    <!-- Navigation Drawer menu labels -->
+    <string name="nav_my_events">My events</string>
+    <string name="nav_invitations">Invitations</string>
+    <string name="nav_settings">Settings</string>
+
+
+    <!-- Add new event -->
+    <string name="add_new_event">Add event</string>
+    <string name="new_event_name">Name</string>
+    <string name="new_event_description">Description</string>
+    <string name="new_event_budget">Budget</string>
+    <string name="new_event_start_date">Start date</string>
+    <string name="new_event_end_date">End date</string>
+    <string name="new_event_category">Category</string>
+    <string name="new_event_image">Upload image</string>
+    <!-- Toolbar titles when navigation menu item is selected -->
+    <string-array name="nav_item_activity_titles">
+        <item>My events</item>
+        <item>Invitations</item>
+        <item>Settings</item>
+    </string-array>
+
 </resources>
