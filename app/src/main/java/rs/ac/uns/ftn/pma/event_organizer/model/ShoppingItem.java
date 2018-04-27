@@ -2,6 +2,7 @@ package rs.ac.uns.ftn.pma.event_organizer.model;
 
 import java.io.Serializable;
 
+import rs.ac.uns.ftn.pma.event_organizer.model.enums.Currency;
 import rs.ac.uns.ftn.pma.event_organizer.model.enums.ShoppingItemCategory;
 
 public class ShoppingItem implements Serializable {
@@ -10,6 +11,7 @@ public class ShoppingItem implements Serializable {
     private String description;
     private int quantity;
     private double price;
+    private Currency currency;
     private boolean status;
     private ShoppingItemCategory category;
 
@@ -24,6 +26,14 @@ public class ShoppingItem implements Serializable {
         this.price = price;
         this.status = status;
         this.category = category;
+    }
+
+    public Currency getCurrency() {
+        return currency;
+    }
+
+    public void setCurrency(Currency currency) {
+        this.currency = currency;
     }
 
     public long getId() {
