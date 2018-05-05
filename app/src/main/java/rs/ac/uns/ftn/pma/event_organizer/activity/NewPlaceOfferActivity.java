@@ -1,4 +1,4 @@
-package rs.ac.uns.ftn.pma.event_organizer;
+package rs.ac.uns.ftn.pma.event_organizer.activity;
 
 import android.content.Intent;
 import android.support.v7.app.ActionBar;
@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import org.w3c.dom.Text;
 
+import rs.ac.uns.ftn.pma.event_organizer.R;
 import rs.ac.uns.ftn.pma.event_organizer.model.Location;
 import rs.ac.uns.ftn.pma.event_organizer.model.PlaceOffer;
 

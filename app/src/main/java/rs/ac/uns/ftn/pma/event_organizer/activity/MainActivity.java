@@ -1,4 +1,4 @@
-package rs.ac.uns.ftn.pma.event_organizer;
+package rs.ac.uns.ftn.pma.event_organizer.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -15,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import rs.ac.uns.ftn.pma.event_organizer.R;
 import rs.ac.uns.ftn.pma.event_organizer.adapter.MyEventsListAdapter;
 
 

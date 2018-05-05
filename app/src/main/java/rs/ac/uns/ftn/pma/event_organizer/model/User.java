@@ -1,5 +1,6 @@
 package rs.ac.uns.ftn.pma.event_organizer.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -25,6 +26,17 @@ public class User {
         this.lastName = lastName;
         this.createdEvents = createdEvents;
         this.invitations = invitations;
+    }
+
+    public User(long id, String username, String password, String email, String name, String lastName) {
+        this.id = id;
+        this.username = username;
+        this.password = password;
+        this.email = email;
+        this.name = name;
+        this.lastName = lastName;
+        this.createdEvents = new ArrayList<>();
+        this.invitations = new ArrayList<>();
     }
 
     public User() {

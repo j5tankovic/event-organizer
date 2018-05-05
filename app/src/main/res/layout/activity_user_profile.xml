@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="rs.ac.uns.ftn.pma.event_organizer.UserProfileActivity">
+    tools:context="rs.ac.uns.ftn.pma.event_organizer.activity.UserProfileActivity">
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/user_profile_appbar"

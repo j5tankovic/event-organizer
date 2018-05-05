@@ -15,9 +15,9 @@ import android.view.ViewGroup;
 import java.util.ArrayList;
 import java.util.List;
 
-import rs.ac.uns.ftn.pma.event_organizer.NewShoppingItemActivity;
+import rs.ac.uns.ftn.pma.event_organizer.activity.NewShoppingItemActivity;
 import rs.ac.uns.ftn.pma.event_organizer.R;
-import rs.ac.uns.ftn.pma.event_organizer.ShoppingItemOverviewActivity;
+import rs.ac.uns.ftn.pma.event_organizer.activity.ShoppingItemOverviewActivity;
 import rs.ac.uns.ftn.pma.event_organizer.adapter.ShoppingListAdapter;
 import rs.ac.uns.ftn.pma.event_organizer.listener.RecyclerTouchListener;
 import rs.ac.uns.ftn.pma.event_organizer.model.ShoppingItem;

@@ -1,4 +1,4 @@
-package rs.ac.uns.ftn.pma.event_organizer;
+package rs.ac.uns.ftn.pma.event_organizer.activity;
 
 import android.app.ActionBar;
 import android.support.design.widget.TabLayout;
@@ -9,6 +9,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 
+import rs.ac.uns.ftn.pma.event_organizer.R;
 import rs.ac.uns.ftn.pma.event_organizer.adapter.TabAdapter;
 
 public class EventActivity extends AppCompatActivity {
