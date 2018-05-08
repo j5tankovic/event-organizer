@@ -13,14 +13,17 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyACF0eBzPtMZIbnjc0hAcnt3cnHh0L6VjQ" />
-        <activity android:name=".MainActivity">
+
+        <activity android:name=".EventActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".EventActivity"/>
+        <activity
+            android:name=".PeopleOverviewActivity"
+            android:parentActivityName=".EventActivity" />
         <activity
             android:name=".PlaceOfferOverviewActivity"
             android:parentActivityName=".EventActivity" />
@@ -45,8 +48,9 @@
         <activity android:name=".MyEventsListViewActivity" />
         <activity android:name=".AddNewEventActivity" />
         <activity android:name=".UserProfileActivity" />
-        <activity android:name=".RegisterActivity"></activity>
-        <activity android:name=".LoginActivity"></activity>
+        <activity android:name=".RegisterActivity" />
+        <activity android:name=".LoginActivity" />
+
     </application>
 
 </manifest>

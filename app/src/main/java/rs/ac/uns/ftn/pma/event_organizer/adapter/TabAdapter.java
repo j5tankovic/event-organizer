@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v7.app.AppCompatActivity;
 
+import rs.ac.uns.ftn.pma.event_organizer.fragment.PeopleOverviewFragment;
 import rs.ac.uns.ftn.pma.event_organizer.fragment.PlaceOffersFragment;
 import rs.ac.uns.ftn.pma.event_organizer.fragment.ShoppingListFragment;
 
@@ -30,7 +31,7 @@ public class TabAdapter extends FragmentStatePagerAdapter {
             case 2:
                 return new ShoppingListFragment();
             case 3:
-                return new PlaceOffersFragment(); //FIXME change this for people fragment
+                return new PeopleOverviewFragment();
             default:
                 throw new RuntimeException("Invalid number of tabs");
         }
