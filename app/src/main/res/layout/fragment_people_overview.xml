@@ -27,10 +27,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
+            android:background="@null"
             android:src="@android:drawable/ic_input_add" />
         <EditText
             android:id="@+id/new_invitation_email"
-            android:inputType="textEmailAddress"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
