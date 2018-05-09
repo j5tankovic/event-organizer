@@ -31,14 +31,14 @@ public class PeopleOverviewAdapter extends RecyclerView.Adapter<PeopleOverviewAd
     public PeopleOverviewAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.people_view, parent, false);
-
         PeopleOverviewAdapter.ViewHolder vh = new PeopleOverviewAdapter.ViewHolder(v);
         return vh;
     }
 
     @Override
     public void onBindViewHolder(@NonNull PeopleOverviewAdapter.ViewHolder holder, int position) {
-        holder.userEmail.setText(testData.get(position).getEmail());
+        int pos=position+1;
+        holder.userEmail.setText(pos+". "+testData.get(position).getEmail());
     }
 
     @Override

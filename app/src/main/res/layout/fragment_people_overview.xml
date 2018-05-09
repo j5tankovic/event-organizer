@@ -12,14 +12,15 @@
         android:layout_width="match_parent"
         android:layout_height="25sp"
         android:orientation="vertical"
-        android:layout_marginEnd="25sp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="16dp"
         >
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
-            android:textSize="20sp"
+            android:textSize="18sp"
             android:text="@string/email" />
         <ImageButton
             android:id="@+id/moreImageButton"
@@ -27,11 +28,14 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:src="@android:drawable/ic_input_add" />
-        <Spinner
-            android:id="@+id/people_user_email"
+        <EditText
+            android:id="@+id/new_invitation_email"
+            android:inputType="textEmailAddress"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true" />
+            android:layout_centerHorizontal="true"
+            android:ems="10"
+            />
     </RelativeLayout>
 
     <!-- TODO: Update blank fragment layout -->
@@ -40,9 +44,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/relativeLayoutEmail"
         app:layout_constraintTop_toBottomOf="@+id/relativeLayoutEmail"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
         app:layout_constraintVertical_bias="0.0" />
 
 </android.support.constraint.ConstraintLayout>
