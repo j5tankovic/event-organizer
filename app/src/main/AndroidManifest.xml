@@ -14,13 +14,13 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyACF0eBzPtMZIbnjc0hAcnt3cnHh0L6VjQ" />
 
-        <activity android:name=".activity.RegisterActivity">
+        <activity android:name=".activity.EventActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activity.EventActivity"/>
+        <activity android:name=".activity.RegisterActivity"/>
         <activity
             android:name=".activity.PlaceOfferOverviewActivity"
             android:parentActivityName=".activity.EventActivity" />

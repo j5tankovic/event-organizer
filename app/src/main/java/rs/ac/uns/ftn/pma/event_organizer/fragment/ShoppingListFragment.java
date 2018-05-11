@@ -90,7 +90,7 @@ public class ShoppingListFragment extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == 999 && resultCode == RESULT_OK) {
-            long id = data.getLongExtra(ShoppingItemOverviewActivity.ITEM_ID, -1);
+            String id = data.getStringExtra(ShoppingItemOverviewActivity.ITEM_ID);
             ShoppingItem item = findById(id);
             if (item != null) {
                 removeFromList(item);
@@ -107,13 +107,13 @@ public class ShoppingListFragment extends Fragment {
         ShoppingItemCategory food = ShoppingItemCategory.FOOD;
         ShoppingItemCategory drink = ShoppingItemCategory.DRINK;
 
-        ShoppingItem item1 = new ShoppingItem(1, "Pileca krilca",
+        ShoppingItem item1 = new ShoppingItem("1", "Pileca krilca",
                 "Fina ukusna pileca krilca", 1, 1000, false, food);
-        ShoppingItem item2 = new ShoppingItem(2, "Gurmanska pljeskavica",
+        ShoppingItem item2 = new ShoppingItem("2", "Gurmanska pljeskavica",
                 "Fina ukusna gurmanska pljeskavica", 2, 1000, false, food);
-        ShoppingItem item3 = new ShoppingItem(3, "Cevapcici",
+        ShoppingItem item3 = new ShoppingItem("3", "Cevapcici",
                 "Fina ukusni cevapcici", 10, 2000, false, food);
-        ShoppingItem item4 = new ShoppingItem(4, "Pivce za zivce",
+        ShoppingItem item4 = new ShoppingItem("4", "Pivce za zivce",
                 "Fina pitko pivce", 3, 300, false, drink);
 
         testData.add(item1);
@@ -124,9 +124,9 @@ public class ShoppingListFragment extends Fragment {
         adapter.notifyDataSetChanged();
     }
 
-    private ShoppingItem findById(long id) {
+    private ShoppingItem findById(String id) {
         for (ShoppingItem item : testData) {
-            if (item.getId() == id) {
+            if (item.getId().equals(id)) {
                 return item;
             }
         }
