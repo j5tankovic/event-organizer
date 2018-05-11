@@ -14,16 +14,13 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyACF0eBzPtMZIbnjc0hAcnt3cnHh0L6VjQ" />
 
-        <activity android:name=".EventActivity">
+        <activity android:name=".InvitationsActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".PeopleOverviewActivity"
-            android:parentActivityName=".EventActivity" />
         <activity
             android:name=".PlaceOfferOverviewActivity"
             android:parentActivityName=".EventActivity" />
@@ -46,6 +43,7 @@
             android:parentActivityName=".ShoppingItemOverviewActivity" />
         <activity android:name=".MyEventsActivity" />
         <activity android:name=".MyEventsListViewActivity" />
+        <activity android:name=".InvitationListViewActivity"/>
         <activity android:name=".AddNewEventActivity" />
         <activity android:name=".UserProfileActivity" />
         <activity android:name=".RegisterActivity" />

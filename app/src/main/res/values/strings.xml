@@ -1,11 +1,11 @@
 <resources>
     <string name="username">Username</string>
     <string name="password">Password</string>
+    <string name="email">Email</string>
     <string name="login">Login</string>
     <string name="logout">Logout</string>
     <string name="register">Register</string>
     <string name="repeat_password">Repeat password</string>
-    <string name="email">Email:</string>
     <string name="first_name">First name</string>
     <string name="last_name">Last name</string>
     <string name="profile_picture">Upload picture</string>
@@ -29,6 +29,9 @@
     <string name="edit_placeoffer">Edit</string>
     <string name="edit_shoppingitem">Edit</string>
     <string name="add_shoppingitem">Add</string>
+
+    <string name="invitation_email">Enter email address</string>
+    <string name="invitations_title">Invitations</string>
 
     <string-array name="shoppingitem_categories">
         <item>Food</item>
