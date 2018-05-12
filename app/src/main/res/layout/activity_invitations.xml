@@ -6,14 +6,16 @@
     android:layout_height="match_parent"
     tools:context=".InvitationsActivity">
 
+
     <android.support.v7.widget.Toolbar
-        android:id="@+id/my_events_toolbar"
+        android:id="@+id/my_invitations_toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:background="@color/primary"
         android:elevation="4dp"
         app:title="@string/invitations_title"
-        app:titleTextColor="@color/primary_text">
+        app:titleTextColor="@color/primary_text"
+        >
 
         <ImageView
             android:id="@+id/my_events_profile_image"
