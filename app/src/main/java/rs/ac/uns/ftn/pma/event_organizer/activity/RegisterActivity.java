@@ -51,8 +51,6 @@ public class RegisterActivity extends AppCompatActivity {
         firebaseDatabase = FirebaseDatabase.getInstance();
         // get reference to 'users' node
         databaseReference = firebaseDatabase.getReference("users");
-
-
     }
 
     public void onRegisterClick(View view){
@@ -62,8 +60,8 @@ public class RegisterActivity extends AppCompatActivity {
 
     private void createUser(){
 
-        String userId = databaseReference.push().getKey();
-        System.out.println("\n\nUSER ID: " + userId);
+        //String userId = databaseReference.push().getKey();
+        //System.out.println("\n\nUSER ID: " + userId);
         User newUser = new User(
                 0l,
                 textView_username.getText().toString(),
@@ -74,8 +72,8 @@ public class RegisterActivity extends AppCompatActivity {
         );
 
         System.out.println("USER : " + newUser.toString());
-        databaseReference.child(userId).setValue(newUser);
-        databaseReference.child(userId).addValueEventListener(new ValueEventListener() {
+        databaseReference.child(textView_username.getText().toString()).setValue(newUser);
+        databaseReference.child(textView_username.getText().toString()).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 User user = dataSnapshot.getValue(User.class);

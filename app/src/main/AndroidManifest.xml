@@ -14,7 +14,7 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyACF0eBzPtMZIbnjc0hAcnt3cnHh0L6VjQ" />
 
-        <activity android:name=".activity.RegisterActivity">
+        <activity android:name=".activity.LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -45,8 +45,10 @@
         <activity android:name=".activity.MyEventsListViewActivity" />
         <activity android:name=".activity.AddNewEventActivity" />
         <activity android:name=".activity.UserProfileActivity" />
-        <!--<activity android:name=".activity.RegisterActivity"></activity>-->
+        <activity android:name=".activity.RegisterActivity"></activity>
+<!--
         <activity android:name=".activity.LoginActivity"></activity>
+-->
     </application>
 
 </manifest>
