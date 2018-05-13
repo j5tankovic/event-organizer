@@ -11,6 +11,9 @@ import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 import rs.ac.uns.ftn.pma.event_organizer.R;
 import rs.ac.uns.ftn.pma.event_organizer.model.ShoppingItem;
 
@@ -55,6 +58,7 @@ public class EditShoppingItemActivity extends AppCompatActivity {
         edit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                formData();
                 edit();
                 formResult();
             }
@@ -68,7 +72,7 @@ public class EditShoppingItemActivity extends AppCompatActivity {
         categories.setAdapter(adapter);
     }
 
-    private void edit() {
+    private void formData() {
         shoppingItem.setName(name.getText().toString());
         shoppingItem.setQuantity(Integer.parseInt(quantity.getText().toString()));
         shoppingItem.setDescription(description.getText().toString());
@@ -80,5 +84,12 @@ public class EditShoppingItemActivity extends AppCompatActivity {
         i.putExtra(EDITED_ITEM, shoppingItem);
         setResult(RESULT_OK, i);
         finish();
+    }
+
+    private void edit() {
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance()
+                .getReference("shopping_items");
+
+        databaseReference.child(shoppingItem.getId()).setValue(shoppingItem);
     }
 }
