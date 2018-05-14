@@ -9,6 +9,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 import rs.ac.uns.ftn.pma.event_organizer.R;
 import rs.ac.uns.ftn.pma.event_organizer.model.PlaceOffer;
 
@@ -53,13 +56,14 @@ public class EditPlaceOfferActivity extends AppCompatActivity {
         edit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                formData();
                 edit();
                 formResult();
             }
         });
     }
 
-    private void edit() {
+    private void formData() {
         placeOffer.setCapacity(Integer.parseInt(capacity.getText().toString()));
         placeOffer.setNotes(notes.getText().toString());
         placeOffer.setPrice(Double.parseDouble(price.getText().toString()));
@@ -70,5 +74,12 @@ public class EditPlaceOfferActivity extends AppCompatActivity {
         i.putExtra(EDITED_OFFER, placeOffer);
         setResult(RESULT_OK, i);
         finish();
+    }
+
+    private void edit() {
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance()
+                .getReference("place_offers");
+
+        databaseReference.child(placeOffer.getId()).setValue(placeOffer);
     }
 }

@@ -17,6 +17,8 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import rs.ac.uns.ftn.pma.event_organizer.R;
 import rs.ac.uns.ftn.pma.event_organizer.fragment.PlaceOffersFragment;
@@ -31,6 +33,8 @@ public class PlaceOfferOverviewActivity extends AppCompatActivity implements OnM
     private static final String MAP_VIEW_BUNDLE_KEY = "MapViewBundleKey";
     public static final String PLACE_OFFER_ID = "rs.ac.uns.ftn.pma.event_organizer.PLACE_OFFER_ID";
     public static final String PLACE_OFFER = "rs.ac.uns.ftn.pma.event_organizer.PLACE_OFFER";
+
+    private DatabaseReference databaseReference;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +60,8 @@ public class PlaceOfferOverviewActivity extends AppCompatActivity implements OnM
         mapView = findViewById(R.id.placeoffer_mapview);
         mapView.onCreate(mapViewBundle);
         mapView.getMapAsync(this);
+
+        databaseReference = FirebaseDatabase.getInstance().getReference("place_offers");
     }
 
     @Override
@@ -159,6 +165,7 @@ public class PlaceOfferOverviewActivity extends AppCompatActivity implements OnM
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+                        delete();
                         formResult();
                     }
                 })
@@ -192,5 +199,9 @@ public class PlaceOfferOverviewActivity extends AppCompatActivity implements OnM
         i.putExtra(PLACE_OFFER_ID, placeOffer.getId());
         setResult(RESULT_OK, i);
         finish();
+    }
+
+    private void delete() {
+        databaseReference.child(placeOffer.getId()).setValue(null);
     }
 }

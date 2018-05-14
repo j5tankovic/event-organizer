@@ -9,15 +9,21 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 import org.w3c.dom.Text;
 
 import rs.ac.uns.ftn.pma.event_organizer.R;
 import rs.ac.uns.ftn.pma.event_organizer.model.Location;
 import rs.ac.uns.ftn.pma.event_organizer.model.PlaceOffer;
+import rs.ac.uns.ftn.pma.event_organizer.model.ShoppingItem;
 
 public class NewPlaceOfferActivity extends AppCompatActivity {
 
     public static final String ADDED_OFFER = "rs.ac.uns.ftn.pma.event_organizer.ADDED_OFFER";
+
+    private DatabaseReference databaseReference;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,9 +41,12 @@ public class NewPlaceOfferActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 PlaceOffer offer = formPlaceOffer();
+                save(offer);
                 formResult(offer);
             }
         });
+
+        databaseReference = FirebaseDatabase.getInstance().getReference("place_offers");
     }
 
     private PlaceOffer formPlaceOffer() {
@@ -60,5 +69,12 @@ public class NewPlaceOfferActivity extends AppCompatActivity {
         i.putExtra(ADDED_OFFER, offer);
         setResult(RESULT_OK, i);
         finish();
+    }
+
+    private void save(PlaceOffer offer) {
+        String key = databaseReference.push().getKey();
+
+        offer.setId(key);
+        databaseReference.child(key).setValue(offer);
     }
 }

@@ -87,22 +87,6 @@ public class ShoppingListFragment extends Fragment {
         });
 
         dbReference = FirebaseDatabase.getInstance().getReference("shopping_items");
-//        dbReference.addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(DataSnapshot dataSnapshot) {
-//                testData.clear();
-//                for (DataSnapshot itemSnapshot: dataSnapshot.getChildren()) {
-//                    ShoppingItem item = itemSnapshot.getValue(ShoppingItem.class);
-//                    testData.add(item);
-//                }
-//                adapter.notifyDataSetChanged();
-//            }
-//
-//            @Override
-//            public void onCancelled(DatabaseError databaseError) {
-//                Log.w(TAG, "loadShoppingItem:onCancelled", databaseError.toException());
-//            }
-//        });
         dbReference.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
@@ -120,7 +104,10 @@ public class ShoppingListFragment extends Fragment {
 
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {
-
+                String key = dataSnapshot.getKey();
+                ShoppingItem item = findById(key);
+                testData.remove(item);
+                adapter.notifyDataSetChanged();
             }
 
             @Override
@@ -141,35 +128,14 @@ public class ShoppingListFragment extends Fragment {
         if (requestCode == 999 && resultCode == RESULT_OK) {
             String id = data.getStringExtra(ShoppingItemOverviewActivity.ITEM_ID);
             ShoppingItem item = findById(id);
-            if (item != null) {
-                removeFromList(item);
-                adapter.notifyDataSetChanged();
-            }
+//            if (item != null) {
+//                //removeFromList(item);
+//                adapter.notifyDataSetChanged();
+//            }
         } else if (requestCode == 994 && resultCode == RESULT_OK) {
             ShoppingItem item = (ShoppingItem) data.getExtras().get(NewShoppingItemActivity.ADDED_ITEM);
             adapter.notifyDataSetChanged();
         }
-    }
-
-    private void prepareTestData() {
-        ShoppingItemCategory food = ShoppingItemCategory.FOOD;
-        ShoppingItemCategory drink = ShoppingItemCategory.DRINK;
-
-//        ShoppingItem item1 = new ShoppingItem("1", "Pileca krilca",
-//                "Fina ukusna pileca krilca", 1, 1000, false, food);
-//        ShoppingItem item2 = new ShoppingItem("2", "Gurmanska pljeskavica",
-//                "Fina ukusna gurmanska pljeskavica", 2, 1000, false, food);
-//        ShoppingItem item3 = new ShoppingItem("3", "Cevapcici",
-//                "Fina ukusni cevapcici", 10, 2000, false, food);
-//        ShoppingItem item4 = new ShoppingItem("4", "Pivce za zivce",
-//                "Fina pitko pivce", 3, 300, false, drink);
-//
-//        testData.add(item1);
-//        testData.add(item2);
-//        testData.add(item3);
-//        testData.add(item4);
-
-        adapter.notifyDataSetChanged();
     }
 
     private ShoppingItem findById(String id) {
@@ -179,10 +145,6 @@ public class ShoppingListFragment extends Fragment {
             }
         }
         return null;
-    }
-
-    private void removeFromList(ShoppingItem item) {
-        testData.remove(item);
     }
 
 }
