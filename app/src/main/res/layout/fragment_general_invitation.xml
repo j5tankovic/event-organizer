@@ -9,7 +9,7 @@
     <ImageView
         android:id="@+id/invitation_image"
         android:layout_width="wrap_content"
-        android:layout_height="150dp"
+        android:layout_height="200dp"
         app:srcCompat="@drawable/background"
         android:paddingLeft="16dp"
         android:paddingRight="16dp"
@@ -31,37 +31,39 @@
             android:id="@+id/invitation_info_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Name: "
+            android:drawableStart="@drawable/ic_info_black_24dp"
             />
         <TextView
-            android:id="@+id/invitation_info_from"
+            android:id="@+id/invitation_info_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="From: "
-            />
-        <TextView
-            android:id="@+id/invitation_info_to"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="To: "
+            android:drawableStart="@drawable/ic_event_black_24dp"
             />
         <TextView
             android:id="@+id/invitation_info_description"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Description: "
+            android:drawableStart="@drawable/ic_description_black_24dp"
             />
         <TextView
             android:id="@+id/invitation_info_category"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Category: "
+            android:drawableStart="@drawable/ic_description_black_24dp"
             />
+
         <TextView
             android:id="@+id/invitation_info_location"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Location: "
+            android:drawableStart="@drawable/ic_my_location_black_24dp"
             />
+        <com.google.android.gms.maps.MapView
+            android:id="@+id/invitation_info_mapview"
+            android:layout_width="wrap_content"
+            android:layout_height="150dp"
+            app:layout_constraintTop_toBottomOf="@+id/invitation_info_location" />
+
+
     </LinearLayout>
 </android.support.constraint.ConstraintLayout>

@@ -18,7 +18,9 @@ public class InvitationActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_invitation);
 
-        setSupportActionBar((Toolbar) findViewById(R.id.event_toolbar));
+        Toolbar toolbar=(Toolbar) findViewById(R.id.event_toolbar);
+        toolbar.setTitle("Invitation");
+        setSupportActionBar(toolbar);
 
         tabLayout = findViewById(R.id.tabLayoutInvitation);
         viewPager = findViewById(R.id.pagerInvitation);

@@ -50,9 +50,9 @@ public class InvitationsActivity extends AppCompatActivity {
                                     View v,
                                     int position,
                                     long id) {
-                    Intent intent = new Intent(InvitationsActivity.this,
+                   /* Intent intent = new Intent(InvitationsActivity.this,
                             MainActivity.class);
-                    startActivity(intent);
+                    startActivity(intent);*/
 
             }
         };
