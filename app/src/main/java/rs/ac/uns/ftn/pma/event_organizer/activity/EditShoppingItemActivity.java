@@ -1,4 +1,4 @@
-package rs.ac.uns.ftn.pma.event_organizer;
+package rs.ac.uns.ftn.pma.event_organizer.activity;
 
 import android.content.Intent;
 import android.support.v7.app.ActionBar;
@@ -11,7 +11,7 @@ import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import rs.ac.uns.ftn.pma.event_organizer.model.PlaceOffer;
+import rs.ac.uns.ftn.pma.event_organizer.R;
 import rs.ac.uns.ftn.pma.event_organizer.model.ShoppingItem;
 
 public class EditShoppingItemActivity extends AppCompatActivity {

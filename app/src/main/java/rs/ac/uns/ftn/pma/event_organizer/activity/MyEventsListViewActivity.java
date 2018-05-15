@@ -1,7 +1,9 @@
-package rs.ac.uns.ftn.pma.event_organizer;
+package rs.ac.uns.ftn.pma.event_organizer.activity;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+
+import rs.ac.uns.ftn.pma.event_organizer.R;
 
 
 public class MyEventsListViewActivity extends AppCompatActivity {

@@ -15,8 +15,8 @@ import android.view.ViewGroup;
 import java.util.ArrayList;
 import java.util.List;
 
-import rs.ac.uns.ftn.pma.event_organizer.NewPlaceOfferActivity;
-import rs.ac.uns.ftn.pma.event_organizer.PlaceOfferOverviewActivity;
+import rs.ac.uns.ftn.pma.event_organizer.activity.NewPlaceOfferActivity;
+import rs.ac.uns.ftn.pma.event_organizer.activity.PlaceOfferOverviewActivity;
 import rs.ac.uns.ftn.pma.event_organizer.R;
 import rs.ac.uns.ftn.pma.event_organizer.adapter.PlaceOffersAdapter;
 import rs.ac.uns.ftn.pma.event_organizer.listener.RecyclerTouchListener;
