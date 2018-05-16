@@ -105,4 +105,18 @@ public class User {
     public void setInvitations(List<Invitation> invitations) {
         this.invitations = invitations;
     }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", email='" + email + '\'' +
+                ", name='" + name + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", createdEvents=" + createdEvents +
+                ", invitations=" + invitations +
+                '}';
+    }
 }

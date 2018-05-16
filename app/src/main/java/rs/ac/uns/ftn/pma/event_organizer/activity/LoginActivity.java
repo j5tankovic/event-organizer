@@ -1,6 +1,7 @@
 package rs.ac.uns.ftn.pma.event_organizer.activity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -9,13 +10,17 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import rs.ac.uns.ftn.pma.event_organizer.R;
+import rs.ac.uns.ftn.pma.event_organizer.model.User;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -23,7 +28,9 @@ public class LoginActivity extends AppCompatActivity {
     private FirebaseDatabase firebaseDatabase;
     TextView textViewUsername;
     TextView textViewPassword;
-    boolean loginSuccess;
+    User authenticatedUser = null;
+    boolean authenticated = false;
+    private FirebaseAuth mAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,8 +38,8 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
 
         firebaseDatabase = FirebaseDatabase.getInstance();
-        // get reference to 'users' node
-        databaseReference = firebaseDatabase.getReference("users");
+        databaseReference = firebaseDatabase.getReference();
+
 
         Toolbar myToolbar = (Toolbar) findViewById(R.id.login_toolbar);
         setSupportActionBar(myToolbar);
@@ -41,6 +48,11 @@ public class LoginActivity extends AppCompatActivity {
         Button loginBtn = findViewById(R.id.login);
         textViewUsername = findViewById(R.id.text_input_username);
         textViewPassword = findViewById(R.id.text_input_password);
+
+        mAuth = FirebaseAuth.getInstance();
+        // Check if user is signed in (non-null) and update UI accordingly.
+        FirebaseUser loggedUser = mAuth.getCurrentUser();
+        //updateUI(currentUser);
 
         registerBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -53,11 +65,11 @@ public class LoginActivity extends AppCompatActivity {
 
             @Override
             public void onClick(View v) {
-                doLogin();
+
+                authanticate();
+
             }
         });
-
-
     }
 
     private void openRegisterActivity(){
@@ -65,33 +77,37 @@ public class LoginActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    private boolean doLogin(){
-        if(databaseReference.child("users") == null){
-            System.out.println("************NULLLLLLL**************");
-        }
-        else{
-            System.out.println("************      NIJE      **************");
+    private void authanticate(){
+        databaseReference = FirebaseDatabase.getInstance().getReference();
+        authenticatedUser = null;
+        authenticated = false;
 
-        }
-        /*databaseReference.child("users").addListenerForSingleValueEvent(new ValueEventListener() {
+        Query query = databaseReference.child("users").orderByChild("username").equalTo(textViewUsername.getText().toString());
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public void onDataChange(DataSnapshot snapshot) {
-                System.out.println("SNAPSHOT: " + snapshot.getValue());
-                String username = textViewUsername.getText().toString();
-                String password = textViewPassword.getText().toString();
-                if (snapshot.hasChild(username)){
-                    loginSuccess = true;
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    // dataSnapshot is the "user" node with all children with id 0
+                    for (DataSnapshot user : dataSnapshot.getChildren()) {
+                        if(user.child("password").getValue().equals(textViewPassword.getText().toString())){
+                            User usersBean = user.getValue(User.class);
+                            System.out.println("Authenticated User: " + usersBean.toString());
+                            authenticatedUser = usersBean;
+                        }
+                    }
                 }
-                loginSuccess = false;
+                boolean loginSuccess = authenticatedUser != null;
+                Toast.makeText(LoginActivity.this, "LOGIN: " + loginSuccess, Toast.LENGTH_LONG).show();
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                // ...
-            }
-        });*/
 
-        Toast.makeText(this, "LOGIN: " + loginSuccess, Toast.LENGTH_LONG).show();
-        return loginSuccess;
+            }
+        });
+    }
+
+    private void setLoggedUser(User loggedUser){
+
     }
 }
