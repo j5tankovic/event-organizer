@@ -98,32 +98,6 @@ public class RegisterActivity extends AppCompatActivity {
         return valid;
     }
 
-    private void sendEmailVerification() {
-        // Disable button
-        findViewById(R.id.btn_register).setEnabled(false);
-
-        // Send verification email
-        // [START send_email_verification]
-        final FirebaseUser user = mAuth.getCurrentUser();
-        user.sendEmailVerification()
-                .addOnCompleteListener(this, new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-
-                        if (task.isSuccessful()) {
-                            Toast.makeText(RegisterActivity.this,
-                                    "Verification email sent to " + user.getEmail(),
-                                    Toast.LENGTH_SHORT).show();
-                        } else {
-                            Log.e(TAG, "sendEmailVerification", task.getException());
-                            Toast.makeText(RegisterActivity.this,
-                                    "Failed to send verification email.",
-                                    Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
-    }
-
     private void createAccount(final String username, final String password, final String email, final String firstname, final String lastname) {
         Log.d(TAG, "createAccount:" + email);
         if (!validateForm()) {
