@@ -25,10 +25,8 @@ import rs.ac.uns.ftn.pma.event_organizer.activity.NewPlaceOfferActivity;
 import rs.ac.uns.ftn.pma.event_organizer.activity.PlaceOfferOverviewActivity;
 import rs.ac.uns.ftn.pma.event_organizer.R;
 import rs.ac.uns.ftn.pma.event_organizer.adapter.PlaceOffersAdapter;
-import rs.ac.uns.ftn.pma.event_organizer.listener.RecyclerTouchListener;
-import rs.ac.uns.ftn.pma.event_organizer.model.Location;
+import rs.ac.uns.ftn.pma.event_organizer.listener.ClickListener;
 import rs.ac.uns.ftn.pma.event_organizer.model.PlaceOffer;
-import rs.ac.uns.ftn.pma.event_organizer.model.ShoppingItem;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -57,24 +55,23 @@ public class PlaceOffersFragment extends Fragment {
         FloatingActionButton addPlaceOffer = view.findViewById(R.id.add_place_offer);
 
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
-        adapter = new PlaceOffersAdapter(testData);
-        recyclerView.setLayoutManager(layoutManager);
-        recyclerView.setAdapter(adapter);
-        recyclerView.addItemDecoration(new DividerItemDecoration(getContext(), LinearLayoutManager.VERTICAL));
-
-        recyclerView.addOnItemTouchListener(new RecyclerTouchListener(getContext(), recyclerView, new RecyclerTouchListener.ClickListener() {
+        adapter = new PlaceOffersAdapter(testData, new ClickListener() {
             @Override
-            public void onClick(View view, int position) {
+            public void onPositionClicked(int position) {
                 Intent intent = new Intent(getContext(), PlaceOfferOverviewActivity.class);
                 intent.putExtra(PLACE_OFFER, testData.get(position));
                 startActivityForResult(intent, 998);
             }
 
             @Override
-            public void onLongClick(View view, int position) {
+            public void onLongClicked(int position) {
 
             }
-        }));
+        });
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setAdapter(adapter);
+        recyclerView.addItemDecoration(new DividerItemDecoration(getContext(), LinearLayoutManager.VERTICAL));
+
 
         addPlaceOffer.setOnClickListener(new View.OnClickListener() {
             @Override

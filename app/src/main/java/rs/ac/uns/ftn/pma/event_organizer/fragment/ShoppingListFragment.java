@@ -18,7 +18,6 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,9 +26,8 @@ import rs.ac.uns.ftn.pma.event_organizer.activity.NewShoppingItemActivity;
 import rs.ac.uns.ftn.pma.event_organizer.R;
 import rs.ac.uns.ftn.pma.event_organizer.activity.ShoppingItemOverviewActivity;
 import rs.ac.uns.ftn.pma.event_organizer.adapter.ShoppingListAdapter;
-import rs.ac.uns.ftn.pma.event_organizer.listener.RecyclerTouchListener;
+import rs.ac.uns.ftn.pma.event_organizer.listener.ClickListener;
 import rs.ac.uns.ftn.pma.event_organizer.model.ShoppingItem;
-import rs.ac.uns.ftn.pma.event_organizer.model.enums.ShoppingItemCategory;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -59,24 +57,23 @@ public class ShoppingListFragment extends Fragment {
         FloatingActionButton addShoppingItem = view.findViewById(R.id.add_shopping_item);
 
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
-        adapter = new ShoppingListAdapter(testData);
-        recyclerView.setLayoutManager(layoutManager);
-        recyclerView.setAdapter(adapter);
-        recyclerView.addItemDecoration(new DividerItemDecoration(getContext(), LinearLayoutManager.VERTICAL));
-
-        recyclerView.addOnItemTouchListener(new RecyclerTouchListener(getContext(), recyclerView, new RecyclerTouchListener.ClickListener() {
+        adapter = new ShoppingListAdapter(testData, new ClickListener() {
             @Override
-            public void onClick(View view, int position) {
+            public void onPositionClicked(int position) {
+                Log.d(TAG, "onPositionClicked");
                 Intent intent = new Intent(getContext(), ShoppingItemOverviewActivity.class);
                 intent.putExtra(SHOPPING_ITEM, testData.get(position));
                 startActivityForResult(intent, 999);
             }
 
-
             @Override
-            public void onLongClick(View view, int position) {
+            public void onLongClicked(int position) {
+                Log.d(TAG, "onLongClicked");
             }
-        }));
+        });
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setAdapter(adapter);
+        recyclerView.addItemDecoration(new DividerItemDecoration(getContext(), LinearLayoutManager.VERTICAL));
 
         addShoppingItem.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -98,8 +95,11 @@ public class ShoppingListFragment extends Fragment {
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
                 ShoppingItem item = dataSnapshot.getValue(ShoppingItem.class);
-                testData.add(item);
-                adapter.notifyDataSetChanged();
+                for (ShoppingItem si: testData) {
+                    if (item.getId().equals(si.getId())) {
+                        adapter.notifyDataSetChanged();
+                    }
+                }
             }
 
             @Override

@@ -7,25 +7,44 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.lang.ref.WeakReference;
 import java.util.List;
 
 import rs.ac.uns.ftn.pma.event_organizer.R;
+import rs.ac.uns.ftn.pma.event_organizer.listener.ClickListener;
 import rs.ac.uns.ftn.pma.event_organizer.model.PlaceOffer;
 
 public class PlaceOffersAdapter extends RecyclerView.Adapter<PlaceOffersAdapter.ViewHolder> {
+    private ClickListener clickListener;
     private List<PlaceOffer> testSet;
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
         public TextView textView;
+        public WeakReference<ClickListener> listenerRef;
 
-        public ViewHolder(View v) {
+        public ViewHolder(View v, ClickListener clickListener) {
             super(v);
+
+            listenerRef = new WeakReference<>(clickListener);
             textView = (TextView) v.findViewById(R.id.placeoffer_tv);
+
+            v.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View v) {
+            listenerRef.get().onPositionClicked(getAdapterPosition());
+        }
+
+        @Override
+        public boolean onLongClick(View v) {
+            return true;
         }
     }
 
-    public PlaceOffersAdapter(List<PlaceOffer> testSet) {
+    public PlaceOffersAdapter(List<PlaceOffer> testSet, ClickListener clickListener) {
         this.testSet = testSet;
+        this.clickListener = clickListener;
     }
 
     @Override
@@ -33,7 +52,7 @@ public class PlaceOffersAdapter extends RecyclerView.Adapter<PlaceOffersAdapter.
         View v = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.place_offers_item_view, parent, false);
 
-        ViewHolder vh = new ViewHolder(v);
+        ViewHolder vh = new ViewHolder(v, clickListener);
         return vh;
     }
 

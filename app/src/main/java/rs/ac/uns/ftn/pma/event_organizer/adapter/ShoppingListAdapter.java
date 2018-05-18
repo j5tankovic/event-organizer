@@ -1,5 +1,6 @@
 package rs.ac.uns.ftn.pma.event_organizer.adapter;
 
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -8,30 +9,58 @@ import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.TextView;
 
+import com.google.firebase.database.FirebaseDatabase;
+
+import java.lang.ref.WeakReference;
 import java.util.List;
 
 import rs.ac.uns.ftn.pma.event_organizer.R;
+import rs.ac.uns.ftn.pma.event_organizer.listener.ClickListener;
 import rs.ac.uns.ftn.pma.event_organizer.model.ShoppingItem;
 
 public class ShoppingListAdapter extends RecyclerView.Adapter<ShoppingListAdapter.ViewHolder> {
+    private ClickListener clickListener;
     private List<ShoppingItem> testData;
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
         public TextView shoppingItemName;
         public TextView shoppingItemQuantity;
         public CheckBox shoppingItemStatus;
+        public WeakReference<ClickListener> listenerRef;
 
-        public ViewHolder(View v) {
+        public ViewHolder(final View v, ClickListener clickListener) {
             super(v);
+
+            listenerRef = new WeakReference<>(clickListener);
             shoppingItemName = (TextView) v.findViewById(R.id.shoppinglist_item_name);
             shoppingItemQuantity = (TextView) v.findViewById(R.id.shoppinglist_item_quantity);
             shoppingItemStatus = (CheckBox) v.findViewById(R.id.shoppinglist_item_status);
+
+            v.setOnClickListener(this);
+            shoppingItemStatus.setOnClickListener(this);
         }
 
+        @Override
+        public void onClick(View v) {
+            if (v.getId() == shoppingItemStatus.getId()) {
+                ShoppingItem item = testData.get(getAdapterPosition());
+                item.setStatus(!item.isStatus());
+                FirebaseDatabase.getInstance().getReference("shopping_items")
+                        .child(item.getId()).setValue(item);
+            } else {
+                listenerRef.get().onPositionClicked(getAdapterPosition());
+            }
+        }
+
+        @Override
+        public boolean onLongClick(View v) {
+            return true;
+        }
     }
 
-    public ShoppingListAdapter(List<ShoppingItem> testData) {
+    public ShoppingListAdapter(List<ShoppingItem> testData, ClickListener clickListener) {
         this.testData = testData;
+        this.clickListener = clickListener;
     }
 
     @Override
@@ -39,12 +68,13 @@ public class ShoppingListAdapter extends RecyclerView.Adapter<ShoppingListAdapte
         View v = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.shopping_list_item_view, parent, false);
 
-        ShoppingListAdapter.ViewHolder vh = new ShoppingListAdapter.ViewHolder(v);
+        ShoppingListAdapter.ViewHolder vh = new ShoppingListAdapter.ViewHolder(v, clickListener);
         return vh;
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ShoppingListAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull final ShoppingListAdapter.ViewHolder holder, int position) {
+
         holder.shoppingItemName.setText(testData.get(position).getName());
         holder.shoppingItemQuantity.setText(String.valueOf(testData.get(position).getQuantity()));
         holder.shoppingItemStatus.setChecked(testData.get(position).isStatus());
