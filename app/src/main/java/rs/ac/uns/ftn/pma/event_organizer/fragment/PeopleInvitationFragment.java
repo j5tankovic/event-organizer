@@ -10,12 +10,15 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import rs.ac.uns.ftn.pma.event_organizer.R;
+import rs.ac.uns.ftn.pma.event_organizer.activity.InvitationActivity;
 import rs.ac.uns.ftn.pma.event_organizer.adapter.PeopleInvitationAdapter;
+import rs.ac.uns.ftn.pma.event_organizer.model.Invitation;
 import rs.ac.uns.ftn.pma.event_organizer.model.User;
 
 import static android.app.Activity.RESULT_OK;
@@ -45,7 +48,12 @@ public class PeopleInvitationFragment extends Fragment {
         adapter = new PeopleInvitationAdapter(testData);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
-        prepareTestData();
+       // prepareTestData();
+
+        Invitation invitation= InvitationActivity.invitation;
+        //all users ->list of Events.id ==  invitation->event.id
+        //...list of users testData
+
         return view;
 
     }

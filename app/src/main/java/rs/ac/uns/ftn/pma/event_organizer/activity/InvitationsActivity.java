@@ -22,17 +22,15 @@ public class InvitationsActivity extends AppCompatActivity {
     ArrayList<Invitation> testData;
     String[] invitation_name = {
             "",
-            "Moj rodjendan",
-            "Pidzama party",
-            "Movie night",
-            "Rostilj"
+            "Rodjendan",
+            "Rostilj",
+            "Nova godina",
     };
     String[] invitation_date = {
             "",
             "15.04.2018",
             "20.04.2018",
             "20.04.2018",
-            "15.04.2018"
     };
 
     @Override
@@ -51,9 +49,11 @@ public class InvitationsActivity extends AppCompatActivity {
                                     View v,
                                     int position,
                                     long id) {
-                   /* Intent intent = new Intent(InvitationsActivity.this,
-                            MainActivity.class);
-                    startActivity(intent);*/
+                   Intent intent = new Intent(InvitationsActivity.this,
+                            InvitationActivity.class);
+
+                intent.putExtra("position", position);  //need id of clicked invitation's event
+                startActivity(intent);
 
             }
         };
