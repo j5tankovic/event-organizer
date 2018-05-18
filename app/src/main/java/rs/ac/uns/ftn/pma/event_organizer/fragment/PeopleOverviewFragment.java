@@ -15,14 +15,17 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import rs.ac.uns.ftn.pma.event_organizer.R;
 import rs.ac.uns.ftn.pma.event_organizer.activity.InvitationActivity;
@@ -41,13 +44,15 @@ public class PeopleOverviewFragment extends Fragment {
     private View view;
 
     private List<User> testData = new ArrayList<>();
+    private List<User> usersDatabase=new ArrayList<>();
     private List<Invitation> testDataInvitation=new ArrayList<>();
     private RecyclerView recyclerView;
     private RecyclerView.Adapter adapter;
     private RecyclerView.LayoutManager layoutManager;
     private DatabaseReference databaseReference;
+    private  DatabaseReference databaseReferenceUser;
     private FirebaseDatabase firebaseDatabase;
-
+    private List<String> allEmails;
 
     public PeopleOverviewFragment() {
 
@@ -68,9 +73,21 @@ public class PeopleOverviewFragment extends Fragment {
         recyclerView.setAdapter(adapter);
         recyclerView.addItemDecoration(new DividerItemDecoration(getContext(), LinearLayoutManager.VERTICAL));
         prepareTestData();
-        firebaseDatabase = FirebaseDatabase.getInstance();
 
+        firebaseDatabase = FirebaseDatabase.getInstance();
         databaseReference = firebaseDatabase.getReference("invitations");
+
+        databaseReferenceUser=firebaseDatabase.getReference().child("users");
+        databaseReferenceUser.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                allEmails((Map<String,Object>)dataSnapshot.getValue());// upisuje sve emailove
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                System.out.println("The read failed: " + databaseError.getCode());
+            }
+        });
 
         ImageButton button=(ImageButton)view.findViewById(R.id.new_invitation_email_button);
         button.setOnClickListener(new View.OnClickListener() {
@@ -94,7 +111,9 @@ public class PeopleOverviewFragment extends Fragment {
                          break;
                     }
                 }
+                findUserById(allEmails,email);
                 if(foundedUser!=null){
+
                    createNewInvitation(foundedUser,null);
                 }
                 //add on list?
@@ -111,7 +130,30 @@ public class PeopleOverviewFragment extends Fragment {
         newInvitation.setEvent(event);
         newInvitation.setStatus(InvitationStatus.PENDING);
         databaseReference.child(invitationId).setValue(newInvitation);
-        Toast.makeText(getContext(),"Invited", Toast.LENGTH_LONG).show();
+      }
+
+      public void findUserById(List<String> emails, String email){
+        int i=0;
+
+        for(String e:emails){
+              if(e.equals(email)){
+                  Toast.makeText(getContext(), "U bazi postoji: "+email, Toast.LENGTH_LONG).show();
+                  i=1;
+              }
+        }
+        if(i==0){
+            Toast.makeText(getContext(), "U bazi NE postoji: "+email, Toast.LENGTH_LONG).show();
+        }
+      }
+
+      public List<String> allEmails(Map<String,Object> users){
+        allEmails = new ArrayList<>();
+
+        for (Map.Entry<String, Object> entry : users.entrySet()){
+             Map singleUser = (Map) entry.getValue();
+            allEmails.add((String) singleUser.get("email"));
+        }
+        return allEmails;
     }
 
     @Override
