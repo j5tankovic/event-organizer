@@ -1,7 +1,6 @@
 package rs.ac.uns.ftn.pma.event_organizer.activity;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -18,27 +17,16 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
-import com.google.firebase.database.ValueEventListener;
 
 import rs.ac.uns.ftn.pma.event_organizer.R;
-import rs.ac.uns.ftn.pma.event_organizer.model.User;
 
 public class LoginActivity extends AppCompatActivity {
 
     private static final String TAG = "LoginActivity";
-    private DatabaseReference databaseReference;
-    private FirebaseDatabase firebaseDatabase;
     TextView textViewUsername;
     TextView textViewPassword;
     Button registerBtn;
     Button loginBtn;
-    User authenticatedUser = null;
-    boolean authenticated = false;
     private FirebaseAuth mAuth;
 
     @Override
@@ -46,11 +34,7 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        firebaseDatabase = FirebaseDatabase.getInstance();
-        databaseReference = firebaseDatabase.getReference();
-
-
-        Toolbar myToolbar = (Toolbar) findViewById(R.id.login_toolbar);
+        Toolbar myToolbar = findViewById(R.id.login_toolbar);
         setSupportActionBar(myToolbar);
 
         registerBtn = findViewById(R.id.register);
@@ -63,7 +47,7 @@ public class LoginActivity extends AppCompatActivity {
         FirebaseUser loggedUser = mAuth.getCurrentUser();
         System.out.println("LOGGED USER: ");
         System.out.println(loggedUser.toString());
-        //updateUI(currentUser);
+        openUserProfileActivity();
 
         registerBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -88,6 +72,11 @@ public class LoginActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    private void openUserProfileActivity(){
+        Intent intent = new Intent(this, UserProfileActivity.class);
+        startActivity(intent);
+    }
+
     private void signIn(String email, String password) {
         Log.d(TAG, "signIn:" + email);
         if (!validateForm()) {
@@ -102,8 +91,7 @@ public class LoginActivity extends AppCompatActivity {
                         // Sign in success, update UI with the signed-in user's information
                         Log.d(TAG, "signInWithEmail:success");
                         FirebaseUser user = mAuth.getCurrentUser();
-                        //updateUI(user);
-                        //TODO Move to profile activity
+                        openUserProfileActivity();
                     } else {
                         // If sign in fails, display a message to the user.
                         Log.w(TAG, "signInWithEmail:failure", task.getException());
@@ -136,8 +124,8 @@ public class LoginActivity extends AppCompatActivity {
         return valid;
     }
 
-/*
-    private void authanticate(){
+
+/*    private void authanticate(){
         databaseReference = FirebaseDatabase.getInstance().getReference();
         authenticatedUser = null;
         authenticated = false;
@@ -165,6 +153,6 @@ public class LoginActivity extends AppCompatActivity {
 
             }
         });
-    }
-    */
+    }*/
+
 }
