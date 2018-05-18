@@ -52,7 +52,7 @@ public class PeopleOverviewFragment extends Fragment {
     private DatabaseReference databaseReference;
     private  DatabaseReference databaseReferenceUser;
     private FirebaseDatabase firebaseDatabase;
-    private List<String> allEmails;
+    List<User> allUsers;
 
     public PeopleOverviewFragment() {
 
@@ -81,7 +81,7 @@ public class PeopleOverviewFragment extends Fragment {
         databaseReferenceUser.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                allEmails((Map<String,Object>)dataSnapshot.getValue());// upisuje sve emailove
+                allUsers((Map<String,Object>)dataSnapshot.getValue());
             }
             @Override
             public void onCancelled(DatabaseError databaseError) {
@@ -103,19 +103,12 @@ public class PeopleOverviewFragment extends Fragment {
                 //if doesn't exist invitation with this event and this user -> create new
                 //add it to user.listInvitation
                 //add to database ->invitations, users
-                List<User> allUsers=testData;
-                User foundedUser=null;
-                for(User user:allUsers){
-                    if(user.getEmail().equals(email)) {
-                        foundedUser = user;
-                         break;
-                    }
-                }
-                findUserById(allEmails,email);
-                if(foundedUser!=null){
 
-                   createNewInvitation(foundedUser,null);
+                User foundedUser=findUserByEmail(email);
+                if(foundedUser!=null) {
+                    createNewInvitation(foundedUser, null);
                 }
+
                 //add on list?
             }
         });
@@ -129,31 +122,35 @@ public class PeopleOverviewFragment extends Fragment {
         newInvitation.setId(2L);
         newInvitation.setEvent(event);
         newInvitation.setStatus(InvitationStatus.PENDING);
+
         databaseReference.child(invitationId).setValue(newInvitation);
       }
 
-      public void findUserById(List<String> emails, String email){
-        int i=0;
-
-        for(String e:emails){
-              if(e.equals(email)){
-                  Toast.makeText(getContext(), "U bazi postoji: "+email, Toast.LENGTH_LONG).show();
-                  i=1;
+      public User findUserByEmail( String email){
+         for(User user:allUsers){
+              if(user.getEmail().equals(email)){
+                  return user;
               }
         }
-        if(i==0){
-            Toast.makeText(getContext(), "U bazi NE postoji: "+email, Toast.LENGTH_LONG).show();
-        }
+        return null;
       }
 
-      public List<String> allEmails(Map<String,Object> users){
-        allEmails = new ArrayList<>();
+      public List<User> allUsers(Map<String,Object> users){
+        allUsers=new ArrayList<>();
 
         for (Map.Entry<String, Object> entry : users.entrySet()){
-             Map singleUser = (Map) entry.getValue();
-            allEmails.add((String) singleUser.get("email"));
+            Map singleUser = (Map) entry.getValue();
+
+            User newUser=new User();
+            newUser.setEmail((String) singleUser.get("email"));
+            newUser.setUsername((String) singleUser.get("username"));
+            newUser.setName((String) singleUser.get("name"));
+            newUser.setLastName((String) singleUser.get("lastName"));
+            newUser.setPassword((String) singleUser.get("password"));
+            newUser.setId((long) singleUser.get("id"));
+            allUsers.add(newUser);
         }
-        return allEmails;
+          return allUsers;
     }
 
     @Override
