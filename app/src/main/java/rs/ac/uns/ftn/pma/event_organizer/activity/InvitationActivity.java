@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import rs.ac.uns.ftn.pma.event_organizer.R;
 import rs.ac.uns.ftn.pma.event_organizer.adapter.TabAdapterInvitationOverview;
@@ -22,6 +23,7 @@ public class InvitationActivity extends AppCompatActivity {
     private ViewPager viewPager;
     public static Invitation invitation;
     public static int invitationId=0;
+    public static List<Invitation> testDataInvitations;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,7 +45,8 @@ public class InvitationActivity extends AppCompatActivity {
         tabLayout.setupWithViewPager(viewPager);
 
     }
-    private Invitation findInvitationById(int id){
+
+    public static List<Invitation> testDataInvitation(){
         ArrayList<Invitation> all=new ArrayList<>();
 
         Event e1=new Event();
@@ -67,9 +70,9 @@ public class InvitationActivity extends AppCompatActivity {
         e3.setStartDateTime(new Date());
         e3.setEndDateTime(new Date());
 
-        User user1=new User(0,"user1","user1","user1@gmail.com","user1","user1",null, null);
-        User user2=new User(1,"user2","user2","user2@gmail.com","user2","user2",null, null);
-        User user3=new User(2,"user3","user3","user3@gmail.com","user3","user3",null, null);
+        User user1=new User(1,"user1","user1","user1@gmail.com","user1","user1",null, null);
+        User user2=new User(2,"user2","user2","user2@gmail.com","user2","user2",null, null);
+        User user3=new User(3,"user3","user3","user3@gmail.com","user3","user3",null, null);
 
         //event 1: rodjendan -> 3 user:1,2,3
         //event 2: rostilj -> 1 user: 2
@@ -106,8 +109,14 @@ public class InvitationActivity extends AppCompatActivity {
         all.add(i4);
         all.add(i5);
 
+        testDataInvitations=all;
+
+        return all;
+    }
+    private Invitation findInvitationById(int id){
+
         Invitation i=null;
-        for(Invitation inv:all){
+        for(Invitation inv:testDataInvitations){
             if (inv.getEvent().getId()==id) {
                 i=inv;
                 break;

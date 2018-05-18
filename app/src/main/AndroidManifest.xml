@@ -14,7 +14,7 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyACF0eBzPtMZIbnjc0hAcnt3cnHh0L6VjQ" />
 
-        <activity android:name=".activity.MainActivity">
+        <activity android:name=".activity.EventActivity">
 
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -22,8 +22,7 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".activity.EventActivity"/>
-        <activity
+       <activity
             android:name=".activity.PlaceOfferOverviewActivity"
             android:parentActivityName=".activity.EventActivity" />
         <activity

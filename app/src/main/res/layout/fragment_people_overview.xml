@@ -33,6 +33,7 @@
             android:background="@null"
             android:src="@drawable/ic_add_black_24dp"
             />
+
 </LinearLayout>
 
     <!-- TODO: Update blank fragment layout -->
