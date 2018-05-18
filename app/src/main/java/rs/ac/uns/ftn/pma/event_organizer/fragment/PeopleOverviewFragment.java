@@ -68,46 +68,50 @@ public class PeopleOverviewFragment extends Fragment {
         recyclerView.setAdapter(adapter);
         recyclerView.addItemDecoration(new DividerItemDecoration(getContext(), LinearLayoutManager.VERTICAL));
         prepareTestData();
+        firebaseDatabase = FirebaseDatabase.getInstance();
+
+        databaseReference = firebaseDatabase.getReference("invitations");
 
         ImageButton button=(ImageButton)view.findViewById(R.id.new_invitation_email_button);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String email=((TextView)view.findViewById(R.id.new_invitation_email_edittext)).getText().toString();
+                TextView textViewEmail=(TextView)view.findViewById(R.id.new_invitation_email_edittext);
+                String email=(textViewEmail).getText().toString();
+                Toast.makeText(getContext(), "Inviting "+email, Toast.LENGTH_LONG).show();
+                textViewEmail.setText("");
+
                 //go through all users.emails find user with this email
                 //findUserByEmail()
+                //if doesn't exist invitation with this event and this user -> create new
+                //add it to user.listInvitation
+                //add to database ->invitations, users
                 List<User> allUsers=testData;
                 User foundedUser=null;
                 for(User user:allUsers){
-                    if(user.getEmail().equals(email))
-                        foundedUser=user;
-                        break;
+                    if(user.getEmail().equals(email)) {
+                        foundedUser = user;
+                         break;
+                    }
                 }
                 if(foundedUser!=null){
-                    List<Invitation> invitations= InvitationActivity.testDataInvitations;
-                    //if doesnt exist invitation with this event and this user -> create new
-                     firebaseDatabase = FirebaseDatabase.getInstance();
-                    // get reference to 'users' node
-                    databaseReference = firebaseDatabase.getReference("invitations");
-                    createNewInvitation(foundedUser,null);
-
-
+                   createNewInvitation(foundedUser,null);
                 }
-                //add it to user.listInvitation
-                //add to database
+                //add on list?
             }
         });
 
         return view;
     }
     public void createNewInvitation(User foundedUser, Event event){
-
         String invitationId = databaseReference.push().getKey();
         Invitation newInvitation=new Invitation();
         newInvitation.setInvitedUser(foundedUser);
         newInvitation.setId(2L);
+        newInvitation.setEvent(event);
         newInvitation.setStatus(InvitationStatus.PENDING);
         databaseReference.child(invitationId).setValue(newInvitation);
+        Toast.makeText(getContext(),"Invited", Toast.LENGTH_LONG).show();
     }
 
     @Override
