@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -22,7 +23,6 @@ public class InvitationActivity extends AppCompatActivity {
     private TabAdapterInvitationOverview tabAdapter;
     private ViewPager viewPager;
     public static Invitation invitation;
-    public static int invitationId=0;
     public static List<Invitation> testDataInvitations;
 
     @Override
@@ -37,8 +37,7 @@ public class InvitationActivity extends AppCompatActivity {
         tabLayout = findViewById(R.id.tabLayoutInvitation);
         viewPager = findViewById(R.id.pagerInvitation);
 
-        invitationId=(int)getIntent().getIntExtra("position", 0);   //pozicija u listi
-        invitation=findInvitationById(invitationId);
+        invitation= (Invitation) getIntent().getExtras().get(InvitationsActivity.INVITATION);
 
         tabAdapter = new TabAdapterInvitationOverview(this);
         viewPager.setAdapter(tabAdapter);

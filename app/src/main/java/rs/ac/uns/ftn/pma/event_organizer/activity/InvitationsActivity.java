@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 import android.widget.Toolbar;
 
 import java.util.ArrayList;
@@ -20,8 +21,9 @@ import rs.ac.uns.ftn.pma.event_organizer.model.Invitation;
 import rs.ac.uns.ftn.pma.event_organizer.model.User;
 
 public class InvitationsActivity extends AppCompatActivity {
-    ListView listView;
-    ArrayList<Invitation> testDataInvitations;
+    public static final String INVITATION = "rs.ac.uns.ftn.pma.event_organizer.INVITATION";
+    private ListView listView;
+    private ArrayList<Invitation> testDataInvitations;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,7 +45,9 @@ public class InvitationsActivity extends AppCompatActivity {
                    Intent intent = new Intent(InvitationsActivity.this,
                             InvitationActivity.class);
 
-                intent.putExtra("position", position);  //need id of clicked invitation's event
+                intent.putExtra(INVITATION, testDataInvitations.get(position));
+                //FIX THIS
+
                 startActivity(intent);
 
             }

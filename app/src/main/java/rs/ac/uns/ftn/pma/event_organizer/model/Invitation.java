@@ -1,12 +1,14 @@
 package rs.ac.uns.ftn.pma.event_organizer.model;
 
+import java.io.Serializable;
+
 import rs.ac.uns.ftn.pma.event_organizer.model.enums.InvitationStatus;
 
 /**
  * Created by Sandra on 4/27/2018.
  */
 
-public class Invitation {
+public class Invitation implements Serializable{
 
     private long id;
     private Event event;
