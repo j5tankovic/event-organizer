@@ -9,34 +9,36 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+import java.util.List;
+
 import rs.ac.uns.ftn.pma.event_organizer.R;
+import rs.ac.uns.ftn.pma.event_organizer.model.Invitation;
 
-public class InvitationsAdapter extends ArrayAdapter<String> {
+public class InvitationsAdapter extends ArrayAdapter<Invitation> {
+    private Context context;
+    private List<Invitation> invitations;
 
-    private final Activity context;
-    private final String[] invitation_name;
-    private final String[] invitation_date;
-
-    public InvitationsAdapter(Activity context, String[] invitation_name, String[] invitation_date) {
-        super(context, R.layout.activity_invitation_list_view, invitation_name);
-
-        this.context = context;
-        this.invitation_name = invitation_name;
-        this.invitation_date = invitation_date;
+    public InvitationsAdapter(Context context, int resource, List<Invitation> invitations) {
+        super(context, resource, invitations);
+        this.context=context;
+        this.invitations=invitations;
     }
+
     @Override
     public View getView(int position, View view, ViewGroup parent) {
-        LayoutInflater inflater = context.getLayoutInflater();
-        View rowView = inflater.inflate(R.layout.activity_invitation_list_view, null,true);
+        if(view==null) {
+            LayoutInflater inflater = LayoutInflater.from(getContext());
+            view = inflater.inflate(R.layout.activity_invitation_list_view, null, true);
+        }
+        Invitation inv=getItem(position);
+        if(inv!=null){
+            TextView name = (TextView) view.findViewById(R.id.invitation_name);
+            TextView date = (TextView) view.findViewById(R.id.invitation_date);
 
-        TextView name = (TextView) rowView.findViewById(R.id.invitation_name);
-        TextView date = (TextView) rowView.findViewById(R.id.invitation_date);
-
-
-        name.setText(invitation_name[position]);
-        date.setText(invitation_date[position]);
-        return rowView;
-
+            name.setText(inv.getEvent().getName());
+            date.setText(inv.getEvent().getStartDateTime().toString());
+        }
+        return view;
     };
 
 }
