@@ -46,9 +46,10 @@ public class LoginActivity extends AppCompatActivity {
         // Check if user is signed in (non-null) and update UI accordingly.
         FirebaseUser loggedUser = mAuth.getCurrentUser();
         System.out.println("LOGGED USER: ");
-        System.out.println(loggedUser.toString());
-        openUserProfileActivity();
-
+        if(loggedUser != null){
+            System.out.println(loggedUser.toString());
+            openUserProfileActivity();
+        }
         registerBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -14,6 +14,7 @@ public class User {
     private String email;
     private String name;
     private String lastName;
+    private String profilePicture;
     private List<Event> createdEvents;
     private List<Invitation> invitations;
 
@@ -40,6 +41,14 @@ public class User {
     }
 
     public User() {
+    }
+
+    public String getProfilePicture() {
+        return profilePicture;
+    }
+
+    public void setProfilePicture(String profilePicture) {
+        this.profilePicture = profilePicture;
     }
 
     public long getId() {
