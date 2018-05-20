@@ -162,13 +162,17 @@ public class PeopleOverviewFragment extends Fragment {
         }
     }
     private void prepareTestData() {
-       User user1=new User(0,"user1","user1","user1@gmail.com","user1","user1",null, null);
-       User user2=new User(1,"user2","user2","user2@gmail.com","user2","user2",null, null);
-       User user3=new User(2,"user3","user3","user3@gmail.com","user3","user3",null, null);
+       User user1=new User(1,"user1","user1","user1@gmail.com","user1","user1",null, null);
+       User user2=new User(2,"user2","user2","user2@gmail.com","user2","user2",null, null);
+       User user3=new User(3,"user3","user3","user3@gmail.com","user3","user3",null, null);
+       User user4=new User(4,"user4","user4","user4@gmail.com","user4","user4",null, null);
+       User user5=new User(5,"user5","user5","user5@gmail.com","user5","user5",null, null);
 
        testData.add(user1);
        testData.add(user2);
        testData.add(user3);
+       testData.add(user4);
+       testData.add(user5);
 
        adapter.notifyDataSetChanged();
     }

@@ -1,10 +1,12 @@
 package rs.ac.uns.ftn.pma.event_organizer.model;
 
+import java.io.Serializable;
+
 /**
  * Created by Sandra on 4/27/2018.
  */
 
-public class EventCategory {
+public class EventCategory implements Serializable{
     private long id;
     private String name;
 

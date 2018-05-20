@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 import rs.ac.uns.ftn.pma.event_organizer.R;
@@ -36,7 +37,10 @@ public class InvitationsAdapter extends ArrayAdapter<Invitation> {
             TextView date = (TextView) view.findViewById(R.id.invitation_date);
 
             name.setText(inv.getEvent().getName());
-            date.setText(inv.getEvent().getStartDateTime().toString());
+            String date1str = new SimpleDateFormat("dd/MM/yyyy").format(inv.getEvent().getStartDateTime());
+            String date2str = new SimpleDateFormat("dd/MM/yyyy").format(inv.getEvent().getEndDateTime());
+
+            date.setText(date1str+" - "+date2str);
         }
         return view;
     };

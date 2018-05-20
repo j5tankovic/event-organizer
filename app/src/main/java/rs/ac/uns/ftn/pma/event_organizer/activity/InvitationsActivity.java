@@ -17,11 +17,12 @@ import java.util.GregorianCalendar;
 import rs.ac.uns.ftn.pma.event_organizer.R;
 import rs.ac.uns.ftn.pma.event_organizer.adapter.InvitationsAdapter;
 import rs.ac.uns.ftn.pma.event_organizer.model.Event;
+import rs.ac.uns.ftn.pma.event_organizer.model.EventCategory;
 import rs.ac.uns.ftn.pma.event_organizer.model.Invitation;
 import rs.ac.uns.ftn.pma.event_organizer.model.User;
 
 public class InvitationsActivity extends AppCompatActivity {
-    public static final String INVITATION = "rs.ac.uns.ftn.pma.event_organizer.INVITATION";
+    public static final String EVENT = "rs.ac.uns.ftn.pma.event_organizer.EVENT";
     private ListView listView;
     private ArrayList<Invitation> testDataInvitations;
 
@@ -41,7 +42,7 @@ public class InvitationsActivity extends AppCompatActivity {
                 Intent intent = new Intent(getApplicationContext(),
                         InvitationActivity.class);
 
-                intent.putExtra(INVITATION, testDataInvitations.get(position));
+                intent.putExtra(EVENT, testDataInvitations.get(position).getEvent());
 
                 startActivity(intent);
             }
@@ -57,6 +58,7 @@ public class InvitationsActivity extends AppCompatActivity {
         e1.setDescription("neki opis");
         e1.setStartDateTime(new Date());
         e1.setEndDateTime(new Date());
+        e1.setEventCategory(new EventCategory(1,"Rodjendan"));
 
         Event e2=new Event();
         e2.setId(2);
@@ -64,6 +66,7 @@ public class InvitationsActivity extends AppCompatActivity {
         e2.setDescription("neki opis 2 2 2");
         e2.setStartDateTime(new Date());
         e2.setEndDateTime(new Date());
+        e2.setEventCategory(new EventCategory(1,"Privatno druzenje"));
 
         Event e3=new Event();
         e3.setId(3);
@@ -71,6 +74,7 @@ public class InvitationsActivity extends AppCompatActivity {
         e3.setDescription("neki opis 3 3 3");
         e3.setStartDateTime(new Date());
         e3.setEndDateTime(new Date());
+        e3.setEventCategory(new EventCategory(1,"Praznik"));
 
         User user1=new User(1,"user1","user1","user1@gmail.com","user1","user1",null, null);
         User user2=new User(2,"user2","user2","user2@gmail.com","user2","user2",null, null);
