@@ -1,5 +1,6 @@
 package rs.ac.uns.ftn.pma.event_organizer.model;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
@@ -7,7 +8,7 @@ import java.util.List;
  * Created by Sandra on 4/27/2018.
  */
 
-public class Event {
+public class Event implements Serializable{
 
     private long id;
     private String name;

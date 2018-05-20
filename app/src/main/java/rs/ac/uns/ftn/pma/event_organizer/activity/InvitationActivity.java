@@ -32,12 +32,11 @@ public class InvitationActivity extends AppCompatActivity {
 
         Toolbar toolbar=(Toolbar) findViewById(R.id.event_toolbar);
         toolbar.setTitle("Invitation");
-        setSupportActionBar(toolbar);
+
+        invitation= (Invitation) getIntent().getExtras().get(InvitationsActivity.INVITATION);
 
         tabLayout = findViewById(R.id.tabLayoutInvitation);
         viewPager = findViewById(R.id.pagerInvitation);
-
-        invitation= (Invitation) getIntent().getExtras().get(InvitationsActivity.INVITATION);
 
         tabAdapter = new TabAdapterInvitationOverview(this);
         viewPager.setAdapter(tabAdapter);

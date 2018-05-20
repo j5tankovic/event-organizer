@@ -35,26 +35,18 @@ public class InvitationsActivity extends AppCompatActivity {
         listView = (ListView) findViewById(R.id.invitations_list);
         listView.setAdapter(adapter);
 
-        AdapterView.OnItemClickListener onItemClickListener = new AdapterView.OnItemClickListener() {
-
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> listView,
-                                    View v,
-                                    int position,
-                                    long id) {
-                   Intent intent = new Intent(InvitationsActivity.this,
-                            InvitationActivity.class);
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(getApplicationContext(),
+                        InvitationActivity.class);
 
                 intent.putExtra(INVITATION, testDataInvitations.get(position));
-                //FIX THIS
 
                 startActivity(intent);
-
             }
-        };
-        listView.setOnItemClickListener(onItemClickListener);
+        });
     }
-
 
     public void prepareTest(){
         ArrayList<Invitation> all=new ArrayList<>();
