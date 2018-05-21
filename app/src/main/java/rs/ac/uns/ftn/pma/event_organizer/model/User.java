@@ -1,5 +1,7 @@
 package rs.ac.uns.ftn.pma.event_organizer.model;
 
+
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -7,7 +9,7 @@ import java.util.List;
  * Created by Sandra on 4/27/2018.
  */
 
-public class User {
+public class User implements Serializable {
     private long id;
     private String username;
     private String password;

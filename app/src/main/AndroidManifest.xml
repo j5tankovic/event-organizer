@@ -22,6 +22,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity android:name=".activity.EventActivity"/>
         <activity
             android:name=".activity.PlaceOfferOverviewActivity"
@@ -45,12 +46,15 @@
             android:parentActivityName=".activity.ShoppingItemOverviewActivity" />
         <activity android:name=".activity.MyEventsActivity" />
         <activity android:name=".activity.MyEventsListViewActivity" />
+        <activity android:name=".activity.InvitationListViewActivity" />
+        <activity
+            android:name=".activity.InvitationsActivity"
+            android:parentActivityName=".activity.MainActivity" />
+        <activity android:name=".activity.InvitationActivity"></activity>
         <activity android:name=".activity.AddNewEventActivity" />
         <activity android:name=".activity.UserProfileActivity" />
         <activity android:name=".activity.RegisterActivity"></activity>
-<!--
-        <activity android:name=".activity.LoginActivity"></activity>
--->
+
     </application>
 
 </manifest>

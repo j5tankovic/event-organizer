@@ -127,6 +127,10 @@ public class MainActivity extends AppCompatActivity {
                         navItemIndex = 1;
                         CURRENT_TAG = TAG_SETTINGS;
                         break;
+                    case R.id.my_invitations:
+                        Intent intent = new Intent(MainActivity.this, InvitationsActivity.class);
+                        startActivity(intent);
+                        break;
                     default:
                         navItemIndex = 0;
                 }

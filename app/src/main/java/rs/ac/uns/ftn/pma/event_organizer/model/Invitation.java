@@ -19,6 +19,37 @@ public class Invitation {
         this.invitedUser = invitedUser;
         this.status = status;
     }
+    public Invitation(){}
 
+    public long getId() {
+        return id;
+    }
 
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public Event getEvent() {
+        return event;
+    }
+
+    public void setEvent(Event event) {
+        this.event = event;
+    }
+
+    public User getInvitedUser() {
+        return invitedUser;
+    }
+
+    public void setInvitedUser(User invitedUser) {
+        this.invitedUser = invitedUser;
+    }
+
+    public InvitationStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(InvitationStatus status) {
+        this.status = status;
+    }
 }
