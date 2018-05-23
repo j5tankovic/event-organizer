@@ -17,6 +17,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -126,6 +127,7 @@ public class PlaceOfferOverviewActivity extends AppCompatActivity implements OnM
         gMap.setMinZoomPreference(12);
 
         LatLng coords = new LatLng(placeOffer.getLocation().getLat(), placeOffer.getLocation().getLng());
+        gMap.addMarker(new MarkerOptions().position(coords).title(placeOffer.getLocation().getAddress()));
         gMap.moveCamera(CameraUpdateFactory.newLatLng(coords));
     }
 

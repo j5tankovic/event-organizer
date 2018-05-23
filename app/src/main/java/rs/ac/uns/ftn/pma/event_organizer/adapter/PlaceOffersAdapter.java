@@ -5,7 +5,9 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.lang.ref.WeakReference;
 import java.util.List;
@@ -20,19 +22,30 @@ public class PlaceOffersAdapter extends RecyclerView.Adapter<PlaceOffersAdapter.
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
         public TextView textView;
+        public ImageButton acceptButton;
+        public ImageButton rejectButton;
         public WeakReference<ClickListener> listenerRef;
 
         public ViewHolder(View v, ClickListener clickListener) {
             super(v);
 
             listenerRef = new WeakReference<>(clickListener);
-            textView = (TextView) v.findViewById(R.id.placeoffer_tv);
+            textView = v.findViewById(R.id.placeoffer_tv);
+            acceptButton = v.findViewById(R.id.placeoffer_accept);
+            rejectButton = v.findViewById(R.id.placeoffer_reject);
 
             v.setOnClickListener(this);
+            acceptButton.setOnClickListener(this);
+            rejectButton.setOnClickListener(this);
         }
 
         @Override
         public void onClick(View v) {
+            if (v.getId() == R.id.placeoffer_accept) {
+                Toast.makeText(v.getContext(), "Accepted place offer", Toast.LENGTH_LONG).show();
+            } else if (v.getId() == R.id.placeoffer_reject) {
+                Toast.makeText(v.getContext(), "Rejected place offer", Toast.LENGTH_LONG).show();
+            }
             listenerRef.get().onPositionClicked(getAdapterPosition());
         }
 

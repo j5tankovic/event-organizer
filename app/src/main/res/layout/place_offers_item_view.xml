@@ -17,7 +17,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageButton
-        android:id="@+id/imageButton"
+        android:id="@+id/placeoffer_accept"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
@@ -25,12 +25,12 @@
         android:layout_marginTop="16dp"
         android:background="?android:selectableItemBackground"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/imageButton2"
+        app:layout_constraintEnd_toStartOf="@+id/placeoffer_reject"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/ic_check_black_24dp" />
 
     <ImageButton
-        android:id="@+id/imageButton2"
+        android:id="@+id/placeoffer_reject"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"

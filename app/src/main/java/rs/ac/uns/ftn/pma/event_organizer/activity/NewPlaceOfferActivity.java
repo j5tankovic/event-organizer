@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.places.Place;
@@ -30,6 +31,7 @@ public class NewPlaceOfferActivity extends AppCompatActivity {
     public static final String ADDED_OFFER = "rs.ac.uns.ftn.pma.event_organizer.ADDED_OFFER";
 
     private DatabaseReference databaseReference;
+    private Location location;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,13 +61,16 @@ public class NewPlaceOfferActivity extends AppCompatActivity {
             @Override
             public void onPlaceSelected(Place place) {
                 // TODO: Get info about the selected place.
-                Log.i(TAG, "Place: " + place.getName());
+                //Toast.makeText(getApplicationContext(), place.getAddress(), Toast.LENGTH_LONG).show();
+                location = new Location();
+                location.setLat(place.getLatLng().latitude);
+                location.setLng(place.getLatLng().longitude);
+                location.setAddress(place.getName().toString());
             }
 
             @Override
             public void onError(Status status) {
                 // TODO: Handle the error.
-                Log.i(TAG, "An error occurred: " + status);
             }
         });
 
@@ -73,7 +78,7 @@ public class NewPlaceOfferActivity extends AppCompatActivity {
     }
 
     private PlaceOffer formPlaceOffer() {
-        TextView location = findViewById(R.id.new_placeoffer_location);
+        //TextView location = findViewById(R.id.new_placeoffer_location);
         TextView capacity = findViewById(R.id.new_placeoffer_capacity);
         TextView notes = findViewById(R.id.new_placeoffer_notes);
         TextView price = findViewById(R.id.new_placeoffer_price);
@@ -82,7 +87,7 @@ public class NewPlaceOfferActivity extends AppCompatActivity {
         offer.setCapacity(Integer.valueOf(capacity.getText().toString()));
         offer.setNotes(notes.getText().toString());
         offer.setPrice(Double.parseDouble(price.getText().toString()));
-        offer.setLocation(new Location(0, 0, location.getText().toString()));
+        offer.setLocation(location);
 
         return offer;
     }
