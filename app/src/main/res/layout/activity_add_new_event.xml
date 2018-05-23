@@ -74,7 +74,7 @@
         android:layout_marginTop="16dp"
         android:ems="10"
         android:hint="@string/new_event_start_date"
-        android:inputType="datetime"
+        android:inputType="textPersonName"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/new_event_image" />
@@ -88,7 +88,7 @@
         android:layout_marginTop="16dp"
         android:ems="10"
         android:hint="@string/new_event_end_date"
-        android:inputType="datetime"
+        android:inputType="textPersonName"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/new_event_start_date" />
@@ -128,7 +128,6 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:text="@string/add_new_event"
-        android:onClick="onClick"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/new_event_category" />
