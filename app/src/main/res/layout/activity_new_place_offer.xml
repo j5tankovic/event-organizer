@@ -21,6 +21,16 @@
 
     </android.support.design.widget.AppBarLayout>
 
+    <fragment
+        android:id="@+id/place_autocomplete_fragment"
+        android:name="com.google.android.gms.location.places.ui.PlaceAutocompleteFragment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/new_placeoffer_appbar" />
+
     <EditText
         android:id="@+id/new_placeoffer_location"
         android:layout_width="0dp"
@@ -34,7 +44,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/new_placeoffer_appbar" />
+        app:layout_constraintTop_toBottomOf="@+id/place_autocomplete_fragment" />
 
     <EditText
         android:id="@+id/new_placeoffer_capacity"
