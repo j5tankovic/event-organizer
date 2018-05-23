@@ -9,8 +9,10 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -27,6 +29,7 @@ import com.google.firebase.storage.UploadTask;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 
 import rs.ac.uns.ftn.pma.event_organizer.R;
@@ -42,6 +45,7 @@ public class AddNewEventActivity extends AppCompatActivity {
     private TextView start_date;
     private TextView end_date;
     private TextView budget;
+    private Spinner eventCategory;
 
     private Button upload;
     private ImageView uploadedPicture;
@@ -53,6 +57,7 @@ public class AddNewEventActivity extends AppCompatActivity {
     private String eventPicturePath;
 
     private DatabaseReference databaseReference;
+    private DatabaseReference databaseReferenceEventCategories;
     private FirebaseDatabase firebaseDatabase;
     private StorageReference storageReference;
 
@@ -61,8 +66,17 @@ public class AddNewEventActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_new_event);
 
+/*        EventCategory eventCategory1 = new EventCategory();
+        eventCategory1.setName("Kategorija 1");
+        saveCategory(eventCategory1);
+
+        EventCategory eventCategory2 = new EventCategory();
+        eventCategory2.setName("Kategorija 2");
+        saveCategory(eventCategory2);*/
+
         firebaseDatabase = FirebaseDatabase.getInstance();
         databaseReference = firebaseDatabase.getReference("events");
+        databaseReferenceEventCategories = firebaseDatabase.getReference("eventCategories");
         storageReference = FirebaseStorage.getInstance().getReference();
 
         name = findViewById(R.id.new_event_name);
@@ -70,9 +84,17 @@ public class AddNewEventActivity extends AppCompatActivity {
         start_date = findViewById(R.id.new_event_start_date);
         end_date = findViewById(R.id.new_event_end_date);
         budget = findViewById(R.id.new_event_budget);
+        eventCategory = findViewById(R.id.new_event_category);
 
         upload = findViewById(R.id.new_event_upload_image);
         uploadedPicture = findViewById(R.id.new_event_image);
+
+        Spinner categories = findViewById(R.id.new_event_category);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+                R.array.event_categories, android.R.layout.simple_spinner_item);
+
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        categories.setAdapter(adapter);
 
         add = findViewById(R.id.add_new_event);
         add.setOnClickListener(new View.OnClickListener() {
@@ -110,6 +132,12 @@ public class AddNewEventActivity extends AppCompatActivity {
         event.setStartDateTime(start_date_date);
         event.setEndDateTime(end_date_date);
         event.setBudget(Double.valueOf(budget.getText().toString()));
+        String eventCategoryName = eventCategory.getSelectedItem().toString();
+        System.out.println("**************");
+        System.out.println("**************");
+        System.out.println(eventCategoryName);
+        System.out.println("**************");
+        System.out.println("**************");
 
         return event;
     }
@@ -126,6 +154,13 @@ public class AddNewEventActivity extends AppCompatActivity {
 
         event.setId(key);
         databaseReference.child(key).setValue(event);
+    }
+
+    private void saveCategory(EventCategory eventCategory) {
+        String key = databaseReferenceEventCategories.push().getKey();
+
+        eventCategory.setId(key);
+        databaseReferenceEventCategories.child(key).setValue(eventCategory);
     }
 
     @Override
