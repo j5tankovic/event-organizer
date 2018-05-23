@@ -17,9 +17,13 @@ public class Event {
     private double budget;
     private String image;
     private List<ShoppingItem> shoppingItemList;
+    private List<PlaceOffer> potentialPlaces;
+    private PlaceOffer finalPlace;
     private EventCategory eventCategory;
 
-    public Event(long id, String name, Date startDateTime, Date endDateTime, String description, double budget, String image, List<ShoppingItem> shoppingItemList) {
+    public Event(long id, String name, Date startDateTime, Date endDateTime,
+                 String description, double budget, String image, List<ShoppingItem> shoppingItemList,
+                 List<PlaceOffer> placeOffers) {
         this.id = id;
         this.name = name;
         this.startDateTime = startDateTime;
@@ -28,6 +32,7 @@ public class Event {
         this.budget = budget;
         this.image = image;
         this.shoppingItemList = shoppingItemList;
+        this.potentialPlaces = placeOffers;
     }
 
     public Event() {
@@ -107,5 +112,21 @@ public class Event {
 
     public void setImage(String image) {
         this.image = image;
+    }
+
+    public List<PlaceOffer> getPotentialPlaces() {
+        return potentialPlaces;
+    }
+
+    public void setPotentialPlaces(List<PlaceOffer> potentialPlaces) {
+        this.potentialPlaces = potentialPlaces;
+    }
+
+    public PlaceOffer getFinalPlace() {
+        return finalPlace;
+    }
+
+    public void setFinalPlace(PlaceOffer finalPlace) {
+        this.finalPlace = finalPlace;
     }
 }

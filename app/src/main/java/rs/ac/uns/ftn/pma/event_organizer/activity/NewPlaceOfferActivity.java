@@ -56,6 +56,7 @@ public class NewPlaceOfferActivity extends AppCompatActivity {
 
         PlaceAutocompleteFragment autocompleteFragment = (PlaceAutocompleteFragment)
                 getFragmentManager().findFragmentById(R.id.place_autocomplete_fragment);
+        autocompleteFragment.setHint("Location");
 
         autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
             @Override
@@ -65,7 +66,8 @@ public class NewPlaceOfferActivity extends AppCompatActivity {
                 location = new Location();
                 location.setLat(place.getLatLng().latitude);
                 location.setLng(place.getLatLng().longitude);
-                location.setAddress(place.getName().toString());
+                location.setAddress(place.getAddress().toString());
+                location.setName(place.getName().toString());
             }
 
             @Override
