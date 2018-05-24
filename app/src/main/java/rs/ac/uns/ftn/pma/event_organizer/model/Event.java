@@ -98,10 +98,10 @@ public class Event implements Serializable{
         return budget;
     }
 
-    public void setBudget(float budget) {
+  /*  public void setBudget(float budget) {
         this.budget = budget;
     }
-
+*/
     public String getImage() {
         return image;
     }

@@ -8,13 +8,15 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import java.util.List;
+
+import rs.ac.uns.ftn.pma.event_organizer.model.Invitation;
 import rs.ac.uns.ftn.pma.event_organizer.model.User;
 import rs.ac.uns.ftn.pma.event_organizer.R;
+import rs.ac.uns.ftn.pma.event_organizer.model.enums.InvitationStatus;
 
 public class PeopleOverviewAdapter extends RecyclerView.Adapter<PeopleOverviewAdapter.ViewHolder> {
 
-    private List<User> testData;
-
+    private List<Invitation> invitations;
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         public TextView userEmail;
@@ -27,8 +29,8 @@ public class PeopleOverviewAdapter extends RecyclerView.Adapter<PeopleOverviewAd
         }
     }
 
-    public PeopleOverviewAdapter(List<User> testData) {
-        this.testData = testData;
+    public PeopleOverviewAdapter(List<Invitation> invitations) {
+        this.invitations = invitations;
     }
 
     @Override
@@ -43,17 +45,17 @@ public class PeopleOverviewAdapter extends RecyclerView.Adapter<PeopleOverviewAd
     @Override
     public void onBindViewHolder(@NonNull PeopleOverviewAdapter.ViewHolder holder, int position) {
         int pos=position+1;
-        holder.userEmail.setText(pos+". "+testData.get(position).getEmail());
-        //src - deppending on status of invitation
-        if(position==1)
-            holder.img.setImageResource(R.drawable.ic_status_accepted_24dp);
-        if(position==3)
-            holder.img.setImageResource(R.drawable.ic_status_rejected_24dp);
 
+        holder.userEmail.setText(pos+". "+invitations.get(position).getInvitedUser().getEmail());
+
+        if(invitations.get(position).getStatus().equals(InvitationStatus.ACCEPTED))
+            holder.img.setImageResource(R.drawable.ic_status_accepted_24dp);
+        if(invitations.get(position).getStatus().equals(InvitationStatus.REJECTED))
+            holder.img.setImageResource(R.drawable.ic_status_rejected_24dp);
     }
 
     @Override
     public int getItemCount() {
-        return testData.size();
+        return invitations.size();
     }
 }

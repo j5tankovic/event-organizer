@@ -7,32 +7,57 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
-import android.widget.Toolbar;
 
+import java.sql.Date;
+import java.sql.Time;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
+import java.util.List;
+import java.util.Map;
 
 import rs.ac.uns.ftn.pma.event_organizer.R;
 import rs.ac.uns.ftn.pma.event_organizer.adapter.InvitationsAdapter;
 import rs.ac.uns.ftn.pma.event_organizer.model.Event;
-import rs.ac.uns.ftn.pma.event_organizer.model.EventCategory;
 import rs.ac.uns.ftn.pma.event_organizer.model.Invitation;
 import rs.ac.uns.ftn.pma.event_organizer.model.User;
+import rs.ac.uns.ftn.pma.event_organizer.model.enums.InvitationStatus;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 
 public class InvitationsActivity extends AppCompatActivity {
     public static final String EVENT = "rs.ac.uns.ftn.pma.event_organizer.EVENT";
     private ListView listView;
-    private ArrayList<Invitation> testDataInvitations;
+    private ArrayList<Invitation> testDataInvitations=new ArrayList<>();
+    private DatabaseReference databaseReference;
+    private DatabaseReference databaseReferenceInvitations;
+    private FirebaseDatabase firebaseDatabase;
+    private List<Invitation> allInvitations=new ArrayList<>();
+    private InvitationsAdapter adapter;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_invitations);
-        prepareTest();
 
-       InvitationsAdapter adapter = new InvitationsAdapter(this,R.layout.activity_invitation_list_view, testDataInvitations );
+        firebaseDatabase = FirebaseDatabase.getInstance();
+        databaseReferenceInvitations=firebaseDatabase.getReference().child("invitations");
+        databaseReferenceInvitations.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                getAllInvitations((Map<String,Object>)dataSnapshot.getValue());
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                System.out.println("The read failed: " + databaseError.getCode());
+            }
+        });
+
+        adapter = new InvitationsAdapter(this,R.layout.activity_invitation_list_view, testDataInvitations );
         listView = (ListView) findViewById(R.id.invitations_list);
         listView.setAdapter(adapter);
 
@@ -50,72 +75,59 @@ public class InvitationsActivity extends AppCompatActivity {
     }
 
     public void prepareTest(){
-        ArrayList<Invitation> all=new ArrayList<>();
+        // ulogovan npr:
+        User user1=new User(1,"ja","ja","ja@gmail.com","ja","ja",null, null);
+        for(Invitation inv:allInvitations){
+            if(inv.getInvitedUser()!=null) {
+                if (inv.getInvitedUser().getEmail().equals(user1.getEmail())) {
 
-        Event e1=new Event();
-        e1.setId(1);
-        e1.setName("Rodjendan");
-        e1.setDescription("neki opis");
-        e1.setStartDateTime(new Date());
-        e1.setEndDateTime(new Date());
-        e1.setEventCategory(new EventCategory(1,"Rodjendan"));
-
-        Event e2=new Event();
-        e2.setId(2);
-        e2.setName("Rostilj");
-        e2.setDescription("neki opis 2 2 2");
-        e2.setStartDateTime(new Date());
-        e2.setEndDateTime(new Date());
-        e2.setEventCategory(new EventCategory(1,"Privatno druzenje"));
-
-        Event e3=new Event();
-        e3.setId(3);
-        e3.setName("Nova Godina");
-        e3.setDescription("neki opis 3 3 3");
-        e3.setStartDateTime(new Date());
-        e3.setEndDateTime(new Date());
-        e3.setEventCategory(new EventCategory(1,"Praznik"));
-
-        User user1=new User(1,"user1","user1","user1@gmail.com","user1","user1",null, null);
-        User user2=new User(2,"user2","user2","user2@gmail.com","user2","user2",null, null);
-        User user3=new User(3,"user3","user3","user3@gmail.com","user3","user3",null, null);
-
-        //event 1: rodjendan -> 3 user:1,2,3
-        //event 2: rostilj -> 1 user: 2
-        //event 3: nova godina -> 1 user: 2
-
-        Invitation i1=new Invitation();
-        i1.setId(1);
-        i1.setEvent(e1);
-        i1.setInvitedUser(user1);
-
-        Invitation i2=new Invitation();
-        i2.setId(2);
-        i2.setEvent(e1);
-        i2.setInvitedUser(user2);
-
-        Invitation i3=new Invitation();
-        i3.setId(3);
-        i3.setEvent(e1);
-        i3.setInvitedUser(user3);
-
-        Invitation i4=new Invitation();
-        i4.setId(4);
-        i4.setEvent(e2);
-        i4.setInvitedUser(user2);
-
-        Invitation i5=new Invitation();
-        i5.setId(5);
-        i5.setEvent(e3);
-        i5.setInvitedUser(user2);
-
-        all.add(i1);
-        all.add(i2);
-        all.add(i3);
-        all.add(i4);
-        all.add(i5);
-
-        testDataInvitations=all;
+                    testDataInvitations.add(inv);
+                    adapter.notifyDataSetChanged();
+                }
+            }
+        }
 
     }
+    public void getAllInvitations(Map<String,Object> invitations){
+        for (Map.Entry<String, Object> entry : invitations.entrySet()){
+            Map singleInvitation = (Map) entry.getValue();
+
+            Invitation newInvitation=new Invitation();
+            newInvitation.setId((long)singleInvitation.get("id"));
+
+            if(singleInvitation.get("status").equals("ACCEPTED"))
+                newInvitation.setStatus(InvitationStatus.ACCEPTED);
+            else if(singleInvitation.get("status").equals("REJECTED"))
+                newInvitation.setStatus(InvitationStatus.REJECTED);
+            else
+                newInvitation.setStatus(InvitationStatus.PENDING);
+
+            Map eventMap= (Map) singleInvitation.get("event");
+            Event newEvent=new Event();
+            newEvent.setId((long)eventMap.get("id"));
+            newEvent.setDescription((String)eventMap.get("description"));
+
+            Map date=(Map)eventMap.get("startDateTime");
+            Date startTime=new Date((long)date.get("time"));
+            newEvent.setStartDateTime(startTime);
+            Map dateEnd=(Map)eventMap.get("endDateTime");
+            Date endTime=new Date((long)dateEnd.get("time"));
+            newEvent.setEndDateTime(endTime);
+
+            newEvent.setName((String)eventMap.get("name"));
+            newInvitation.setEvent(newEvent);
+
+            Map userMap=(Map)singleInvitation.get("invitedUser");
+            User newUser=new User();
+            newUser.setEmail((String)userMap.get("email"));
+            newUser.setId((long)eventMap.get("id"));
+            newUser.setLastName((String)eventMap.get("lastname"));
+            newUser.setUsername((String)eventMap.get("username"));
+            newInvitation.setInvitedUser(newUser);
+
+            allInvitations.add(newInvitation);
+        }
+        prepareTest();
+    }
+
 }

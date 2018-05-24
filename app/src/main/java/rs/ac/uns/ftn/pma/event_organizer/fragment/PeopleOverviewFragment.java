@@ -1,7 +1,5 @@
 package rs.ac.uns.ftn.pma.event_organizer.fragment;
 
-
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DividerItemDecoration;
@@ -10,7 +8,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -24,55 +21,46 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
 import rs.ac.uns.ftn.pma.event_organizer.R;
-import rs.ac.uns.ftn.pma.event_organizer.activity.InvitationActivity;
 import rs.ac.uns.ftn.pma.event_organizer.adapter.PeopleOverviewAdapter;
-import rs.ac.uns.ftn.pma.event_organizer.listener.RecyclerTouchListener;
 import rs.ac.uns.ftn.pma.event_organizer.model.Event;
+import rs.ac.uns.ftn.pma.event_organizer.model.EventCategory;
 import rs.ac.uns.ftn.pma.event_organizer.model.Invitation;
 import rs.ac.uns.ftn.pma.event_organizer.model.User;
 import rs.ac.uns.ftn.pma.event_organizer.model.enums.InvitationStatus;
 
-import static android.app.Activity.RESULT_OK;
-
 public class PeopleOverviewFragment extends Fragment {
-    public static final String USER = "rs.ac.uns.ftn.pma.event_organizer.USER";
 
     private View view;
-
-    private List<User> testData = new ArrayList<>();
-    private List<User> usersDatabase=new ArrayList<>();
-    private List<Invitation> testDataInvitation=new ArrayList<>();
     private RecyclerView recyclerView;
     private RecyclerView.Adapter adapter;
     private RecyclerView.LayoutManager layoutManager;
     private DatabaseReference databaseReference;
     private  DatabaseReference databaseReferenceUser;
+    private  DatabaseReference databaseReferenceInvitations;
     private FirebaseDatabase firebaseDatabase;
-    List<User> allUsers;
+    private List<User> allUsers=new ArrayList<>();
+    private List<Invitation> allInvitations=new ArrayList<>();
+    private List<Invitation> eventInvitations=new ArrayList<>();
+    private int eventId=1; //npr.=1 rodjendan   -   FIND THIS EVENT; FROM GENERAL FRAGMENT?
 
-    public PeopleOverviewFragment() {
-
-    }
+    public PeopleOverviewFragment() {}
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+
         view = inflater.inflate(R.layout.fragment_people_overview, container, false);
-
         recyclerView = view.findViewById(R.id.people_rv);
-
-
         layoutManager = new LinearLayoutManager(getContext());
-        adapter = new PeopleOverviewAdapter(testData);
+        adapter = new PeopleOverviewAdapter(eventInvitations);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
         recyclerView.addItemDecoration(new DividerItemDecoration(getContext(), LinearLayoutManager.VERTICAL));
-        prepareTestData();
 
         firebaseDatabase = FirebaseDatabase.getInstance();
         databaseReference = firebaseDatabase.getReference("invitations");
@@ -81,7 +69,19 @@ public class PeopleOverviewFragment extends Fragment {
         databaseReferenceUser.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                allUsers((Map<String,Object>)dataSnapshot.getValue());
+                getAllUsers((Map<String,Object>)dataSnapshot.getValue());
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                System.out.println("The read failed: " + databaseError.getCode());
+            }
+        });
+
+        databaseReferenceInvitations=firebaseDatabase.getReference().child("invitations");
+        databaseReferenceInvitations.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                getAllInvitations((Map<String,Object>)dataSnapshot.getValue());
             }
             @Override
             public void onCancelled(DatabaseError databaseError) {
@@ -98,36 +98,42 @@ public class PeopleOverviewFragment extends Fragment {
                 Toast.makeText(getContext(), "Inviting "+email, Toast.LENGTH_LONG).show();
                 textViewEmail.setText("");
 
-                //go through all users.emails find user with this email
-                //findUserByEmail()
-                //if doesn't exist invitation with this event and this user -> create new
-                //add it to user.listInvitation
-                //add to database ->invitations, users
-
                 User foundedUser=findUserByEmail(email);
+                //YOU CAN'T INVITE SOMEONE WHO IS ALREADY INVITED
+                //CAN YOU INVITE YOURSELF?
                 if(foundedUser!=null) {
-                    createNewInvitation(foundedUser, null);
+                    createNewInvitation(foundedUser, null);//THIS EVENT
+                    adapter.notifyDataSetChanged();
+                } else{
+                    Toast.makeText(getContext(), email+" doesn't have a profile", Toast.LENGTH_LONG).show();
+                    //IF THIS USER DOESN'T HAVE PROFILE
                 }
-
-                //add on list?
             }
         });
-
         return view;
     }
     public void createNewInvitation(User foundedUser, Event event){
         String invitationId = databaseReference.push().getKey();
         Invitation newInvitation=new Invitation();
         newInvitation.setInvitedUser(foundedUser);
-        newInvitation.setId(2L);
+        newInvitation.setId(2L);//FIX
+        event=new Event();
+        event.setId(1L);
+        event.setStartDateTime(new Date());
+        event.setEndDateTime(new Date());
+        event.setName("Rodjendan");
+        event.setBudget(50.0);
+        event.setDescription("opis rodjendana: prvi rodjendan male tare");
+        event.setEventCategory(new EventCategory(1,"Rodjendan"));
         newInvitation.setEvent(event);
         newInvitation.setStatus(InvitationStatus.PENDING);
 
         databaseReference.child(invitationId).setValue(newInvitation);
+        eventInvitations.add(newInvitation);
       }
 
-      public User findUserByEmail( String email){
-         for(User user:allUsers){
+    public User findUserByEmail( String email){
+          for(User user:allUsers){
               if(user.getEmail().equals(email)){
                   return user;
               }
@@ -135,13 +141,11 @@ public class PeopleOverviewFragment extends Fragment {
         return null;
       }
 
-      public List<User> allUsers(Map<String,Object> users){
-        allUsers=new ArrayList<>();
-
-        for (Map.Entry<String, Object> entry : users.entrySet()){
+    public void getAllUsers(Map<String,Object> users){
+        for (Map.Entry<String, Object> entry : users.entrySet()) {
             Map singleUser = (Map) entry.getValue();
 
-            User newUser=new User();
+            User newUser = new User();
             newUser.setEmail((String) singleUser.get("email"));
             newUser.setUsername((String) singleUser.get("username"));
             newUser.setName((String) singleUser.get("name"));
@@ -150,33 +154,43 @@ public class PeopleOverviewFragment extends Fragment {
             newUser.setId((long) singleUser.get("id"));
             allUsers.add(newUser);
         }
-          return allUsers;
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == 999 && resultCode == RESULT_OK) {
+    public void getAllInvitations(Map<String,Object> invitations){
+        for (Map.Entry<String, Object> entry : invitations.entrySet()){
+            Map singleInvitation = (Map) entry.getValue();
 
-        } else if (requestCode == 994 && resultCode == RESULT_OK) {
+            Invitation newInvitation=new Invitation();
+            newInvitation.setId((long)singleInvitation.get("id"));
 
+            if(singleInvitation.get("status").equals("ACCEPTED"))
+                newInvitation.setStatus(InvitationStatus.ACCEPTED);
+            else if(singleInvitation.get("status").equals("REJECTED"))
+                newInvitation.setStatus(InvitationStatus.REJECTED);
+            else
+                newInvitation.setStatus(InvitationStatus.PENDING);
+
+            Map eventMap= (Map) singleInvitation.get("event");
+            Event newEvent=new Event();
+            newEvent.setId((long)eventMap.get("id"));
+            newInvitation.setEvent(newEvent);
+
+            Map userMap=(Map)singleInvitation.get("invitedUser");
+            User newUser=new User();
+            newUser.setEmail((String)userMap.get("email"));
+            newInvitation.setInvitedUser(newUser);
+
+            allInvitations.add(newInvitation);
         }
-    }
+        prepareTestData();
+       }
+
     private void prepareTestData() {
-       User user1=new User(1,"user1","user1","user1@gmail.com","user1","user1",null, null);
-       User user2=new User(2,"user2","user2","user2@gmail.com","user2","user2",null, null);
-       User user3=new User(3,"user3","user3","user3@gmail.com","user3","user3",null, null);
-       User user4=new User(4,"user4","user4","user4@gmail.com","user4","user4",null, null);
-       User user5=new User(5,"user5","user5","user5@gmail.com","user5","user5",null, null);
-
-       testData.add(user1);
-       testData.add(user2);
-       testData.add(user3);
-       testData.add(user4);
-       testData.add(user5);
-
+        for(Invitation inv:allInvitations){
+            if(inv.getEvent().getId()==eventId){
+                eventInvitations.add(inv);
+            }
+        }
        adapter.notifyDataSetChanged();
     }
-
-
-
 }

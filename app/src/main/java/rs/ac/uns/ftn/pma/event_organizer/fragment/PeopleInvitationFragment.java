@@ -34,16 +34,13 @@ public class PeopleInvitationFragment extends Fragment {
     private RecyclerView.Adapter adapter;
     private RecyclerView.LayoutManager layoutManager;
 
-    public PeopleInvitationFragment() {
-        // Required empty public constructor
-    }
+    public PeopleInvitationFragment() {}
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        view=inflater.inflate(R.layout.fragment_people_invitation, container, false);
+       view=inflater.inflate(R.layout.fragment_people_invitation, container, false);
         recyclerView = view.findViewById(R.id.invitation_people_rv);
         layoutManager = new LinearLayoutManager(getContext());
         adapter = new PeopleInvitationAdapter(testData);
@@ -54,20 +51,11 @@ public class PeopleInvitationFragment extends Fragment {
         Event event= InvitationActivity.event;
         //all users ->list of Events.id ==  event.id
         //status? from invitation
-        //...list of users testData
 
         return view;
 
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == 999 && resultCode == RESULT_OK) {
-
-        } else if (requestCode == 994 && resultCode == RESULT_OK) {
-
-        }
-    }
     private void prepareTestData() {
         User user1=new User(1,"user1","user1","user1@gmail.com","user1","user1",null, null);
         User user2=new User(2,"user2","user2","user2@gmail.com","user2","user2",null, null);
@@ -83,5 +71,4 @@ public class PeopleInvitationFragment extends Fragment {
 
         adapter.notifyDataSetChanged();
     }
-
 }

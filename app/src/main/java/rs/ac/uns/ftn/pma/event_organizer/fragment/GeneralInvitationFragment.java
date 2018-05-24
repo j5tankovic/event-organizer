@@ -39,12 +39,16 @@ public class GeneralInvitationFragment extends Fragment {
         event=InvitationActivity.event;
 
         ((TextView)view.findViewById(R.id.invitation_info_name)).setText(event.getName());
-
-        String date1str = new SimpleDateFormat("dd/MM/yyyy").format(event.getStartDateTime());
-        String date2str = new SimpleDateFormat("dd/MM/yyyy").format(event.getEndDateTime());
+        String date1str="";
+        if(event.getStartDateTime()!=null)
+           date1str= new SimpleDateFormat("dd/MM/yyyy").format(event.getStartDateTime());
+        String date2str ="";
+        if(event.getEndDateTime()!=null)
+            date2str=new SimpleDateFormat("dd/MM/yyyy").format(event.getEndDateTime());
         ((TextView)view.findViewById(R.id.invitation_info_date)).setText(date1str+" - "+date2str);
         ((TextView)view.findViewById(R.id.invitation_info_description)).setText(event.getDescription());
-        ((TextView)view.findViewById(R.id.invitation_info_category)).setText(event.getEventCategory().getName());
+        if(event.getEventCategory()!=null)
+            ((TextView)view.findViewById(R.id.invitation_info_category)).setText(event.getEventCategory().getName());
         //location?
 
         return view;

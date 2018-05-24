@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
 import java.util.List;
@@ -27,6 +28,7 @@ public class InvitationsAdapter extends ArrayAdapter<Invitation> {
 
     @Override
     public View getView(int position, View view, ViewGroup parent) {
+
         if(view==null) {
             LayoutInflater inflater = LayoutInflater.from(getContext());
             view = inflater.inflate(R.layout.activity_invitation_list_view, null, true);
@@ -37,8 +39,12 @@ public class InvitationsAdapter extends ArrayAdapter<Invitation> {
             TextView date = (TextView) view.findViewById(R.id.invitation_date);
 
             name.setText(inv.getEvent().getName());
-            String date1str = new SimpleDateFormat("dd/MM/yyyy").format(inv.getEvent().getStartDateTime());
-            String date2str = new SimpleDateFormat("dd/MM/yyyy").format(inv.getEvent().getEndDateTime());
+            String date1str="";
+            String date2str="";
+            if(inv.getEvent().getStartDateTime()!=null)
+                date1str = new SimpleDateFormat("dd/MM/yyyy").format(inv.getEvent().getStartDateTime());
+            if(inv.getEvent().getEndDateTime()!=null)
+                date2str = new SimpleDateFormat("dd/MM/yyyy").format(inv.getEvent().getEndDateTime());
 
             date.setText(date1str+" - "+date2str);
         }
