@@ -32,10 +32,8 @@ public class InvitationsActivity extends AppCompatActivity {
     public static final String EVENT = "rs.ac.uns.ftn.pma.event_organizer.EVENT";
     private ListView listView;
     private ArrayList<Invitation> testDataInvitations=new ArrayList<>();
-    private DatabaseReference databaseReference;
     private DatabaseReference databaseReferenceInvitations;
     private FirebaseDatabase firebaseDatabase;
-    private List<Invitation> allInvitations=new ArrayList<>();
     private InvitationsAdapter adapter;
 
 
@@ -74,13 +72,13 @@ public class InvitationsActivity extends AppCompatActivity {
         });
     }
 
-    public void prepareTest(){
-        // ulogovan npr:
+    public void getInvitations(List<Invitation> allInvitations){
+       // ulogovan npr:
         User user1=new User(1,"ja","ja","ja@gmail.com","ja","ja",null, null);
+
         for(Invitation inv:allInvitations){
             if(inv.getInvitedUser()!=null) {
                 if (inv.getInvitedUser().getEmail().equals(user1.getEmail())) {
-
                     testDataInvitations.add(inv);
                     adapter.notifyDataSetChanged();
                 }
@@ -89,6 +87,7 @@ public class InvitationsActivity extends AppCompatActivity {
 
     }
     public void getAllInvitations(Map<String,Object> invitations){
+        List<Invitation> allInvitations=new ArrayList<>();
         for (Map.Entry<String, Object> entry : invitations.entrySet()){
             Map singleInvitation = (Map) entry.getValue();
 
@@ -127,7 +126,7 @@ public class InvitationsActivity extends AppCompatActivity {
 
             allInvitations.add(newInvitation);
         }
-        prepareTest();
+        getInvitations(allInvitations);
     }
 
 }
