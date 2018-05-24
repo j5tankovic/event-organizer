@@ -66,18 +66,17 @@ public class AddNewEventActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_new_event);
 
-/*        EventCategory eventCategory1 = new EventCategory();
-        eventCategory1.setName("Kategorija 1");
-        saveCategory(eventCategory1);
-
-        EventCategory eventCategory2 = new EventCategory();
-        eventCategory2.setName("Kategorija 2");
-        saveCategory(eventCategory2);*/
-
         firebaseDatabase = FirebaseDatabase.getInstance();
         databaseReference = firebaseDatabase.getReference("events");
-        databaseReferenceEventCategories = firebaseDatabase.getReference("eventCategories");
+        databaseReferenceEventCategories = firebaseDatabase.getReference("event_categories");
         storageReference = FirebaseStorage.getInstance().getReference();
+
+//        EventCategory eventCategory1 = new EventCategory();
+//        eventCategory1.setName("Kategorija 1");
+//        saveCategory(eventCategory1);
+//        EventCategory eventCategory2 = new EventCategory();
+//        eventCategory2.setName("Kategorija 2");
+//        saveCategory(eventCategory2);
 
         name = findViewById(R.id.new_event_name);
         description = findViewById(R.id.new_event_description);
@@ -102,6 +101,7 @@ public class AddNewEventActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Event event = formEvent();
                 save(event);
+
                 formResult(event);
             }
         });
@@ -162,7 +162,7 @@ public class AddNewEventActivity extends AppCompatActivity {
         eventCategory.setId(key);
         databaseReferenceEventCategories.child(key).setValue(eventCategory);
     }
-
+    
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
