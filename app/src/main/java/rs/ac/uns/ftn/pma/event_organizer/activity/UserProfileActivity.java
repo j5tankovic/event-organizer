@@ -9,21 +9,47 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 
 import rs.ac.uns.ftn.pma.event_organizer.R;
+import rs.ac.uns.ftn.pma.event_organizer.model.User;
+import rs.ac.uns.ftn.pma.event_organizer.services.AuthentificationService;
 
 public class UserProfileActivity extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
+    private DatabaseReference databaseReference;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_profile);
 
-        mAuth = FirebaseAuth.getInstance();
-
         setSupportActionBar((Toolbar) findViewById(R.id.user_profile_toolbar));
+
+        mAuth = FirebaseAuth.getInstance();
+        databaseReference = FirebaseDatabase.getInstance().getReference("users");
+
+        Query query = databaseReference.orderByChild("email").equalTo(mAuth.getCurrentUser().getEmail());
+        query.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                System.out.println("\n\nDATA SNAPSHOT: " + dataSnapshot.toString());
+
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+        AuthentificationService service = new AuthentificationService();
+        User loggedUser = service.getLoggedUser(mAuth.getCurrentUser().getEmail());
     }
 
     @Override

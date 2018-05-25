@@ -48,7 +48,7 @@ public class LoginActivity extends AppCompatActivity {
         System.out.println("LOGGED USER: ");
         if(loggedUser != null){
             System.out.println(loggedUser.toString());
-            openUserProfileActivity();
+            openMainActivity();
         }
         registerBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -73,8 +73,8 @@ public class LoginActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    private void openUserProfileActivity(){
-        Intent intent = new Intent(this, UserProfileActivity.class);
+    private void openMainActivity(){
+        Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
     }
 
@@ -92,7 +92,8 @@ public class LoginActivity extends AppCompatActivity {
                         // Sign in success, update UI with the signed-in user's information
                         Log.d(TAG, "signInWithEmail:success");
                         FirebaseUser user = mAuth.getCurrentUser();
-                        openUserProfileActivity();
+                        finish();
+                        openMainActivity();
                     } else {
                         // If sign in fails, display a message to the user.
                         Log.w(TAG, "signInWithEmail:failure", task.getException());

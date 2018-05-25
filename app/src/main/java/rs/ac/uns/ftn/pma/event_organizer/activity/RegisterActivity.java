@@ -100,6 +100,22 @@ public class RegisterActivity extends AppCompatActivity {
                 chooseImage();
             }
         });
+
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("users");
+
+        Query query = databaseReference.orderByChild("username").equalTo(textView_username.getText().toString());
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    System.out.println("DATA SNAPSHOT: " + dataSnapshot.toString());
+                }
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 
     public void onRegisterClick(View view){

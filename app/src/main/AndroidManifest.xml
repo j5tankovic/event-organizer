@@ -23,6 +23,7 @@
             </intent-filter>
         </activity>
 
+        <activity android:name=".activity.MainActivity"/>
         <activity android:name=".activity.EventActivity"/>
         <activity
             android:name=".activity.PlaceOfferOverviewActivity"

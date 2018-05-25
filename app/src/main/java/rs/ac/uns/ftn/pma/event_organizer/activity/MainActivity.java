@@ -14,6 +14,9 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.google.firebase.auth.FirebaseAuth;
 
 import rs.ac.uns.ftn.pma.event_organizer.R;
 import rs.ac.uns.ftn.pma.event_organizer.adapter.MyEventsListAdapter;
@@ -43,7 +46,9 @@ public class MainActivity extends AppCompatActivity {
     private View navHeader;
     private TextView txtName;
     private Toolbar myToolbar;
+    private ImageView profileImage;
 
+    private FirebaseAuth mAuth;
 
     // index to identify current nav menu item
     public static int navItemIndex = 0;
@@ -51,6 +56,7 @@ public class MainActivity extends AppCompatActivity {
     // tags used to attach the fragments
     private static final String TAG_HOME = "home";
     private static final String TAG_SETTINGS = "settings";
+    private static final String TAG_LOGOUT = "logout";
     public static String CURRENT_TAG = TAG_HOME;
 
     // toolbar titles respected to selected nav menu item
@@ -62,12 +68,20 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        mAuth = FirebaseAuth.getInstance();
+
         myToolbar = (Toolbar) findViewById(R.id.my_events_toolbar);
         myToolbar.showOverflowMenu();
 
-        ImageView profileImage = (ImageView) findViewById(R.id.my_events_profile_image);
+        profileImage = (ImageView) findViewById(R.id.my_events_profile_image);
         profileImage.setImageResource(R.drawable.profile);
         profileImage.setClickable(true);
+        profileImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openUserProfileActivity();
+            }
+        });
 
         MyEventsListAdapter adapter = new MyEventsListAdapter(this, event_name, event_date);
         list = (ListView) findViewById(R.id.my_events_list);
@@ -100,8 +114,8 @@ public class MainActivity extends AppCompatActivity {
         // initializing navigation menu
         setUpNavigationView();
 
-    }
 
+    }
 
     private void setToolbarTitle() {
         getSupportActionBar().setTitle(activityTitles[navItemIndex]);
@@ -126,6 +140,12 @@ public class MainActivity extends AppCompatActivity {
                     case R.id.settings:
                         navItemIndex = 1;
                         CURRENT_TAG = TAG_SETTINGS;
+                        break;
+                    case R.id.logout:
+                        navItemIndex = 2;
+                        CURRENT_TAG = TAG_LOGOUT;
+                        logout();
+                        Toast.makeText(MainActivity.this,"LOGOUT", Toast.LENGTH_LONG);
                         break;
                     case R.id.my_invitations:
                         Intent intent = new Intent(MainActivity.this, InvitationsActivity.class);
@@ -178,6 +198,21 @@ public class MainActivity extends AppCompatActivity {
         }
 
         super.onBackPressed();
+    }
+
+    private void logout(){
+        mAuth.signOut();
+        openLoginActivity();
+    }
+
+    private void openLoginActivity(){
+        Intent intent = new Intent(this, LoginActivity.class);
+        startActivity(intent);
+    }
+
+    private void openUserProfileActivity(){
+        Intent intent = new Intent(this, UserProfileActivity.class);
+        startActivity(intent);
     }
 
 }
