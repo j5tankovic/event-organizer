@@ -5,10 +5,12 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.provider.MediaStore;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -19,8 +21,11 @@ import android.widget.Toast;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
@@ -31,6 +36,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import rs.ac.uns.ftn.pma.event_organizer.R;
 import rs.ac.uns.ftn.pma.event_organizer.model.Event;
@@ -55,6 +61,8 @@ public class AddNewEventActivity extends AppCompatActivity {
     private Uri filePath;
     private final int PICK_IMAGE_REQUEST = 71;
     private String eventPicturePath;
+
+    private List<String> eventCategoryList = new ArrayList<>();
 
     private DatabaseReference databaseReference;
     private DatabaseReference databaseReferenceEventCategories;
@@ -85,15 +93,35 @@ public class AddNewEventActivity extends AppCompatActivity {
         budget = findViewById(R.id.new_event_budget);
         eventCategory = findViewById(R.id.new_event_category);
 
+
         upload = findViewById(R.id.new_event_upload_image);
         uploadedPicture = findViewById(R.id.new_event_image);
 
+        databaseReferenceEventCategories.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot eventCategoryShapshot: dataSnapshot.getChildren()) {
+                    String id = (String) eventCategoryShapshot.child("id").getValue();
+                    String name = (String) eventCategoryShapshot.child("name").getValue();
+
+                    EventCategory eventCategory = new EventCategory(id, name);
+                    eventCategoryList.add(name);
+                    System.out.println(eventCategory);
+                }
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                System.out.println("The read failed: " + databaseError.getCode());
+            }
+        });
+
         Spinner categories = findViewById(R.id.new_event_category);
+       // ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, eventCategoryList);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
                 R.array.event_categories, android.R.layout.simple_spinner_item);
-
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         categories.setAdapter(adapter);
+
 
         add = findViewById(R.id.add_new_event);
         add.setOnClickListener(new View.OnClickListener() {
@@ -138,6 +166,8 @@ public class AddNewEventActivity extends AppCompatActivity {
         System.out.println(eventCategoryName);
         System.out.println("**************");
         System.out.println("**************");
+        event.setEventCategory(new EventCategory(eventCategoryName));
+
 
         return event;
     }
@@ -162,7 +192,7 @@ public class AddNewEventActivity extends AppCompatActivity {
         eventCategory.setId(key);
         databaseReferenceEventCategories.child(key).setValue(eventCategory);
     }
-    
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
