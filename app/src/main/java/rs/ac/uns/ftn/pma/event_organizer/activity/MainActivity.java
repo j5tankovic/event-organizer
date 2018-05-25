@@ -11,12 +11,27 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.StorageReference;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+
 import rs.ac.uns.ftn.pma.event_organizer.R;
+import rs.ac.uns.ftn.pma.event_organizer.adapter.EventsAdapter;
 import rs.ac.uns.ftn.pma.event_organizer.adapter.MyEventsListAdapter;
+import rs.ac.uns.ftn.pma.event_organizer.model.Event;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -38,12 +53,21 @@ public class MainActivity extends AppCompatActivity {
             "15.04.2018"
     };
 
+    private DatabaseReference databaseReference;
+    private FirebaseDatabase firebaseDatabase;
+    private StorageReference storageReference;
+
+    private List<Event> allEvents = new ArrayList<>();
+    private EventsAdapter adapter;
+
+    public static final String EVENT = "rs.ac.uns.ftn.pma.event_organizer.EVENT";
+    private ListView listView;
     private NavigationView navigationView;
     private DrawerLayout drawer;
     private View navHeader;
     private TextView txtName;
     private Toolbar myToolbar;
-
+    private ArrayList<Event> testData = new ArrayList<>();
 
     // index to identify current nav menu item
     public static int navItemIndex = 0;
@@ -69,10 +93,38 @@ public class MainActivity extends AppCompatActivity {
         profileImage.setImageResource(R.drawable.profile);
         profileImage.setClickable(true);
 
-        MyEventsListAdapter adapter = new MyEventsListAdapter(this, event_name, event_date);
-        list = (ListView) findViewById(R.id.my_events_list);
-        list.setAdapter(adapter);
+//        MyEventsListAdapter adapter = new MyEventsListAdapter(this, event_name, event_date);
+//        list = (ListView) findViewById(R.id.my_events_list);
+//        list.setAdapter(adapter);
 
+        firebaseDatabase = FirebaseDatabase.getInstance();
+        databaseReference = firebaseDatabase.getReference().child("events");
+        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                getAllEvents((Map<String,Object>)dataSnapshot.getValue());
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                System.out.println("The read failed: " + databaseError.getCode());
+            }
+        });
+
+        adapter = new EventsAdapter(this,R.layout.activity_my_events_list, testData);
+        listView = (ListView) findViewById(R.id.my_events_list);
+        listView.setAdapter(adapter);
+
+//        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//                Intent intent = new Intent(getApplicationContext(),
+//                        EventActivity.class);
+//
+//                intent.putExtra(EVENT, testData.get(position));
+//
+//                startActivity(intent);
+//            }
+//        });
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.open_add_event);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -103,6 +155,15 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    public void prepareTest(){
+        testData.add(new Event("", new Date(), new Date()));
+
+        for(Event event : allEvents){
+            testData.add(event);
+            adapter.notifyDataSetChanged();
+        }
+
+    }
     private void setToolbarTitle() {
         getSupportActionBar().setTitle(activityTitles[navItemIndex]);
     }
@@ -180,4 +241,22 @@ public class MainActivity extends AppCompatActivity {
         super.onBackPressed();
     }
 
+    public void getAllEvents(Map<String,Object> events){
+        for (Map.Entry<String, Object> entry : events.entrySet()){
+            Map value = (Map) entry.getValue();
+
+            Event event = new Event();
+            event.setId((String) value.get("id"));
+            event.setName((String) value.get("name"));
+            Map startDateTime = (Map) value.get("startDateTime");
+            Date startTime = new Date((long) startDateTime.get("time"));
+            event.setStartDateTime(startTime);
+            Map endDateTime = (Map) value.get("endDateTime");
+            Date endTime = new Date((long) endDateTime.get("time"));
+            event.setEndDateTime(endTime);
+            allEvents.add(event);
+        }
+        prepareTest();
+
+    }
 }

@@ -31,6 +31,12 @@ public class Event implements Serializable {
         this.shoppingItemList = shoppingItemList;
     }
 
+    public Event(String name, Date startDateTime, Date endDateTime) {
+        this.name = name;
+        this.startDateTime = startDateTime;
+        this.endDateTime = endDateTime;
+    }
+
     public Event() {
     }
 
