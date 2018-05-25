@@ -1,6 +1,7 @@
 package rs.ac.uns.ftn.pma.event_organizer.activity;
 
 import android.content.Intent;
+import android.os.storage.StorageManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -16,6 +17,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import rs.ac.uns.ftn.pma.event_organizer.R;
 import rs.ac.uns.ftn.pma.event_organizer.model.User;
@@ -29,6 +32,8 @@ public class UserProfileActivity extends AppCompatActivity {
     private TextView email;
     private TextView firstName;
     private TextView lastName;
+    private StorageReference storageReference;
+    //StorageReference storageRef = FirebaseStorage.getInstance().reference().child("folderName/file.jpg");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +50,7 @@ public class UserProfileActivity extends AppCompatActivity {
         firstName = findViewById(R.id.first_name2);
         lastName = findViewById(R.id.last_name2);
 
+
         Query query = databaseReference.orderByChild("email").equalTo(mAuth.getCurrentUser().getEmail());
         query.addValueEventListener(new ValueEventListener() {
             @Override
@@ -55,6 +61,7 @@ public class UserProfileActivity extends AppCompatActivity {
                     loggedUser = user.getValue(User.class);
                 }
 
+                storageReference = FirebaseStorage.getInstance().getReference().child(loggedUser.getProfilePicture());
                 System.out.println("******* logged user: " + loggedUser.toString());
                 username.setText(loggedUser.getUsername());
                 email.setText(loggedUser.getEmail());

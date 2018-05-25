@@ -60,7 +60,10 @@ public class AuthentificationService {
             public void onDataChange(DataSnapshot dataSnapshot) {
 
                 //System.out.println("**********************DATA SNAPSHOT: " + dataSnapshot.toString());
-                user = dataSnapshot.getValue(User.class);
+                System.out.println("\n\nDATA SNAPSHOT: " + dataSnapshot.toString());
+                for (DataSnapshot snapshot: dataSnapshot.getChildren()) {
+                    user = snapshot.getValue(User.class);
+                }
             }
             @Override
             public void onCancelled(DatabaseError databaseError) {
