@@ -34,18 +34,17 @@ public class EventsAdapter extends ArrayAdapter<Event> {
         TextView name = (TextView) rowView.findViewById(R.id.event_name);
         TextView date = (TextView) rowView.findViewById(R.id.event_date);
 
-
         name.setText(events.get(position).getName());
 
-        String date1str="";
-        String date2str="";
-        if(events.get(position).getStartDateTime()!=null)
+        String date1str = "";
+        String date2str = "";
+        if(events.get(position).getStartDateTime() != null)
             date1str = new SimpleDateFormat("dd.MM.yyyy").format(events.get(position).getStartDateTime());
-        if(events.get(position).getEndDateTime()!=null)
+        if(events.get(position).getEndDateTime() != null)
             date2str = new SimpleDateFormat("dd.MM.yyyy").format(events.get(position).getEndDateTime());
 
-        date.setText(date1str+" - "+date2str);
-        //date.setText(events.get(position).getName());
+        date.setText(date1str + " - " + date2str);
+
         return rowView;
 
     };

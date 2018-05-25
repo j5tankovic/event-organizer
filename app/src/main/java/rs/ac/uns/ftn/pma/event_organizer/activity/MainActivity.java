@@ -32,6 +32,7 @@ import rs.ac.uns.ftn.pma.event_organizer.R;
 import rs.ac.uns.ftn.pma.event_organizer.adapter.EventsAdapter;
 import rs.ac.uns.ftn.pma.event_organizer.adapter.MyEventsListAdapter;
 import rs.ac.uns.ftn.pma.event_organizer.model.Event;
+import rs.ac.uns.ftn.pma.event_organizer.model.EventCategory;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -114,17 +115,17 @@ public class MainActivity extends AppCompatActivity {
         listView = (ListView) findViewById(R.id.my_events_list);
         listView.setAdapter(adapter);
 
-//        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                Intent intent = new Intent(getApplicationContext(),
-//                        EventActivity.class);
-//
-//                intent.putExtra(EVENT, testData.get(position));
-//
-//                startActivity(intent);
-//            }
-//        });
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(getApplicationContext(),
+                        EventActivity.class);
+
+                intent.putExtra(EVENT, testData.get(position));
+
+                startActivity(intent);
+            }
+        });
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.open_add_event);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -246,14 +247,21 @@ public class MainActivity extends AppCompatActivity {
             Map value = (Map) entry.getValue();
 
             Event event = new Event();
+
             event.setId((String) value.get("id"));
             event.setName((String) value.get("name"));
+            event.setDescription((String) value.get("description"));
+            event.setBudget((Long) value.get("budget"));
             Map startDateTime = (Map) value.get("startDateTime");
             Date startTime = new Date((long) startDateTime.get("time"));
             event.setStartDateTime(startTime);
             Map endDateTime = (Map) value.get("endDateTime");
             Date endTime = new Date((long) endDateTime.get("time"));
             event.setEndDateTime(endTime);
+            Map eventCategoryMap = (Map) value.get("eventCategory");
+            EventCategory eventCategory = new EventCategory((String) eventCategoryMap.get("name"));
+            event.setEventCategory(eventCategory);
+
             allEvents.add(event);
         }
         prepareTest();

@@ -159,7 +159,7 @@ public class AddNewEventActivity extends AppCompatActivity {
         }
         event.setStartDateTime(start_date_date);
         event.setEndDateTime(end_date_date);
-        event.setBudget(Double.valueOf(budget.getText().toString()));
+        event.setBudget(Long.valueOf(budget.getText().toString()));
         String eventCategoryName = eventCategory.getSelectedItem().toString();
         System.out.println("**************");
         System.out.println("**************");

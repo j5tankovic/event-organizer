@@ -15,12 +15,12 @@ public class Event implements Serializable {
     private Date startDateTime;
     private Date endDateTime;
     private String description;
-    private double budget;
+    private long budget;
     private String image;
     private List<ShoppingItem> shoppingItemList;
     private EventCategory eventCategory;
 
-    public Event(String id, String name, Date startDateTime, Date endDateTime, String description, double budget, String image, List<ShoppingItem> shoppingItemList) {
+    public Event(String id, String name, Date startDateTime, Date endDateTime, String description, long budget, String image, List<ShoppingItem> shoppingItemList) {
         this.id = id;
         this.name = name;
         this.startDateTime = startDateTime;
@@ -96,11 +96,11 @@ public class Event implements Serializable {
         this.description = description;
     }
 
-    public double getBudget() {
+    public long getBudget() {
         return budget;
     }
 
-    public void setBudget(double budget) {
+    public void setBudget(long budget) {
         this.budget = budget;
     }
 
