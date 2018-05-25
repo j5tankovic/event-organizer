@@ -7,6 +7,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -24,6 +25,10 @@ public class UserProfileActivity extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
     private DatabaseReference databaseReference;
+    private TextView username;
+    private TextView email;
+    private TextView firstName;
+    private TextView lastName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,13 +40,26 @@ public class UserProfileActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         databaseReference = FirebaseDatabase.getInstance().getReference("users");
 
+        username = findViewById(R.id.username2);
+        email = findViewById(R.id.email2);
+        firstName = findViewById(R.id.first_name2);
+        lastName = findViewById(R.id.last_name2);
+
         Query query = databaseReference.orderByChild("email").equalTo(mAuth.getCurrentUser().getEmail());
         query.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-
+                User loggedUser = null;
                 System.out.println("\n\nDATA SNAPSHOT: " + dataSnapshot.toString());
+                for (DataSnapshot user: dataSnapshot.getChildren()) {
+                    loggedUser = user.getValue(User.class);
+                }
 
+                System.out.println("******* logged user: " + loggedUser.toString());
+                username.setText(loggedUser.getUsername());
+                email.setText(loggedUser.getEmail());
+                firstName.setText(loggedUser.getName());
+                lastName.setText(loggedUser.getLastName());
             }
             @Override
             public void onCancelled(DatabaseError databaseError) {
