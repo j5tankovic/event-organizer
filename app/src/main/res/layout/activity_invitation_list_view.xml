@@ -37,4 +37,20 @@
                     android:textColor="@color/secondary_text"/>
         </LinearLayout>
 
+        <ImageButton
+            android:id="@+id/invitation_status_acc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_check_gray_24dp"
+            android:background="@null"
+        />
+        <ImageButton
+            android:id="@+id/invitation_status_rej"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_close_gray_24dp"
+            android:background="@null"
+            />
+
+
 </LinearLayout>
