@@ -15,6 +15,9 @@ import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.google.firebase.auth.FirebaseAuth;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -43,6 +46,8 @@ public class EventsActivity extends AppCompatActivity {
     public static final String EVENT = "rs.ac.uns.ftn.pma.event_organizer.EVENT";
     private static final String TAG_HOME = "home";
     private static final String TAG_SETTINGS = "settings";
+    private static final String TAG_LOGOUT = "logout";
+
     public static String CURRENT_TAG = TAG_HOME;
 
     // toolbar titles respected to selected nav menu item
@@ -58,6 +63,7 @@ public class EventsActivity extends AppCompatActivity {
     private DatabaseReference databaseReference;
     private FirebaseDatabase firebaseDatabase;
     private StorageReference storageReference;
+    private FirebaseAuth mAuth;
 
     private List<Event> allEvents = new ArrayList<>();
     private List<Event> testData = new ArrayList<>();
@@ -78,6 +84,9 @@ public class EventsActivity extends AppCompatActivity {
 
         firebaseDatabase = FirebaseDatabase.getInstance();
         databaseReference = firebaseDatabase.getReference().child("events");
+
+        mAuth = FirebaseAuth.getInstance();
+
         databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -133,7 +142,6 @@ public class EventsActivity extends AppCompatActivity {
 
     }
 
-
     public void prepareTest(){
         testData.add(new Event("", new Date(), new Date()));
 
@@ -186,6 +194,13 @@ public class EventsActivity extends AppCompatActivity {
                         navItemIndex = 1;
                         CURRENT_TAG = TAG_SETTINGS;
                         break;
+                    case R.id.logout:
+                        navItemIndex = 2;
+                        CURRENT_TAG = TAG_LOGOUT;
+                        logout();
+                        Toast.makeText(EventsActivity.this,"LOGOUT", Toast.LENGTH_LONG);
+                        break;
+
                     case R.id.my_invitations:
                         Intent intent = new Intent(EventsActivity.this, InvitationsActivity.class);
                         startActivity(intent);
@@ -237,6 +252,21 @@ public class EventsActivity extends AppCompatActivity {
         }
 
         super.onBackPressed();
+    }
+
+    private void logout(){
+        mAuth.signOut();
+        openLoginActivity();
+    }
+
+    private void openLoginActivity(){
+        Intent intent = new Intent(this, LoginActivity.class);
+        startActivity(intent);
+    }
+
+    private void openUserProfileActivity(){
+        Intent intent = new Intent(this, UserProfileActivity.class);
+        startActivity(intent);
     }
 
 }
