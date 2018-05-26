@@ -116,7 +116,7 @@ public class PeopleOverviewFragment extends Fragment {
         String invitationId = databaseReference.push().getKey();
         Invitation newInvitation=new Invitation();
         newInvitation.setInvitedUser(foundedUser);
-        newInvitation.setId(2L);//FIX
+        newInvitation.setId(invitationId);//FIX
         event=new Event();
         event.setId(1L);
         event.setStartDateTime(new Date());
@@ -161,7 +161,7 @@ public class PeopleOverviewFragment extends Fragment {
             Map singleInvitation = (Map) entry.getValue();
 
             Invitation newInvitation=new Invitation();
-            newInvitation.setId((long)singleInvitation.get("id"));
+            newInvitation.setId((String)singleInvitation.get("id"));
 
             if(singleInvitation.get("status").equals("ACCEPTED"))
                 newInvitation.setStatus(InvitationStatus.ACCEPTED);

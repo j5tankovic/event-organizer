@@ -19,6 +19,8 @@ import rs.ac.uns.ftn.pma.event_organizer.R;
 import rs.ac.uns.ftn.pma.event_organizer.model.Invitation;
 import rs.ac.uns.ftn.pma.event_organizer.model.enums.InvitationStatus;
 
+import com.google.firebase.database.FirebaseDatabase;
+
 public class InvitationsAdapter extends ArrayAdapter<Invitation> {
     private Context context;
     private List<Invitation> invitations;
@@ -36,7 +38,7 @@ public class InvitationsAdapter extends ArrayAdapter<Invitation> {
             LayoutInflater inflater = LayoutInflater.from(getContext());
             view = inflater.inflate(R.layout.activity_invitation_list_view, null, true);
         }
-        Invitation inv=getItem(position);
+        final Invitation inv=getItem(position);
         final int pos=position;
         if(inv!=null){
             TextView name = (TextView) view.findViewById(R.id.invitation_name);
@@ -46,7 +48,9 @@ public class InvitationsAdapter extends ArrayAdapter<Invitation> {
 
             if(inv.getStatus().equals(InvitationStatus.ACCEPTED)){
                 button_acc.setImageResource(R.drawable.ic_check_green_24dp);
+                button_rej.setImageResource(R.drawable.ic_close_gray_24dp);
            }else if (inv.getStatus().equals(InvitationStatus.REJECTED)){
+                button_acc.setImageResource(R.drawable.ic_check_gray_24dp);
                 button_rej.setImageResource(R.drawable.ic_close_red_24dp);
             }
 
@@ -55,18 +59,20 @@ public class InvitationsAdapter extends ArrayAdapter<Invitation> {
                 public void onClick(View v) {
                     button_acc.setImageResource(R.drawable.ic_check_green_24dp);
                     button_rej.setImageResource(R.drawable.ic_close_gray_24dp);
-                    //set and update database
-                }
-            });
+                    FirebaseDatabase.getInstance().getReference("invitations")
+                            .child(String.valueOf(inv.getId())).child("status").setValue("ACCEPTED");
+                }});
 
             button_rej.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     button_rej.setImageResource(R.drawable.ic_close_red_24dp);
                     button_acc.setImageResource(R.drawable.ic_check_gray_24dp);
-                    //set and update database
+                    FirebaseDatabase.getInstance().getReference("invitations")
+                            .child(String.valueOf(inv.getId())).child("status").setValue("REJECTED");
                 }
             });
+
 
             name.setText(inv.getEvent().getName());
             String date1str="";

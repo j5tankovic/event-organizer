@@ -10,12 +10,12 @@ import rs.ac.uns.ftn.pma.event_organizer.model.enums.InvitationStatus;
 
 public class Invitation implements Serializable{
 
-    private long id;
+    private String id;
     private Event event;
     private User invitedUser;
     private InvitationStatus status;
 
-    public Invitation(long id, Event event, User invitedUser, InvitationStatus status) {
+    public Invitation(String id, Event event, User invitedUser, InvitationStatus status) {
         this.id = id;
         this.event = event;
         this.invitedUser = invitedUser;
@@ -23,11 +23,11 @@ public class Invitation implements Serializable{
     }
     public Invitation(){}
 
-    public long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(String id) {
         this.id = id;
     }
 

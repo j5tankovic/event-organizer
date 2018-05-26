@@ -3,6 +3,7 @@ package rs.ac.uns.ftn.pma.event_organizer.activity;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -70,6 +71,7 @@ public class InvitationsActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
     }
 
     public void getInvitations(List<Invitation> allInvitations){
@@ -92,7 +94,7 @@ public class InvitationsActivity extends AppCompatActivity {
             Map singleInvitation = (Map) entry.getValue();
 
             Invitation newInvitation=new Invitation();
-            newInvitation.setId((long)singleInvitation.get("id"));
+            newInvitation.setId((String)singleInvitation.get("id"));
 
             if(singleInvitation.get("status").equals("ACCEPTED"))
                 newInvitation.setStatus(InvitationStatus.ACCEPTED);

@@ -85,7 +85,7 @@ public class PeopleInvitationFragment extends Fragment {
             Map singleInvitation = (Map) entry.getValue();
 
             Invitation newInvitation=new Invitation();
-            newInvitation.setId((long)singleInvitation.get("id"));
+            newInvitation.setId((String)singleInvitation.get("id"));
 
             if(singleInvitation.get("status").equals("ACCEPTED"))
                 newInvitation.setStatus(InvitationStatus.ACCEPTED);
