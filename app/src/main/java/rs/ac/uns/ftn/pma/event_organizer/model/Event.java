@@ -111,4 +111,17 @@ public class Event implements Serializable {
     public void setImage(String image) {
         this.image = image;
     }
+
+    @Override
+    public String toString() {
+        return "Event{" +
+                "id='" + id + '\'' +
+                ", name='" + name + '\'' +
+                ", startDateTime=" + startDateTime +
+                ", endDateTime=" + endDateTime +
+                ", description='" + description + '\'' +
+                ", budget=" + budget +
+                ", eventCategory=" + eventCategory +
+                '}';
+    }
 }
