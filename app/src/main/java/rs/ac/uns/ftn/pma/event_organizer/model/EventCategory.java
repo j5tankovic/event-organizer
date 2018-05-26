@@ -7,8 +7,8 @@ import java.io.Serializable;
  */
 
 public class EventCategory implements Serializable {
-    public String id;
-    public String name;
+    private String id;
+    private String name;
 
        public EventCategory(String id, String name) {
         this.id = id;

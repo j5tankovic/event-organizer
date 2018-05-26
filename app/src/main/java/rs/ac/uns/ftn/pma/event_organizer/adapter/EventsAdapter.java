@@ -1,8 +1,6 @@
 package rs.ac.uns.ftn.pma.event_organizer.adapter;
 
-import android.app.ActionBar;
 import android.app.Activity;
-import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,7 +27,7 @@ public class EventsAdapter extends ArrayAdapter<Event> {
 
     public View getView(int position, View view, ViewGroup parent) {
         LayoutInflater inflater = context.getLayoutInflater();
-        View rowView = inflater.inflate(R.layout.activity_my_events_list_item, null,true);
+        View rowView = inflater.inflate(R.layout.activity_events_list_item, null,true);
 
         TextView name = (TextView) rowView.findViewById(R.id.event_name);
         TextView date = (TextView) rowView.findViewById(R.id.event_date);
