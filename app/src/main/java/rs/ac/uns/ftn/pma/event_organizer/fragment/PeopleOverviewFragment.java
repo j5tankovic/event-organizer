@@ -16,7 +16,6 @@ import java.util.List;
 
 import rs.ac.uns.ftn.pma.event_organizer.R;
 import rs.ac.uns.ftn.pma.event_organizer.adapter.PeopleOverviewAdapter;
-import rs.ac.uns.ftn.pma.event_organizer.listener.RecyclerTouchListener;
 import rs.ac.uns.ftn.pma.event_organizer.model.User;
 
 import static android.app.Activity.RESULT_OK;

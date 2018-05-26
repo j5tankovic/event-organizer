@@ -42,9 +42,11 @@ import rs.ac.uns.ftn.pma.event_organizer.R;
 import rs.ac.uns.ftn.pma.event_organizer.model.Event;
 import rs.ac.uns.ftn.pma.event_organizer.model.EventCategory;
 
+import static java.security.AccessController.getContext;
+
 public class AddNewEventActivity extends AppCompatActivity {
 
-    public static final String ADDED_ITEM = "rs.ac.uns.ftn.pma.event_organizer.ADDED_ITEM";
+    public static final String ADDED_EVENT = "rs.ac.uns.ftn.pma.event_organizer.ADDED_EVENT";
 
     private TextView name;
     private TextView description;
@@ -129,8 +131,8 @@ public class AddNewEventActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Event event = formEvent();
                 save(event);
-
                 formResult(event);
+
             }
         });
 
@@ -174,7 +176,8 @@ public class AddNewEventActivity extends AppCompatActivity {
 
     private void formResult(Event event) {
         Intent i = new Intent();
-        i.putExtra(ADDED_ITEM, event);
+        i.putExtra(ADDED_EVENT, event);
+        //startActivityForResult(i, 994);
         setResult(RESULT_OK, i);
         finish();
     }

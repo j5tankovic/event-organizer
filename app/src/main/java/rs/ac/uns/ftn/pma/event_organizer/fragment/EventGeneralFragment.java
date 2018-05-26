@@ -3,33 +3,19 @@ package rs.ac.uns.ftn.pma.event_organizer.fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.DividerItemDecoration;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 import java.util.Objects;
 
 import rs.ac.uns.ftn.pma.event_organizer.R;
 import rs.ac.uns.ftn.pma.event_organizer.activity.EventsActivity;
-import rs.ac.uns.ftn.pma.event_organizer.activity.NewPlaceOfferActivity;
-import rs.ac.uns.ftn.pma.event_organizer.activity.PlaceOfferOverviewActivity;
-import rs.ac.uns.ftn.pma.event_organizer.adapter.PlaceOffersAdapter;
-import rs.ac.uns.ftn.pma.event_organizer.listener.RecyclerTouchListener;
 import rs.ac.uns.ftn.pma.event_organizer.model.Event;
-import rs.ac.uns.ftn.pma.event_organizer.model.Location;
-import rs.ac.uns.ftn.pma.event_organizer.model.PlaceOffer;
-
-import static android.app.Activity.RESULT_OK;
 
 /**
  * A simple {@link Fragment} subclass.

@@ -19,6 +19,7 @@ import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -35,6 +36,7 @@ import rs.ac.uns.ftn.pma.event_organizer.R;
 import rs.ac.uns.ftn.pma.event_organizer.adapter.EventsAdapter;
 import rs.ac.uns.ftn.pma.event_organizer.model.Event;
 import rs.ac.uns.ftn.pma.event_organizer.model.EventCategory;
+import rs.ac.uns.ftn.pma.event_organizer.model.ShoppingItem;
 
 
 public class EventsActivity extends AppCompatActivity {
@@ -87,17 +89,45 @@ public class EventsActivity extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
 
-        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+//        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(DataSnapshot dataSnapshot) {
+//                getAllEvents((Map<String,Object>)dataSnapshot.getValue());
+//            }
+//            @Override
+//            public void onCancelled(DatabaseError databaseError) {
+//                System.out.println("The read failed: " + databaseError.getCode());
+//            }
+//        });
+
+        databaseReference.addChildEventListener(new ChildEventListener() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                getAllEvents((Map<String,Object>)dataSnapshot.getValue());
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                Event event = dataSnapshot.getValue(Event.class);
+                testData.add(event);
+                adapter.notifyDataSetChanged();
             }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                System.out.println("The read failed: " + databaseError.getCode());
+
             }
         });
-
         adapter = new EventsAdapter(this,R.layout.activity_events_list, testData);
         listView = (ListView) findViewById(R.id.my_events_list);
         listView.setAdapter(adapter);
@@ -109,7 +139,6 @@ public class EventsActivity extends AppCompatActivity {
                         EventActivity.class);
 
                 intent.putExtra(EVENT, testData.get(position));
-
 
                 startActivity(intent);
             }
@@ -144,8 +173,6 @@ public class EventsActivity extends AppCompatActivity {
     }
 
     public void prepareTest(){
-        testData.add(new Event("", new Date(), new Date()));
-
         for(Event event : allEvents){
             testData.add(event);
             adapter.notifyDataSetChanged();
