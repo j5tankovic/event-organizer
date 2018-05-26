@@ -29,7 +29,7 @@
         <activity
             android:name=".activity.EventActivity"
             android:parentActivityName=".activity.EventsActivity" />
-
+        <activity android:name=".activity.RegisterActivity"/>
         <activity
             android:name=".activity.PlaceOfferOverviewActivity"
             android:parentActivityName=".activity.EventActivity" />
@@ -56,7 +56,6 @@
             android:parentActivityName=".activity.MainActivity" />
         <activity android:name=".activity.InvitationActivity"></activity>
         <activity android:name=".activity.UserProfileActivity" />
-        <activity android:name=".activity.RegisterActivity"></activity>
     </application>
 
 </manifest>

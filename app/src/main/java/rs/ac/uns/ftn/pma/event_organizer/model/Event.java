@@ -18,6 +18,8 @@ public class Event implements Serializable {
     private long budget;
     private String image;
     private List<ShoppingItem> shoppingItemList;
+    private List<PlaceOffer> potentialPlaces;
+    private PlaceOffer finalPlace;
     private EventCategory eventCategory;
 
     public Event(String id, String name, Date startDateTime, Date endDateTime, String description, long budget, String image, List<ShoppingItem> shoppingItemList) {
@@ -110,5 +112,21 @@ public class Event implements Serializable {
 
     public void setImage(String image) {
         this.image = image;
+    }
+
+    public List<PlaceOffer> getPotentialPlaces() {
+        return potentialPlaces;
+    }
+
+    public void setPotentialPlaces(List<PlaceOffer> potentialPlaces) {
+        this.potentialPlaces = potentialPlaces;
+    }
+
+    public PlaceOffer getFinalPlace() {
+        return finalPlace;
+    }
+
+    public void setFinalPlace(PlaceOffer finalPlace) {
+        this.finalPlace = finalPlace;
     }
 }

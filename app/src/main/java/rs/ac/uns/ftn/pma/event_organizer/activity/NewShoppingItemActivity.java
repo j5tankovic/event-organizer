@@ -11,6 +11,9 @@ import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 import rs.ac.uns.ftn.pma.event_organizer.R;
 import rs.ac.uns.ftn.pma.event_organizer.model.PlaceOffer;
 import rs.ac.uns.ftn.pma.event_organizer.model.ShoppingItem;
@@ -19,6 +22,9 @@ import rs.ac.uns.ftn.pma.event_organizer.model.enums.ShoppingItemCategory;
 public class NewShoppingItemActivity extends AppCompatActivity {
 
     public static final String ADDED_ITEM = "rs.ac.uns.ftn.pma.event_organizer.ADDED_ITEM";
+
+    private DatabaseReference databaseReference;
+    private FirebaseDatabase firebaseDatabase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +42,7 @@ public class NewShoppingItemActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 ShoppingItem item = formShoppingItem();
+                save(item);
                 formResult(item);
             }
         });
@@ -46,6 +53,9 @@ public class NewShoppingItemActivity extends AppCompatActivity {
 
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         categories.setAdapter(adapter);
+
+        firebaseDatabase = FirebaseDatabase.getInstance();
+        databaseReference = firebaseDatabase.getReference("shopping_items");
     }
 
     private ShoppingItem formShoppingItem() {
@@ -69,5 +79,12 @@ public class NewShoppingItemActivity extends AppCompatActivity {
         i.putExtra(ADDED_ITEM, item);
         setResult(RESULT_OK, i);
         finish();
+    }
+
+    private void save(ShoppingItem item) {
+        String key = databaseReference.push().getKey();
+
+        item.setId(key);
+        databaseReference.child(key).setValue(item);
     }
 }
