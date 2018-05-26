@@ -61,6 +61,12 @@
     <string name="new_event_end_date">End date</string>
     <string name="new_event_category">Category</string>
     <string name="new_event_image">Upload image</string>
+
+    <string-array name="event_categories">
+        <item value = "1">Kategorija 1</item>
+        <item value = "2">Kategorija 2</item>
+    </string-array>
+
     <!-- Toolbar titles when navigation menu item is selected -->
     <string-array name="nav_item_activity_titles">
         <item>My events</item>

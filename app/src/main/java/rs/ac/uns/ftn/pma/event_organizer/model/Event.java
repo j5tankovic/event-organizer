@@ -1,5 +1,6 @@
 package rs.ac.uns.ftn.pma.event_organizer.model;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
@@ -7,19 +8,19 @@ import java.util.List;
  * Created by Sandra on 4/27/2018.
  */
 
-public class Event {
+public class Event implements Serializable {
 
-    private long id;
+    private String id;
     private String name;
     private Date startDateTime;
     private Date endDateTime;
     private String description;
-    private double budget;
+    private long budget;
     private String image;
     private List<ShoppingItem> shoppingItemList;
     private EventCategory eventCategory;
 
-    public Event(long id, String name, Date startDateTime, Date endDateTime, String description, double budget, String image, List<ShoppingItem> shoppingItemList) {
+    public Event(String id, String name, Date startDateTime, Date endDateTime, String description, long budget, String image, List<ShoppingItem> shoppingItemList) {
         this.id = id;
         this.name = name;
         this.startDateTime = startDateTime;
@@ -28,6 +29,12 @@ public class Event {
         this.budget = budget;
         this.image = image;
         this.shoppingItemList = shoppingItemList;
+    }
+
+    public Event(String name, Date startDateTime, Date endDateTime) {
+        this.name = name;
+        this.startDateTime = startDateTime;
+        this.endDateTime = endDateTime;
     }
 
     public Event() {
@@ -41,10 +48,6 @@ public class Event {
         this.eventCategory = eventCategory;
     }
 
-    public void setBudget(double budget) {
-        this.budget = budget;
-    }
-
     public List<ShoppingItem> getShoppingItemList() {
         return shoppingItemList;
     }
@@ -53,11 +56,11 @@ public class Event {
         this.shoppingItemList = shoppingItemList;
     }
 
-    public long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -93,11 +96,11 @@ public class Event {
         this.description = description;
     }
 
-    public double getBudget() {
+    public long getBudget() {
         return budget;
     }
 
-    public void setBudget(float budget) {
+    public void setBudget(long budget) {
         this.budget = budget;
     }
 

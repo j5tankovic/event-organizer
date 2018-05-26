@@ -11,87 +11,105 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.StorageReference;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 import rs.ac.uns.ftn.pma.event_organizer.R;
+import rs.ac.uns.ftn.pma.event_organizer.adapter.EventsAdapter;
+import rs.ac.uns.ftn.pma.event_organizer.model.Event;
+import rs.ac.uns.ftn.pma.event_organizer.model.EventCategory;
 
-public class MainActivity extends AppCompatActivity {
 
-    ListView list;
-
-    String[] event_name ={
-            "",
-            "Moj rodjendan",
-            "Pidzama party",
-            "Movie night",
-            "Rostilj"
-    };
-    String[] event_date ={
-            "",
-            "15.04.2018",
-            "20.04.2018",
-            "20.04.2018",
-            "15.04.2018"
-    };
-
-    private NavigationView navigationView;
-    private DrawerLayout drawer;
-    private View navHeader;
-    private TextView txtName;
-    private Toolbar myToolbar;
-    private ImageView profileImage;
-
-    private FirebaseAuth mAuth;
+public class EventsActivity extends AppCompatActivity {
 
     // index to identify current nav menu item
     public static int navItemIndex = 0;
 
     // tags used to attach the fragments
+    public static final String EVENT = "rs.ac.uns.ftn.pma.event_organizer.EVENT";
     private static final String TAG_HOME = "home";
     private static final String TAG_SETTINGS = "settings";
-    private static final String TAG_LOGOUT = "logout";
     public static String CURRENT_TAG = TAG_HOME;
 
     // toolbar titles respected to selected nav menu item
     private String[] activityTitles;
 
+    private ListView listView;
+    private NavigationView navigationView;
+    private DrawerLayout drawer;
+    private View navHeader;
+    private TextView txtName;
+    private Toolbar myToolbar;
+
+    private DatabaseReference databaseReference;
+    private FirebaseDatabase firebaseDatabase;
+    private StorageReference storageReference;
+
+    private List<Event> allEvents = new ArrayList<>();
+    private List<Event> testData = new ArrayList<>();
+    private EventsAdapter adapter;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-
-
-        mAuth = FirebaseAuth.getInstance();
+        setContentView(R.layout.activity_events);
 
         myToolbar = (Toolbar) findViewById(R.id.my_events_toolbar);
         myToolbar.showOverflowMenu();
 
-        profileImage = (ImageView) findViewById(R.id.my_events_profile_image);
+        ImageView profileImage = (ImageView) findViewById(R.id.my_events_profile_image);
         profileImage.setImageResource(R.drawable.profile);
         profileImage.setClickable(true);
-        profileImage.setOnClickListener(new View.OnClickListener() {
+
+        firebaseDatabase = FirebaseDatabase.getInstance();
+        databaseReference = firebaseDatabase.getReference().child("events");
+        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public void onClick(View v) {
-                openUserProfileActivity();
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                getAllEvents((Map<String,Object>)dataSnapshot.getValue());
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                System.out.println("The read failed: " + databaseError.getCode());
             }
         });
 
-//        MyEventsListAdapter adapter = new MyEventsListAdapter(this, event_name, event_date);
-//        list = (ListView) findViewById(R.id.my_events_list);
-//        list.setAdapter(adapter);
+        adapter = new EventsAdapter(this,R.layout.activity_events_list, testData);
+        listView = (ListView) findViewById(R.id.my_events_list);
+        listView.setAdapter(adapter);
 
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(getApplicationContext(),
+                        EventActivity.class);
+
+                intent.putExtra(EVENT, testData.get(position));
+
+                startActivity(intent);
+            }
+        });
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.open_add_event);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //here
-                startActivity(new Intent(MainActivity.this, AddNewEventActivity.class));
+                startActivity(new Intent(EventsActivity.this, AddNewEventActivity.class));
             }
         });
 
@@ -113,16 +131,44 @@ public class MainActivity extends AppCompatActivity {
         // initializing navigation menu
         setUpNavigationView();
 
+    }
+
+
+    public void prepareTest(){
+        testData.add(new Event("", new Date(), new Date()));
+
+        for(Event event : allEvents){
+            testData.add(event);
+            adapter.notifyDataSetChanged();
+        }
 
     }
 
-    private void setToolbarTitle() {
-        getSupportActionBar().setTitle(activityTitles[navItemIndex]);
-    }
+    public void getAllEvents(Map<String,Object> events){
+        for (Map.Entry<String, Object> entry : events.entrySet()){
+            Map value = (Map) entry.getValue();
 
-//    private void selectNavMenu() {
-//        navigationView.getMenu().getItem(navItemIndex).setChecked(true);
-//    }
+            Event event = new Event();
+
+            event.setId((String) value.get("id"));
+            event.setName((String) value.get("name"));
+            event.setDescription((String) value.get("description"));
+            event.setBudget((Long) value.get("budget"));
+            Map startDateTime = (Map) value.get("startDateTime");
+            Date startTime = new Date((long) startDateTime.get("time"));
+            event.setStartDateTime(startTime);
+            Map endDateTime = (Map) value.get("endDateTime");
+            Date endTime = new Date((long) endDateTime.get("time"));
+            event.setEndDateTime(endTime);
+            Map eventCategoryMap = (Map) value.get("eventCategory");
+            EventCategory eventCategory = new EventCategory((String) eventCategoryMap.get("name"));
+            event.setEventCategory(eventCategory);
+
+            allEvents.add(event);
+        }
+        prepareTest();
+
+    }
 
     private void setUpNavigationView() {
 
@@ -140,14 +186,8 @@ public class MainActivity extends AppCompatActivity {
                         navItemIndex = 1;
                         CURRENT_TAG = TAG_SETTINGS;
                         break;
-                    case R.id.logout:
-                        navItemIndex = 2;
-                        CURRENT_TAG = TAG_LOGOUT;
-                        logout();
-                        Toast.makeText(MainActivity.this,"LOGOUT", Toast.LENGTH_LONG);
-                        break;
                     case R.id.my_invitations:
-                        Intent intent = new Intent(MainActivity.this, InvitationsActivity.class);
+                        Intent intent = new Intent(EventsActivity.this, InvitationsActivity.class);
                         startActivity(intent);
                         break;
                     default:
@@ -197,22 +237,6 @@ public class MainActivity extends AppCompatActivity {
         }
 
         super.onBackPressed();
-
-    }
-
-    private void logout(){
-        mAuth.signOut();
-        openLoginActivity();
-    }
-
-    private void openLoginActivity(){
-        Intent intent = new Intent(this, LoginActivity.class);
-        startActivity(intent);
-    }
-
-    private void openUserProfileActivity(){
-        Intent intent = new Intent(this, UserProfileActivity.class);
-        startActivity(intent);
     }
 
 }

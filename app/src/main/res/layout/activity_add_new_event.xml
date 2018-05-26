@@ -52,19 +52,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/new_event_name" />
 
-    <Button
-        android:id="@+id/new_event_image"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:ems="10"
-        android:text="@string/new_event_image"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/new_event_description" />
-
     <EditText
         android:id="@+id/new_event_start_date"
         android:layout_width="0dp"
@@ -74,10 +61,10 @@
         android:layout_marginTop="16dp"
         android:ems="10"
         android:hint="@string/new_event_start_date"
-        android:inputType="datetime"
+        android:inputType="textPersonName"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/new_event_image" />
+        app:layout_constraintTop_toBottomOf="@+id/new_event_description" />
 
     <EditText
         android:id="@+id/new_event_end_date"
@@ -88,11 +75,10 @@
         android:layout_marginTop="16dp"
         android:ems="10"
         android:hint="@string/new_event_end_date"
-        android:inputType="datetime"
+        android:inputType="textPersonName"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/new_event_start_date" />
-
 
     <EditText
         android:id="@+id/new_event_budget"
@@ -103,7 +89,7 @@
         android:layout_marginTop="16dp"
         android:ems="10"
         android:hint="@string/new_event_budget"
-        android:inputType="numberDecimal"
+        android:inputType="number"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/new_event_end_date" />
@@ -128,9 +114,32 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:text="@string/add_new_event"
-        android:onClick="onClick"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/new_event_category" />
+
+    <Button
+        android:id="@+id/new_event_upload_image"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:ems="10"
+        android:text="@string/new_event_image"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/add_new_event" />
+
+    <ImageView
+        android:id="@+id/new_event_image"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/new_event_upload_image" />
 
 </android.support.constraint.ConstraintLayout>
