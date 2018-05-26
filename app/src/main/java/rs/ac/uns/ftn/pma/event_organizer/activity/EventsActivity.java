@@ -110,6 +110,7 @@ public class EventsActivity extends AppCompatActivity {
 
                 intent.putExtra(EVENT, testData.get(position));
 
+
                 startActivity(intent);
             }
         });
