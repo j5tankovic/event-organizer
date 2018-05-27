@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import rs.ac.uns.ftn.pma.event_organizer.activity.EditPlaceOfferActivity;
 import rs.ac.uns.ftn.pma.event_organizer.activity.EventsActivity;
 import rs.ac.uns.ftn.pma.event_organizer.activity.NewPlaceOfferActivity;
 import rs.ac.uns.ftn.pma.event_organizer.activity.PlaceOfferOverviewActivity;
@@ -118,10 +119,10 @@ public class PlaceOffersFragment extends Fragment {
 
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {
-                String key = dataSnapshot.getKey();
-                PlaceOffer offer = findById(key);
-                testData.remove(offer);
-                adapter.notifyDataSetChanged();
+//                String key = dataSnapshot.getKey();
+//                PlaceOffer offer = findById(key);
+//                testData.remove(offer);
+//                adapter.notifyDataSetChanged();
             }
 
             @Override
@@ -140,12 +141,9 @@ public class PlaceOffersFragment extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == 998 && resultCode == RESULT_OK) {
-//            long id = data.getLongExtra(PlaceOfferOverviewActivity.PLACE_OFFER_ID, -1);
-//            PlaceOffer offer = findById(id);
-//            if (offer != null) {
-//                removeFromList(offer);
-//                adapter.notifyDataSetChanged();
-//            }
+            PlaceOffer placeOffer = (PlaceOffer) data.getExtras().get(EditPlaceOfferActivity.EDITED_OFFER);
+            testData.add(placeOffer);
+            adapter.notifyDataSetChanged();
         } else if (requestCode == 995 && resultCode == RESULT_OK) { //DODAVANJE
             PlaceOffer placeOffer = (PlaceOffer) data.getExtras().get(NewPlaceOfferActivity.ADDED_OFFER);
             testData.add(placeOffer);

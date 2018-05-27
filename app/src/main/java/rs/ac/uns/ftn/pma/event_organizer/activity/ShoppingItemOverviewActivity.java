@@ -16,17 +16,22 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import rs.ac.uns.ftn.pma.event_organizer.R;
+import rs.ac.uns.ftn.pma.event_organizer.fragment.PlaceOffersFragment;
 import rs.ac.uns.ftn.pma.event_organizer.fragment.ShoppingListFragment;
+import rs.ac.uns.ftn.pma.event_organizer.model.Event;
+import rs.ac.uns.ftn.pma.event_organizer.model.PlaceOffer;
 import rs.ac.uns.ftn.pma.event_organizer.model.ShoppingItem;
 
 public class ShoppingItemOverviewActivity extends AppCompatActivity {
 
-    private ShoppingItem shoppingItem;
-    private FirebaseDatabase firebaseDatabase;
-    private DatabaseReference databaseReference;
-
-    public static final String ITEM_ID = "rs.ac.uns.ftn.pma.event_organizer.ITEM_ID";
+    public static final String SELECTED_EVENT = "rs.ac.uns.ftn.pma.event_organizer.SELECTED_EVENT";
     public static final String SHOPPING_ITEM = "rs.ac.uns.ftn.pma.event_organizer.SHOPPING_ITEM";
+    public static final String ITEM_ID = "rs.ac.uns.ftn.pma.event_organizer.ITEM_ID";
+
+    private Event selectedEvent;
+    private ShoppingItem shoppingItem;
+
+    private DatabaseReference databaseReference;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,12 +44,14 @@ public class ShoppingItemOverviewActivity extends AppCompatActivity {
         ActionBar ab = getSupportActionBar();
         ab.setDisplayHomeAsUpEnabled(true);
 
-        shoppingItem = (ShoppingItem) getIntent().getExtras().get(ShoppingListFragment.SHOPPING_ITEM);
+        Intent intent = getIntent();
+
+        selectedEvent = (Event) intent.getExtras().get(PlaceOffersFragment.SELECTED_EVENT);
+        shoppingItem = (ShoppingItem) intent.getExtras().get(ShoppingListFragment.SHOPPING_ITEM);
 
         fillUi();
 
-        firebaseDatabase = FirebaseDatabase.getInstance();
-        databaseReference = firebaseDatabase.getReference("events");
+        databaseReference = FirebaseDatabase.getInstance().getReference("events");
     }
 
     @Override
@@ -71,6 +78,7 @@ public class ShoppingItemOverviewActivity extends AppCompatActivity {
     private void openEditActivity() {
         Intent i = new Intent(this, EditShoppingItemActivity.class);
         i.putExtra(SHOPPING_ITEM, shoppingItem);
+        i.putExtra(SELECTED_EVENT, selectedEvent);
         startActivityForResult(i, 996);
     }
 
@@ -90,7 +98,7 @@ public class ShoppingItemOverviewActivity extends AppCompatActivity {
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        delete();
+                        //delete();
                         formResult();
                     }
                 })
@@ -121,11 +129,12 @@ public class ShoppingItemOverviewActivity extends AppCompatActivity {
     private void formResult() {
         Intent i = new Intent();
         i.putExtra(ITEM_ID, shoppingItem.getId());
+        i.putExtra(SHOPPING_ITEM, shoppingItem);
         setResult(RESULT_OK, i);
         finish();
     }
 
-    private void delete() {
-        databaseReference.child(shoppingItem.getId()).setValue(null);
-    }
+//    private void delete() {
+//        databaseReference.child(shoppingItem.getId()).setValue(null);
+//    }
 }

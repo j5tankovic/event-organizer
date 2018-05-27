@@ -85,6 +85,7 @@ public class EditPlaceOfferActivity extends AppCompatActivity {
         placeOffer.setCapacity(Integer.parseInt(capacity.getText().toString()));
         placeOffer.setNotes(notes.getText().toString());
         placeOffer.setPrice(Long.parseLong(price.getText().toString()));
+
         return  placeOffer;
     }
 
@@ -93,10 +94,11 @@ public class EditPlaceOfferActivity extends AppCompatActivity {
 
         for (int i = 0; i < placeOffers.size(); i++) {
             if(placeOffers.get(i).getId().equals(placeOffer2Remove.getId())) {
-                placeOffers.get(i).setLocationName(placeOffer.getLocationName());
-                placeOffers.get(i).setNotes(placeOffer.getNotes());
-                placeOffers.get(i).setCapacity(placeOffer.getCapacity());
-                placeOffers.get(i).setPrice(placeOffer.getPrice());
+                PlaceOffer offer = placeOffers.get(i);
+                offer.setLocationName(placeOffer.getLocationName());
+                offer.setNotes(placeOffer.getNotes());
+                offer.setCapacity(placeOffer.getCapacity());
+                offer.setPrice(placeOffer.getPrice());
             }
         }
         selectedEvent.setPotentialPlaces(placeOffers);

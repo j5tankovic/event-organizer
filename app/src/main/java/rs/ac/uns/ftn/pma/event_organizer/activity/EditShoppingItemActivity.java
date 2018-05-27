@@ -14,19 +14,31 @@ import android.widget.TextView;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.util.List;
+
 import rs.ac.uns.ftn.pma.event_organizer.R;
+import rs.ac.uns.ftn.pma.event_organizer.model.Event;
+import rs.ac.uns.ftn.pma.event_organizer.model.PlaceOffer;
 import rs.ac.uns.ftn.pma.event_organizer.model.ShoppingItem;
+import rs.ac.uns.ftn.pma.event_organizer.model.enums.ShoppingItemCategory;
 
 public class EditShoppingItemActivity extends AppCompatActivity {
 
+    public static final String SELECTED_EVENT = "rs.ac.uns.ftn.pma.event_organizer.SELECTED_EVENT";
+    public static final String EDITED_ITEM = "rs.ac.uns.ftn.pma.event_organizer.EDITED_ITEM";
+
+    private DatabaseReference databaseReference;
+
+    private Event selectedEvent;
     private ShoppingItem shoppingItem;
+    private ShoppingItem shoppingItem2Remove;
+
 
     private TextView name;
     private TextView description;
     private TextView quantity;
     private TextView price;
 
-    public static final String EDITED_ITEM = "rs.ac.uns.ftn.pma.event_organizer.EDITED_ITEM";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,8 +51,16 @@ public class EditShoppingItemActivity extends AppCompatActivity {
         ActionBar ab = getSupportActionBar();
         ab.setDisplayHomeAsUpEnabled(true);
 
+        databaseReference = FirebaseDatabase.getInstance().getReference("events");
+
         Intent intent = getIntent();
+        selectedEvent = (Event) intent.getExtras().get(ShoppingItemOverviewActivity.SELECTED_EVENT);
         shoppingItem = (ShoppingItem) intent.getExtras().get(ShoppingItemOverviewActivity.SHOPPING_ITEM);
+        shoppingItem2Remove = (ShoppingItem) intent.getExtras().get(ShoppingItemOverviewActivity.SHOPPING_ITEM);
+        System.out.println("********************");
+        System.out.println("********************");
+        System.out.println(shoppingItem2Remove.toString());
+        System.out.println("********************");
 
         name = findViewById(R.id.edit_shoppingitem_name);
         name.setText(shoppingItem.getName());
@@ -58,9 +78,10 @@ public class EditShoppingItemActivity extends AppCompatActivity {
         edit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                formData();
-                edit();
-                formResult();
+                shoppingItem = formData();
+                Event event = edit(selectedEvent);
+                save(event);
+                formResult(event);
             }
         });
 
@@ -72,24 +93,44 @@ public class EditShoppingItemActivity extends AppCompatActivity {
         categories.setAdapter(adapter);
     }
 
-    private void formData() {
+    private ShoppingItem formData() {
         shoppingItem.setName(name.getText().toString());
         shoppingItem.setQuantity(Integer.parseInt(quantity.getText().toString()));
         shoppingItem.setDescription(description.getText().toString());
         shoppingItem.setPrice(Long.parseLong(price.getText().toString()));
+
+        return  shoppingItem;
     }
 
-    private void formResult() {
+    private Event edit(Event selectedEvent) {
+        List<ShoppingItem> shoppingItems = selectedEvent.getShoppingItemList();
+
+        for (int i = 0; i < shoppingItems.size(); i++) {
+            if(shoppingItems.get(i).getId().equals(shoppingItem2Remove.getId())) {
+
+                ShoppingItem item = shoppingItems.get(i);
+                item.setName(shoppingItem.getName());
+                item.setDescription(shoppingItem.getDescription());
+                item.setQuantity(shoppingItem.getQuantity());
+                item.setPrice(shoppingItem.getPrice());
+                item.setStatus(shoppingItem.isStatus());
+                item.setCategory(ShoppingItemCategory.FOOD);
+            }
+        }
+        selectedEvent.setShoppingItemList(shoppingItems);
+        return selectedEvent;
+    }
+
+    private void formResult(Event event) {
         Intent i = new Intent();
+        i.putExtra(SELECTED_EVENT, event);
         i.putExtra(EDITED_ITEM, shoppingItem);
         setResult(RESULT_OK, i);
         finish();
     }
 
-    private void edit() {
-        DatabaseReference databaseReference = FirebaseDatabase.getInstance()
-                .getReference("shopping_items");
-
-        databaseReference.child(shoppingItem.getId()).setValue(shoppingItem);
+    private void save(Event event) {
+        databaseReference.child(event.getId()).setValue(event);
     }
+
 }

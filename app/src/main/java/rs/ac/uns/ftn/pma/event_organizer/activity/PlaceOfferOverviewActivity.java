@@ -28,17 +28,16 @@ import rs.ac.uns.ftn.pma.event_organizer.model.PlaceOffer;
 
 public class PlaceOfferOverviewActivity extends AppCompatActivity implements OnMapReadyCallback {
 
-    private MapView mapView;
-    private GoogleMap gMap;
-
-    private Event selectedEvent;
-    private PlaceOffer placeOffer;
-
     private static final String MAP_VIEW_BUNDLE_KEY = "MapViewBundleKey";
     public static final String SELECTED_EVENT = "rs.ac.uns.ftn.pma.event_organizer.SELECTED_EVENT";
     public static final String PLACE_OFFER = "rs.ac.uns.ftn.pma.event_organizer.PLACE_OFFER";
     public static final String PLACE_OFFER_ID = "rs.ac.uns.ftn.pma.event_organizer.PLACE_OFFER_ID";
 
+    private MapView mapView;
+    private GoogleMap gMap;
+
+    private Event selectedEvent;
+    private PlaceOffer placeOffer;
 
     private DatabaseReference databaseReference;
 
@@ -174,7 +173,7 @@ public class PlaceOfferOverviewActivity extends AppCompatActivity implements OnM
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        delete();
+                        //delete(selectedEvent);
                         formResult();
                     }
                 })
@@ -213,7 +212,7 @@ public class PlaceOfferOverviewActivity extends AppCompatActivity implements OnM
         finish();
     }
 
-    private void delete() {
-        databaseReference.child(placeOffer.getId()).setValue(null);
-    }
+//    private void delete(Event event) {
+//        databaseReference.child(event.getId()).setValue(event);
+//    }
 }

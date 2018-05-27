@@ -30,7 +30,8 @@ public class NewShoppingItemActivity extends AppCompatActivity {
     public static final String ADDED_ITEM = "rs.ac.uns.ftn.pma.event_organizer.ADDED_ITEM";
 
     private DatabaseReference databaseReference;
-    private FirebaseDatabase firebaseDatabase;
+
+    private Event selectedEvent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,21 +44,18 @@ public class NewShoppingItemActivity extends AppCompatActivity {
         ActionBar ab = getSupportActionBar();
         ab.setDisplayHomeAsUpEnabled(true);
 
+        databaseReference = FirebaseDatabase.getInstance().getReference("events");
+
         Button add = findViewById(R.id.add_shoppingitem);
         add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 ShoppingItem item = formShoppingItem();
-                Event selectedEvent = (Event) getIntent().getExtras().get(ShoppingListFragment.SELECTED_EVENT);
+                selectedEvent = (Event) getIntent().getExtras().get(ShoppingListFragment.SELECTED_EVENT);
 
-                List<ShoppingItem> shoppingItems = new ArrayList<>();
-                if(selectedEvent.getShoppingItemList() != null) {
-                    shoppingItems = selectedEvent.getShoppingItemList();
-                }
-                shoppingItems.add(item);
-                selectedEvent.setShoppingItemList(shoppingItems);
-                save(selectedEvent);
-                formResult(selectedEvent);
+                Event event = add(selectedEvent, item);
+                save(event);
+                formResult(event);
             }
         });
 
@@ -68,8 +66,6 @@ public class NewShoppingItemActivity extends AppCompatActivity {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         categories.setAdapter(adapter);
 
-        firebaseDatabase = FirebaseDatabase.getInstance();
-        databaseReference = firebaseDatabase.getReference("events");
     }
 
     private ShoppingItem formShoppingItem() {
@@ -79,6 +75,8 @@ public class NewShoppingItemActivity extends AppCompatActivity {
         TextView price = findViewById(R.id.new_shoppingitem_price);
 
         ShoppingItem item = new ShoppingItem();
+        String key = databaseReference.push().getKey();
+        item.setId(key);
         item.setName(name.getText().toString());
         item.setDescription(description.getText().toString());
         item.setQuantity(Integer.valueOf(quantity.getText().toString()));
@@ -86,6 +84,17 @@ public class NewShoppingItemActivity extends AppCompatActivity {
         item.setCategory(ShoppingItemCategory.FOOD);
 
         return item;
+    }
+
+    private Event add(Event selectedEvent, ShoppingItem shoppingItem) {
+        List<ShoppingItem> shoppingItems = new ArrayList<>();
+        if(selectedEvent.getShoppingItemList() != null) {
+            shoppingItems = selectedEvent.getShoppingItemList();
+        }
+        shoppingItems.add(shoppingItem);
+        selectedEvent.setShoppingItemList(shoppingItems);
+
+        return selectedEvent;
     }
 
     private void formResult(Event event) {

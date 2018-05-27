@@ -117,7 +117,6 @@ public class NewPlaceOfferActivity extends AppCompatActivity {
         PlaceOffer lastAdded = event.getPotentialPlaces().get(event.getPotentialPlaces().size()-1);
         i.putExtra(ADDED_OFFER, lastAdded);
         setResult(RESULT_OK, i);
-
         finish();
     }
 

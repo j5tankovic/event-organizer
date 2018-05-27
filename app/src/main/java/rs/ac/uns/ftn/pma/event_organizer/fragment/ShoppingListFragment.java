@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import rs.ac.uns.ftn.pma.event_organizer.activity.EditShoppingItemActivity;
 import rs.ac.uns.ftn.pma.event_organizer.activity.EventsActivity;
 import rs.ac.uns.ftn.pma.event_organizer.activity.NewShoppingItemActivity;
 import rs.ac.uns.ftn.pma.event_organizer.R;
@@ -76,7 +77,7 @@ public class ShoppingListFragment extends Fragment {
                 Intent intent = new Intent(getContext(), ShoppingItemOverviewActivity.class);
                 intent.putExtra(SELECTED_EVENT, selectedEvent);
                 intent.putExtra(SHOPPING_ITEM, testData.get(position));
-                startActivityForResult(intent, 998);
+                startActivityForResult(intent, 997);
             }
 
             @Override
@@ -94,7 +95,7 @@ public class ShoppingListFragment extends Fragment {
             public void onClick(View v) {
                 Intent intent = new Intent(getContext(), NewShoppingItemActivity.class);
                 intent.putExtra(SELECTED_EVENT, selectedEvent);
-                startActivityForResult(intent, 995);
+                startActivityForResult(intent, 994);
             }
         });
 
@@ -118,6 +119,7 @@ public class ShoppingListFragment extends Fragment {
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
                 adapter.notifyDataSetChanged();
+                //adapter.notifyDataSetChanged();
 //                ShoppingItem item = dataSnapshot.getValue(ShoppingItem.class);
 //                for (ShoppingItem si: testData) {
 //                    if (item.getId().equals(si.getId())) {
@@ -128,10 +130,10 @@ public class ShoppingListFragment extends Fragment {
 
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {
-                String key = dataSnapshot.getKey();
-                ShoppingItem item = findById(key);
-                testData.remove(item);
-                adapter.notifyDataSetChanged();
+//                String key = dataSnapshot.getKey();
+//                ShoppingItem item = findById(key);
+//                testData.remove(item);
+//                adapter.notifyDataSetChanged();
             }
 
             @Override
@@ -149,14 +151,17 @@ public class ShoppingListFragment extends Fragment {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == 998 && resultCode == RESULT_OK) {
+        if (requestCode == 997 && resultCode == RESULT_OK) {
+            ShoppingItem item = (ShoppingItem) data.getExtras().get(EditShoppingItemActivity.EDITED_ITEM);
+            testData.add(item);
+            adapter.notifyDataSetChanged();
 //            String id = data.getStringExtra(ShoppingItemOverviewActivity.ITEM_ID);
 //            ShoppingItem item = findById(id);
 //            if (item != null) {
 //                //removeFromList(item);
 //                adapter.notifyDataSetChanged();
 //            }
-        } else if (requestCode == 995 && resultCode == RESULT_OK) { //DODAVANJE
+        } else if (requestCode == 994 && resultCode == RESULT_OK) { //DODAVANJE
             ShoppingItem item = (ShoppingItem) data.getExtras().get(NewShoppingItemActivity.ADDED_ITEM);
             testData.add(item);
             adapter.notifyDataSetChanged();
@@ -166,7 +171,9 @@ public class ShoppingListFragment extends Fragment {
     private ShoppingItem getFromMap(Map<String, Object> map) {
         ShoppingItem shoppingItem = new ShoppingItem();
         for (Map.Entry<String, Object> entry : map.entrySet()) {
-            if(entry.getKey().equals("name")) {
+            if(entry.getKey().equals("id")) {
+                shoppingItem.setId((String) entry.getValue());
+            } else if(entry.getKey().equals("name")) {
                 shoppingItem.setName((String) entry.getValue());
             } else if(entry.getKey().equals("description")) {
                 shoppingItem.setDescription((String) entry.getValue());

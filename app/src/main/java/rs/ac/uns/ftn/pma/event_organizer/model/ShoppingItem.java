@@ -91,4 +91,18 @@ public class ShoppingItem implements Serializable {
     public void setCategory(ShoppingItemCategory category) {
         this.category = category;
     }
+
+    @Override
+    public String toString() {
+        return "ShoppingItem{" +
+                "id='" + id + '\'' +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", quantity=" + quantity +
+                ", price=" + price +
+                ", currency=" + currency +
+                ", status=" + status +
+                ", category=" + category +
+                '}';
+    }
 }
