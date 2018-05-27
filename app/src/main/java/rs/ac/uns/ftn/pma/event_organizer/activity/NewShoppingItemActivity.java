@@ -75,8 +75,8 @@ public class NewShoppingItemActivity extends AppCompatActivity {
         TextView price = findViewById(R.id.new_shoppingitem_price);
 
         ShoppingItem item = new ShoppingItem();
-        String key = databaseReference.push().getKey();
-        item.setId(key);
+        //String key = databaseReference.push().getKey();
+        //item.setId(key);
         item.setName(name.getText().toString());
         item.setDescription(description.getText().toString());
         item.setQuantity(Integer.valueOf(quantity.getText().toString()));

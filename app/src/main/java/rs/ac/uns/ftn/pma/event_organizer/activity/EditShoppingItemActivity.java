@@ -39,7 +39,6 @@ public class EditShoppingItemActivity extends AppCompatActivity {
     private TextView quantity;
     private TextView price;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

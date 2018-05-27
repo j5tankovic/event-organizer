@@ -138,7 +138,7 @@ public class AddNewEventActivity extends AppCompatActivity {
         Event event = new Event();
         event.setName(name.getText().toString());
         event.setDescription(description.getText().toString());
-        SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy");
+        SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy HH:mm");
         String start_date_string = start_date.getText().toString();
         Date start_date_date = null;
         String end_date_string = end_date.getText().toString();
