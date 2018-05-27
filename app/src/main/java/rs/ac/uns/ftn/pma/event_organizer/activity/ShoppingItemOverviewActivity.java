@@ -44,7 +44,7 @@ public class ShoppingItemOverviewActivity extends AppCompatActivity {
         fillUi();
 
         firebaseDatabase = FirebaseDatabase.getInstance();
-        databaseReference = firebaseDatabase.getReference("shopping_items");
+        databaseReference = firebaseDatabase.getReference("events");
     }
 
     @Override

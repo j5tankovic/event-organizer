@@ -45,7 +45,7 @@ public class ShoppingListAdapter extends RecyclerView.Adapter<ShoppingListAdapte
             if (v.getId() == shoppingItemStatus.getId()) {
                 ShoppingItem item = testData.get(getAdapterPosition());
                 item.setStatus(!item.isStatus());
-                FirebaseDatabase.getInstance().getReference("shopping_items")
+                FirebaseDatabase.getInstance().getReference("events")
                         .child(item.getId()).setValue(item);
             } else {
                 listenerRef.get().onPositionClicked(getAdapterPosition());
@@ -76,8 +76,8 @@ public class ShoppingListAdapter extends RecyclerView.Adapter<ShoppingListAdapte
     public void onBindViewHolder(@NonNull final ShoppingListAdapter.ViewHolder holder, int position) {
 
         holder.shoppingItemName.setText(testData.get(position).getName());
-        holder.shoppingItemQuantity.setText(String.valueOf(testData.get(position).getQuantity()));
-        holder.shoppingItemStatus.setChecked(testData.get(position).isStatus());
+        //holder.shoppingItemQuantity.setText(String.valueOf(testData.get(position).getQuantity()));
+        //holder.shoppingItemStatus.setChecked(testData.get(position).isStatus());
     }
 
     @Override

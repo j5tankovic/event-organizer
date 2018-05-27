@@ -99,7 +99,7 @@ public class PlaceOffersFragment extends Fragment {
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
 
                 if(dataSnapshot.child("potentialPlaces").getValue() != null && dataSnapshot.child("id").getValue().equals(selectedEvent.getId())) {
-                  
+
                     List<Map<String, Object>> list = (List<Map<String, Object>>) dataSnapshot.child("potentialPlaces").getValue();
                     for (Map<String, Object> map : list) {
                         PlaceOffer placeOffer = new PlaceOffer();
@@ -179,9 +179,8 @@ public class PlaceOffersFragment extends Fragment {
 //                adapter.notifyDataSetChanged();
 //            }
         } else if (requestCode == 995 && resultCode == RESULT_OK) {
-//            PlaceOffer offer = (PlaceOffer) data.getExtras().get(NewPlaceOfferActivity.ADDED_OFFER);
-//            addToList(offer);
-//            adapter.notifyDataSetChanged();
+            PlaceOffer offer = (PlaceOffer) data.getExtras().get(NewPlaceOfferActivity.ADDED_OFFER);
+            adapter.notifyDataSetChanged();
         }
     }
 

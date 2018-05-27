@@ -22,7 +22,7 @@ public class Event implements Serializable {
     private PlaceOffer finalPlace;
     private EventCategory eventCategory;
 
-    public Event(String id, String name, Date startDateTime, Date endDateTime, String description, long budget, String image, List<ShoppingItem> shoppingItemList) {
+    public Event(String id, String name, Date startDateTime, Date endDateTime, String description, long budget, String image) {
         this.id = id;
         this.name = name;
         this.startDateTime = startDateTime;
@@ -30,7 +30,6 @@ public class Event implements Serializable {
         this.description = description;
         this.budget = budget;
         this.image = image;
-        this.shoppingItemList = shoppingItemList;
     }
 
     public Event(String name, Date startDateTime, Date endDateTime) {

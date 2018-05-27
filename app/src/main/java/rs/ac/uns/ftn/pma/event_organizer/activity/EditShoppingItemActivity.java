@@ -76,7 +76,7 @@ public class EditShoppingItemActivity extends AppCompatActivity {
         shoppingItem.setName(name.getText().toString());
         shoppingItem.setQuantity(Integer.parseInt(quantity.getText().toString()));
         shoppingItem.setDescription(description.getText().toString());
-        shoppingItem.setPrice(Double.parseDouble(price.getText().toString()));
+        shoppingItem.setPrice(Long.parseLong(price.getText().toString()));
     }
 
     private void formResult() {

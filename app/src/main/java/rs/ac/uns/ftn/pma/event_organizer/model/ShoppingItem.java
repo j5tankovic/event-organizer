@@ -9,8 +9,8 @@ public class ShoppingItem implements Serializable {
     private String id;
     private String name;
     private String description;
-    private int quantity;
-    private double price;
+    private long quantity;
+    private long price;
     private Currency currency;
     private boolean status;
     private ShoppingItemCategory category;
@@ -18,7 +18,7 @@ public class ShoppingItem implements Serializable {
     public ShoppingItem() {
     }
 
-    public ShoppingItem(String id, String name, String description, int quantity, double price, boolean status, ShoppingItemCategory category) {
+    public ShoppingItem(String id, String name, String description, long quantity, long price, boolean status, ShoppingItemCategory category) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -60,19 +60,19 @@ public class ShoppingItem implements Serializable {
         this.description = description;
     }
 
-    public int getQuantity() {
+    public long getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(int quantity) {
+    public void setQuantity(long quantity) {
         this.quantity = quantity;
     }
 
-    public double getPrice() {
+    public long getPrice() {
         return price;
     }
 
-    public void setPrice(double price) {
+    public void setPrice(long price) {
         this.price = price;
     }
 

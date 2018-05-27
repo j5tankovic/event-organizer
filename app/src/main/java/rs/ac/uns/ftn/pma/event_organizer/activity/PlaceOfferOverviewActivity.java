@@ -62,7 +62,7 @@ public class PlaceOfferOverviewActivity extends AppCompatActivity implements OnM
         mapView.onCreate(mapViewBundle);
         mapView.getMapAsync(this);
 
-        databaseReference = FirebaseDatabase.getInstance().getReference("place_offers");
+        databaseReference = FirebaseDatabase.getInstance().getReference("events");
     }
 
     @Override
