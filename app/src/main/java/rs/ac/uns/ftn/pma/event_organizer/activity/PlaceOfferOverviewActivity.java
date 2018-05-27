@@ -23,15 +23,19 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import rs.ac.uns.ftn.pma.event_organizer.R;
 import rs.ac.uns.ftn.pma.event_organizer.fragment.PlaceOffersFragment;
+import rs.ac.uns.ftn.pma.event_organizer.model.Event;
 import rs.ac.uns.ftn.pma.event_organizer.model.PlaceOffer;
 
 public class PlaceOfferOverviewActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     private MapView mapView;
     private GoogleMap gMap;
+
+    private Event selectedEvent;
     private PlaceOffer placeOffer;
 
     private static final String MAP_VIEW_BUNDLE_KEY = "MapViewBundleKey";
+    public static final String SELECTED_EVENT = "rs.ac.uns.ftn.pma.event_organizer.SELECTED_EVENT";
     public static final String PLACE_OFFER_ID = "rs.ac.uns.ftn.pma.event_organizer.PLACE_OFFER_ID";
     public static final String PLACE_OFFER = "rs.ac.uns.ftn.pma.event_organizer.PLACE_OFFER";
 
@@ -49,6 +53,7 @@ public class PlaceOfferOverviewActivity extends AppCompatActivity implements OnM
         ab.setDisplayHomeAsUpEnabled(true);
 
         Intent intent = getIntent();
+        selectedEvent = (Event) intent.getExtras().get(PlaceOffersFragment.SELECTED_EVENT);
         placeOffer = (PlaceOffer) intent.getExtras().get(PlaceOffersFragment.PLACE_OFFER);
 
         fillUi();
@@ -148,6 +153,7 @@ public class PlaceOfferOverviewActivity extends AppCompatActivity implements OnM
     private void openEditActivity() {
         Intent intent = new Intent(this, EditPlaceOfferActivity.class);
         intent.putExtra(PLACE_OFFER, placeOffer);
+        intent.putExtra(SELECTED_EVENT, selectedEvent);
         startActivityForResult(intent, 997);
     }
 
@@ -201,6 +207,7 @@ public class PlaceOfferOverviewActivity extends AppCompatActivity implements OnM
     private void formResult() {
         Intent i = new Intent();
         i.putExtra(PLACE_OFFER_ID, placeOffer.getId());
+        i.putExtra(PLACE_OFFER, placeOffer);
         setResult(RESULT_OK, i);
         finish();
     }

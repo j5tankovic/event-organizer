@@ -69,6 +69,7 @@ public class PlaceOffersFragment extends Fragment {
             @Override
             public void onPositionClicked(int position) {
                 Intent intent = new Intent(getContext(), PlaceOfferOverviewActivity.class);
+                intent.putExtra(SELECTED_EVENT, selectedEvent);
                 intent.putExtra(PLACE_OFFER, testData.get(position));
                 startActivityForResult(intent, 998);
             }
@@ -104,7 +105,9 @@ public class PlaceOffersFragment extends Fragment {
                     for (Map<String, Object> map : list) {
                         PlaceOffer placeOffer = new PlaceOffer();
                         for (Map.Entry<String, Object> entry : map.entrySet()) {
-                            if(entry.getKey().equals("capacity")) {
+                            if(entry.getKey().equals("id")) {
+                                placeOffer.setId((String) entry.getValue());
+                            } else if(entry.getKey().equals("capacity")) {
                                 placeOffer.setCapacity((Long) entry.getValue());
                             } else if(entry.getKey().equals("notes")) {
                                 placeOffer.setNotes((String) entry.getValue());
@@ -143,8 +146,8 @@ public class PlaceOffersFragment extends Fragment {
 
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                PlaceOffer offer = dataSnapshot.getValue(PlaceOffer.class);
-                testData.add(offer);
+                //PlaceOffer offer = dataSnapshot.getValue(PlaceOffer.class);
+                //testData.add(offer);
                 adapter.notifyDataSetChanged();
             }
 

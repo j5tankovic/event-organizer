@@ -94,6 +94,8 @@ public class NewPlaceOfferActivity extends AppCompatActivity {
         TextView price = findViewById(R.id.new_placeoffer_price);
 
         PlaceOffer offer = new PlaceOffer();
+        String key = databaseReference.push().getKey();
+        offer.setId(key);
         offer.setLocationName(location.getName());//PROBAJ SA OVIM
         offer.setCapacity(Integer.valueOf(capacity.getText().toString()));
         offer.setNotes(notes.getText().toString());

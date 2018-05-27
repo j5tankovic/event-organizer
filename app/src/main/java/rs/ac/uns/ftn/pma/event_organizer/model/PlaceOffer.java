@@ -65,4 +65,15 @@ public class PlaceOffer implements Serializable {
 
     public void setLocationName(String locationName) { this.locationName = locationName; }
 
+    @Override
+    public String toString() {
+        return "PlaceOffer{" +
+                "id='" + id + '\'' +
+                ", capacity=" + capacity +
+                ", notes='" + notes + '\'' +
+                ", location=" + location +
+                ", price=" + price +
+                ", locationName='" + locationName + '\'' +
+                '}';
+    }
 }
