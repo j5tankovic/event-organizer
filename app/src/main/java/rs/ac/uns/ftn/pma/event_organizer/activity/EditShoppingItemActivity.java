@@ -57,10 +57,6 @@ public class EditShoppingItemActivity extends AppCompatActivity {
         selectedEvent = (Event) intent.getExtras().get(ShoppingItemOverviewActivity.SELECTED_EVENT);
         shoppingItem = (ShoppingItem) intent.getExtras().get(ShoppingItemOverviewActivity.SHOPPING_ITEM);
         shoppingItem2Remove = (ShoppingItem) intent.getExtras().get(ShoppingItemOverviewActivity.SHOPPING_ITEM);
-        System.out.println("********************");
-        System.out.println("********************");
-        System.out.println(shoppingItem2Remove.toString());
-        System.out.println("********************");
 
         name = findViewById(R.id.edit_shoppingitem_name);
         name.setText(shoppingItem.getName());
@@ -108,15 +104,17 @@ public class EditShoppingItemActivity extends AppCompatActivity {
         for (int i = 0; i < shoppingItems.size(); i++) {
             if(shoppingItems.get(i).getId().equals(shoppingItem2Remove.getId())) {
 
+                //shoppingItems.remove(i);
                 ShoppingItem item = shoppingItems.get(i);
-                item.setName(shoppingItem.getName());
-                item.setDescription(shoppingItem.getDescription());
-                item.setQuantity(shoppingItem.getQuantity());
-                item.setPrice(shoppingItem.getPrice());
-                item.setStatus(shoppingItem.isStatus());
-                item.setCategory(ShoppingItemCategory.FOOD);
+                shoppingItems.get(i).setName(shoppingItem.getName());
+                shoppingItems.get(i).setDescription(shoppingItem.getDescription());
+                shoppingItems.get(i).setQuantity(shoppingItem.getQuantity());
+                shoppingItems.get(i).setPrice(shoppingItem.getPrice());
+                shoppingItems.get(i).setStatus(shoppingItem.isStatus());
+                shoppingItems.get(i).setCategory(ShoppingItemCategory.FOOD);
             }
         }
+        //shoppingItems.add(shoppingItem2Remove);
         selectedEvent.setShoppingItemList(shoppingItems);
         return selectedEvent;
     }

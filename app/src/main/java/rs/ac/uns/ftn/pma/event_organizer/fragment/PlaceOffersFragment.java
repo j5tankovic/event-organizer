@@ -114,7 +114,8 @@ public class PlaceOffersFragment extends Fragment {
 
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                adapter.notifyDataSetChanged();
+
+                //adapter.notifyDataSetChanged();
             }
 
             @Override

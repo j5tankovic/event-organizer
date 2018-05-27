@@ -77,7 +77,7 @@ public class ShoppingListFragment extends Fragment {
                 Intent intent = new Intent(getContext(), ShoppingItemOverviewActivity.class);
                 intent.putExtra(SELECTED_EVENT, selectedEvent);
                 intent.putExtra(SHOPPING_ITEM, testData.get(position));
-                startActivityForResult(intent, 997);
+                startActivityForResult(intent, 999);
             }
 
             @Override
@@ -118,7 +118,6 @@ public class ShoppingListFragment extends Fragment {
 
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                adapter.notifyDataSetChanged();
                 //adapter.notifyDataSetChanged();
 //                ShoppingItem item = dataSnapshot.getValue(ShoppingItem.class);
 //                for (ShoppingItem si: testData) {
@@ -151,7 +150,7 @@ public class ShoppingListFragment extends Fragment {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == 997 && resultCode == RESULT_OK) {
+        if (requestCode == 999 && resultCode == RESULT_OK) {
             ShoppingItem item = (ShoppingItem) data.getExtras().get(EditShoppingItemActivity.EDITED_ITEM);
             testData.add(item);
             adapter.notifyDataSetChanged();
