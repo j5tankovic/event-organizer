@@ -1,15 +1,13 @@
 package rs.ac.uns.ftn.pma.event_organizer.activity;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.places.Place;
@@ -18,12 +16,14 @@ import com.google.android.gms.location.places.ui.PlaceSelectionListener;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-import org.w3c.dom.Text;
+import java.util.ArrayList;
+import java.util.List;
 
 import rs.ac.uns.ftn.pma.event_organizer.R;
+import rs.ac.uns.ftn.pma.event_organizer.fragment.PlaceOffersFragment;
+import rs.ac.uns.ftn.pma.event_organizer.model.Event;
 import rs.ac.uns.ftn.pma.event_organizer.model.Location;
 import rs.ac.uns.ftn.pma.event_organizer.model.PlaceOffer;
-import rs.ac.uns.ftn.pma.event_organizer.model.ShoppingItem;
 
 public class NewPlaceOfferActivity extends AppCompatActivity {
 
@@ -49,8 +49,16 @@ public class NewPlaceOfferActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 PlaceOffer offer = formPlaceOffer();
-                save(offer);
-                formResult(offer);
+                Event selectedEvent = (Event) getIntent().getExtras().get(PlaceOffersFragment.SELECTED_EVENT);
+
+                List<PlaceOffer> placeOffers = new ArrayList<>();
+                if(selectedEvent.getPotentialPlaces() != null) {
+                    placeOffers = selectedEvent.getPotentialPlaces();
+                }
+                placeOffers.add(offer);
+                selectedEvent.setPotentialPlaces(placeOffers);
+                save(selectedEvent);
+                formResult(selectedEvent);
             }
         });
 
@@ -61,8 +69,7 @@ public class NewPlaceOfferActivity extends AppCompatActivity {
         autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
             @Override
             public void onPlaceSelected(Place place) {
-                // TODO: Get info about the selected place.
-                //Toast.makeText(getApplicationContext(), place.getAddress(), Toast.LENGTH_LONG).show();
+
                 location = new Location();
                 location.setLat(place.getLatLng().latitude);
                 location.setLng(place.getLatLng().longitude);
@@ -76,7 +83,8 @@ public class NewPlaceOfferActivity extends AppCompatActivity {
             }
         });
 
-        databaseReference = FirebaseDatabase.getInstance().getReference("place_offers");
+        databaseReference = FirebaseDatabase.getInstance().getReference("events");
+
     }
 
     private PlaceOffer formPlaceOffer() {
@@ -86,25 +94,25 @@ public class NewPlaceOfferActivity extends AppCompatActivity {
         TextView price = findViewById(R.id.new_placeoffer_price);
 
         PlaceOffer offer = new PlaceOffer();
+        offer.setLocationName(location.getName());//PROBAJ SA OVIM
         offer.setCapacity(Integer.valueOf(capacity.getText().toString()));
         offer.setNotes(notes.getText().toString());
-        offer.setPrice(Double.parseDouble(price.getText().toString()));
+        offer.setPrice(Long.parseLong(price.getText().toString()));
         offer.setLocation(location);
 
         return offer;
     }
 
-    private void formResult(PlaceOffer offer) {
+    private void formResult(Event event) {
         Intent i = new Intent();
-        i.putExtra(ADDED_OFFER, offer);
+
+        i.putExtra(ADDED_OFFER, event);
         setResult(RESULT_OK, i);
+
         finish();
     }
 
-    private void save(PlaceOffer offer) {
-        String key = databaseReference.push().getKey();
-
-        offer.setId(key);
-        databaseReference.child(key).setValue(offer);
+    private void save(Event event) {
+        databaseReference.child(event.getId()).setValue(event);
     }
 }

@@ -46,9 +46,11 @@ public class EventsActivity extends AppCompatActivity {
 
     // tags used to attach the fragments
     public static final String EVENT = "rs.ac.uns.ftn.pma.event_organizer.EVENT";
+    public static final String SELECTED_EVENT = "rs.ac.uns.ftn.pma.event_organizer.SELECTED_EVENT";
     private static final String TAG_HOME = "home";
     private static final String TAG_SETTINGS = "settings";
     private static final String TAG_LOGOUT = "logout";
+    private static final String TAG_PROFILE = "profile";
 
     public static String CURRENT_TAG = TAG_HOME;
 
@@ -128,6 +130,7 @@ public class EventsActivity extends AppCompatActivity {
 
             }
         });
+
         adapter = new EventsAdapter(this,R.layout.activity_events_list, testData);
         listView = (ListView) findViewById(R.id.my_events_list);
         listView.setAdapter(adapter);
@@ -138,7 +141,7 @@ public class EventsActivity extends AppCompatActivity {
                 Intent intent = new Intent(getApplicationContext(),
                         EventActivity.class);
 
-                intent.putExtra(EVENT, testData.get(position));
+                intent.putExtra(SELECTED_EVENT, testData.get(position));
 
                 startActivity(intent);
             }
@@ -162,7 +165,7 @@ public class EventsActivity extends AppCompatActivity {
         // load toolbar titles from string resources
         activityTitles = getResources().getStringArray(R.array.nav_item_activity_titles);
 
-        txtName.setText("Jovan Jovanovic");
+        txtName.setText("Jovan Jovanovic"); //UPISATI IME I PREZIME ULOGOVANOG
 
         // showing dot next to notifications label
         //navigationView.getMenu().getItem(3).setActionView(R.layout.);
@@ -228,7 +231,11 @@ public class EventsActivity extends AppCompatActivity {
                         logout();
                         Toast.makeText(EventsActivity.this,"LOGOUT", Toast.LENGTH_LONG);
                         break;
-
+                    case R.id.profile:
+                        navItemIndex = 3;
+                        CURRENT_TAG = TAG_PROFILE;
+                        openUserProfileActivity();
+                        break;
                     case R.id.my_invitations:
                         Intent intent = new Intent(EventsActivity.this, InvitationsActivity.class);
                         startActivity(intent);

@@ -21,12 +21,12 @@ import rs.ac.uns.ftn.pma.event_organizer.model.Event;
  * A simple {@link Fragment} subclass.
  */
 public class EventGeneralFragment extends Fragment {
-    public static final String EVENT = "rs.ac.uns.ftn.pma.event_organizer.EVENT";
+
+
+    public static final String SELECTED_EVENT = "rs.ac.uns.ftn.pma.event_organizer.SELECTED_EVENT";
 
     private View view;
 
-
-    private Event event;
     private TextView event_name;
     private TextView event_description;
     private TextView event_start_date;
@@ -45,7 +45,7 @@ public class EventGeneralFragment extends Fragment {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_event_general, container, false);
 
-        Event selectedEvent = (Event) getActivity().getIntent().getExtras().get(EventsActivity.EVENT);
+        Event selectedEvent = (Event) getActivity().getIntent().getExtras().get(EventsActivity.SELECTED_EVENT);
         System.out.println(selectedEvent);
 
         event_name = view.findViewById(R.id.event_name);

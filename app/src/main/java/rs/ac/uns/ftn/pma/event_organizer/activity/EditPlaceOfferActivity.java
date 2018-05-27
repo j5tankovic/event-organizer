@@ -66,7 +66,7 @@ public class EditPlaceOfferActivity extends AppCompatActivity {
     private void formData() {
         placeOffer.setCapacity(Integer.parseInt(capacity.getText().toString()));
         placeOffer.setNotes(notes.getText().toString());
-        placeOffer.setPrice(Double.parseDouble(price.getText().toString()));
+        placeOffer.setPrice(Long.parseLong(price.getText().toString()));
     }
 
     private void formResult() {

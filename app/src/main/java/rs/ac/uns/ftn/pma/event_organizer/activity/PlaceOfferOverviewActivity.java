@@ -181,7 +181,8 @@ public class PlaceOfferOverviewActivity extends AppCompatActivity implements OnM
 
     private void fillUi() {
         TextView location = findViewById(R.id.placeoffer_location);
-        location.setText(placeOffer.getLocation().getAddress());
+        //location.setText(placeOffer.getLocation().getAddress());
+        location.setText(placeOffer.getLocationName());
 
         TextView notes = findViewById(R.id.placeoffer_notes);
         notes.setText(placeOffer.getNotes());
@@ -192,7 +193,8 @@ public class PlaceOfferOverviewActivity extends AppCompatActivity implements OnM
         TextView price = findViewById(R.id.placeoffer_price);
         price.setText(String.valueOf(placeOffer.getPrice()));
 
-        getSupportActionBar().setTitle(placeOffer.getLocation().getAddress());
+        //getSupportActionBar().setTitle(placeOffer.getLocation().getAddress());
+        getSupportActionBar().setTitle(placeOffer.getLocationName());
 
     }
 

@@ -17,6 +17,10 @@
                 android:icon="@drawable/ic_settings_black_24dp"
                 android:title="@string/nav_settings" />
             <item
+                android:id="@+id/profile"
+                android:icon="@drawable/ic_add_circle"
+                android:title="@string/nav_settings" />
+            <item
                 android:id="@+id/logout"
                 android:icon="@drawable/ic_logout_24dp"
                 android:title="@string/logout" />

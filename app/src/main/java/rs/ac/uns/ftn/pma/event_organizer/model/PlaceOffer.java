@@ -5,15 +5,16 @@ import java.io.Serializable;
 public class PlaceOffer implements Serializable {
 
     private String id;
-    private int capacity;
+    private long capacity;
     private String notes;
     private Location location;
-    private double price;
+    private long price;
+    private String locationName;
 
     public PlaceOffer() {
     }
 
-    public PlaceOffer(String id, int capacity, Location location, double price) {
+    public PlaceOffer(String id, long capacity, Location location, long price) {
         this.id = id;
         this.capacity = capacity;
         this.location = location;
@@ -28,11 +29,11 @@ public class PlaceOffer implements Serializable {
         this.id = id;
     }
 
-    public int getCapacity() {
+    public long getCapacity() {
         return capacity;
     }
 
-    public void setCapacity(int capacity) {
+    public void setCapacity(long capacity) {
         this.capacity = capacity;
     }
 
@@ -52,11 +53,16 @@ public class PlaceOffer implements Serializable {
         this.location = location;
     }
 
-    public double getPrice() {
+    public long getPrice() {
         return price;
     }
 
-    public void setPrice(double price) {
+    public void setPrice(long price) {
         this.price = price;
     }
+
+    public String getLocationName() { return locationName; }
+
+    public void setLocationName(String locationName) { this.locationName = locationName; }
+
 }
