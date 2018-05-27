@@ -6,7 +6,7 @@ import rs.ac.uns.ftn.pma.event_organizer.model.enums.Currency;
 import rs.ac.uns.ftn.pma.event_organizer.model.enums.ShoppingItemCategory;
 
 public class ShoppingItem implements Serializable {
-    private long id;
+    private String id;
     private String name;
     private String description;
     private int quantity;
@@ -18,7 +18,7 @@ public class ShoppingItem implements Serializable {
     public ShoppingItem() {
     }
 
-    public ShoppingItem(long id, String name, String description, int quantity, double price, boolean status, ShoppingItemCategory category) {
+    public ShoppingItem(String id, String name, String description, int quantity, double price, boolean status, ShoppingItemCategory category) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -36,11 +36,11 @@ public class ShoppingItem implements Serializable {
         this.currency = currency;
     }
 
-    public long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(String id) {
         this.id = id;
     }
 

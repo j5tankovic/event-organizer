@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v7.app.AppCompatActivity;
 
+import rs.ac.uns.ftn.pma.event_organizer.fragment.EventGeneralFragment;
 import rs.ac.uns.ftn.pma.event_organizer.fragment.PeopleOverviewFragment;
 import rs.ac.uns.ftn.pma.event_organizer.fragment.PlaceOffersFragment;
 import rs.ac.uns.ftn.pma.event_organizer.fragment.ShoppingListFragment;
@@ -25,7 +26,7 @@ public class TabAdapter extends FragmentStatePagerAdapter {
     public Fragment getItem(int position) {
         switch (position) {
             case 0:
-                return new PlaceOffersFragment(); //FIXME change this for general fragment
+                return new EventGeneralFragment();
             case 1:
                 return new PlaceOffersFragment();
             case 2:

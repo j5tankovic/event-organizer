@@ -96,7 +96,7 @@ public class PeopleInvitationFragment extends Fragment {
 
             Map eventMap= (Map) singleInvitation.get("event");
             Event newEvent=new Event();
-            newEvent.setId((long)eventMap.get("id"));
+            newEvent.setId((String)eventMap.get("id"));
             newInvitation.setEvent(newEvent);
 
             Map userMap=(Map)singleInvitation.get("invitedUser");
@@ -110,7 +110,7 @@ public class PeopleInvitationFragment extends Fragment {
     }
     private void findInvitedUsers(List<Invitation> invitations){
         for(Invitation inv:invitations){
-            if(inv.getEvent().getId()==event.getId()){
+            if(inv.getEvent().getId().equals(event.getId())){
                 testData.add(inv);
                 adapter.notifyDataSetChanged();
             }

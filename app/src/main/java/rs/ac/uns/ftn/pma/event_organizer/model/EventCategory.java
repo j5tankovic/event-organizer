@@ -6,23 +6,28 @@ import java.io.Serializable;
  * Created by Sandra on 4/27/2018.
  */
 
+
 public class EventCategory implements Serializable{
-    private long id;
+    private String id;
     private String name;
 
-    public EventCategory(long id, String name) {
+       public EventCategory(String id, String name) {
         this.id = id;
+        this.name = name;
+    }
+
+    public EventCategory(String name) {
         this.name = name;
     }
 
     public EventCategory() {
     }
 
-    public long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -32,5 +37,10 @@ public class EventCategory implements Serializable{
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    @Override
+    public String toString() {
+        return "[EventCategory] name = " + name;
     }
 }

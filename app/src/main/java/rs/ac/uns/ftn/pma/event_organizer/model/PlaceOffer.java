@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 public class PlaceOffer implements Serializable {
 
-    private long id;
+    private String id;
     private int capacity;
     private String notes;
     private Location location;
@@ -13,18 +13,18 @@ public class PlaceOffer implements Serializable {
     public PlaceOffer() {
     }
 
-    public PlaceOffer(long id, int capacity, Location location, double price) {
+    public PlaceOffer(String id, int capacity, Location location, double price) {
         this.id = id;
         this.capacity = capacity;
         this.location = location;
         this.price = price;
     }
 
-    public long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(String id) {
         this.id = id;
     }
 

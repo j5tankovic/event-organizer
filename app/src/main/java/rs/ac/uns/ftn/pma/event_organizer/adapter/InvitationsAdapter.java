@@ -45,6 +45,8 @@ public class InvitationsAdapter extends ArrayAdapter<Invitation> {
             TextView date = (TextView) view.findViewById(R.id.invitation_date);
             final ImageButton button_acc=(ImageButton)view.findViewById(R.id.invitation_status_acc);
             final ImageButton button_rej=(ImageButton)view.findViewById(R.id.invitation_status_rej);
+            button_acc.setFocusable(false);
+            button_rej.setFocusable(false);
 
             if(inv.getStatus().equals(InvitationStatus.ACCEPTED)){
                 button_acc.setImageResource(R.drawable.ic_check_green_24dp);

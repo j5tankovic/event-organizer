@@ -16,6 +16,7 @@ public class User implements Serializable {
     private String email;
     private String name;
     private String lastName;
+    private String profilePicture;
     private List<Event> createdEvents;
     private List<Invitation> invitations;
 
@@ -42,6 +43,16 @@ public class User implements Serializable {
     }
 
     public User() {
+    }
+
+
+
+    public String getProfilePicture() {
+        return profilePicture;
+    }
+
+    public void setProfilePicture(String profilePicture) {
+        this.profilePicture = profilePicture;
     }
 
     public long getId() {
@@ -106,5 +117,19 @@ public class User implements Serializable {
 
     public void setInvitations(List<Invitation> invitations) {
         this.invitations = invitations;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", email='" + email + '\'' +
+                ", name='" + name + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", createdEvents=" + createdEvents +
+                ", invitations=" + invitations +
+                '}';
     }
 }

@@ -63,6 +63,7 @@ public class InvitationsActivity extends AppCompatActivity {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
                 Intent intent = new Intent(getApplicationContext(),
                         InvitationActivity.class);
 
@@ -105,7 +106,7 @@ public class InvitationsActivity extends AppCompatActivity {
 
             Map eventMap= (Map) singleInvitation.get("event");
             Event newEvent=new Event();
-            newEvent.setId((long)eventMap.get("id"));
+            newEvent.setId((String)eventMap.get("id"));
             newEvent.setDescription((String)eventMap.get("description"));
 
             Map date=(Map)eventMap.get("startDateTime");
@@ -121,7 +122,7 @@ public class InvitationsActivity extends AppCompatActivity {
             Map userMap=(Map)singleInvitation.get("invitedUser");
             User newUser=new User();
             newUser.setEmail((String)userMap.get("email"));
-            newUser.setId((long)eventMap.get("id"));
+//            newUser.setId((long)eventMap.get("id"));
             newUser.setLastName((String)eventMap.get("lastname"));
             newUser.setUsername((String)eventMap.get("username"));
             newInvitation.setInvitedUser(newUser);

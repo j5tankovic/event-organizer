@@ -33,6 +33,7 @@ import rs.ac.uns.ftn.pma.event_organizer.model.Invitation;
 import rs.ac.uns.ftn.pma.event_organizer.model.User;
 import rs.ac.uns.ftn.pma.event_organizer.model.enums.InvitationStatus;
 
+
 public class PeopleOverviewFragment extends Fragment {
 
     private View view;
@@ -46,7 +47,7 @@ public class PeopleOverviewFragment extends Fragment {
     private List<User> allUsers=new ArrayList<>();
     private List<Invitation> allInvitations=new ArrayList<>();
     private List<Invitation> eventInvitations=new ArrayList<>();
-    private int eventId=1; //npr.=1 rodjendan   -   FIND THIS EVENT; FROM GENERAL FRAGMENT?
+    private String eventId="1a"; //npr.=1 rodjendan   -   FIND THIS EVENT; FROM GENERAL FRAGMENT?
 
     public PeopleOverviewFragment() {}
 
@@ -118,13 +119,13 @@ public class PeopleOverviewFragment extends Fragment {
         newInvitation.setInvitedUser(foundedUser);
         newInvitation.setId(invitationId);//FIX
         event=new Event();
-        event.setId(1L);
+        event.setId("1");
         event.setStartDateTime(new Date());
         event.setEndDateTime(new Date());
         event.setName("Rodjendan");
-        event.setBudget(50.0);
+        event.setBudget(50);
         event.setDescription("opis rodjendana: prvi rodjendan male tare");
-        event.setEventCategory(new EventCategory(1,"Rodjendan"));
+        event.setEventCategory(new EventCategory("1","Rodjendan"));
         newInvitation.setEvent(event);
         newInvitation.setStatus(InvitationStatus.PENDING);
 
@@ -172,7 +173,7 @@ public class PeopleOverviewFragment extends Fragment {
 
             Map eventMap= (Map) singleInvitation.get("event");
             Event newEvent=new Event();
-            newEvent.setId((long)eventMap.get("id"));
+            newEvent.setId((String)eventMap.get("id"));
             newInvitation.setEvent(newEvent);
 
             Map userMap=(Map)singleInvitation.get("invitedUser");
@@ -187,7 +188,7 @@ public class PeopleOverviewFragment extends Fragment {
 
     private void prepareTestData() {
         for(Invitation inv:allInvitations){
-            if(inv.getEvent().getId()==eventId){
+            if(String.valueOf(inv.getEvent().getId()).equals(eventId)){
                 eventInvitations.add(inv);
             }
         }

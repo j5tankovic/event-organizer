@@ -7,14 +7,16 @@ public class Location implements Serializable {
     private double lat;
     private double lng;
     private String address;
+    private String name;
 
     public Location() {
     }
 
-    public Location(double lat, double lng, String address) {
+    public Location(double lat, double lng, String address, String name) {
         this.lat = lat;
         this.lng = lng;
         this.address = address;
+        this.name = name;
     }
 
     public double getLat() {
@@ -39,5 +41,13 @@ public class Location implements Serializable {
 
     public void setAddress(String address) {
         this.address = address;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }

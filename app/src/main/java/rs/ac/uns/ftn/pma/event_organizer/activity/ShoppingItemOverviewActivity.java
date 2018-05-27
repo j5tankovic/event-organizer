@@ -12,6 +12,9 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.TextView;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 import rs.ac.uns.ftn.pma.event_organizer.R;
 import rs.ac.uns.ftn.pma.event_organizer.fragment.ShoppingListFragment;
 import rs.ac.uns.ftn.pma.event_organizer.model.ShoppingItem;
@@ -19,6 +22,8 @@ import rs.ac.uns.ftn.pma.event_organizer.model.ShoppingItem;
 public class ShoppingItemOverviewActivity extends AppCompatActivity {
 
     private ShoppingItem shoppingItem;
+    private FirebaseDatabase firebaseDatabase;
+    private DatabaseReference databaseReference;
 
     public static final String ITEM_ID = "rs.ac.uns.ftn.pma.event_organizer.ITEM_ID";
     public static final String SHOPPING_ITEM = "rs.ac.uns.ftn.pma.event_organizer.SHOPPING_ITEM";
@@ -37,6 +42,9 @@ public class ShoppingItemOverviewActivity extends AppCompatActivity {
         shoppingItem = (ShoppingItem) getIntent().getExtras().get(ShoppingListFragment.SHOPPING_ITEM);
 
         fillUi();
+
+        firebaseDatabase = FirebaseDatabase.getInstance();
+        databaseReference = firebaseDatabase.getReference("shopping_items");
     }
 
     @Override
@@ -82,6 +90,7 @@ public class ShoppingItemOverviewActivity extends AppCompatActivity {
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+                        delete();
                         formResult();
                     }
                 })
@@ -114,5 +123,9 @@ public class ShoppingItemOverviewActivity extends AppCompatActivity {
         i.putExtra(ITEM_ID, shoppingItem.getId());
         setResult(RESULT_OK, i);
         finish();
+    }
+
+    private void delete() {
+        databaseReference.child(shoppingItem.getId()).setValue(null);
     }
 }

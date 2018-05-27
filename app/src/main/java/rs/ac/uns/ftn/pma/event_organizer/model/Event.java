@@ -10,17 +10,19 @@ import java.util.List;
 
 public class Event implements Serializable{
 
-    private long id;
+    private String id;
     private String name;
     private Date startDateTime;
     private Date endDateTime;
     private String description;
-    private double budget;
+    private long budget;
     private String image;
     private List<ShoppingItem> shoppingItemList;
+    private List<PlaceOffer> potentialPlaces;
+    private PlaceOffer finalPlace;
     private EventCategory eventCategory;
 
-    public Event(long id, String name, Date startDateTime, Date endDateTime, String description, double budget, String image, List<ShoppingItem> shoppingItemList) {
+    public Event(String id, String name, Date startDateTime, Date endDateTime, String description, long budget, String image, List<ShoppingItem> shoppingItemList) {
         this.id = id;
         this.name = name;
         this.startDateTime = startDateTime;
@@ -29,6 +31,12 @@ public class Event implements Serializable{
         this.budget = budget;
         this.image = image;
         this.shoppingItemList = shoppingItemList;
+    }
+
+    public Event(String name, Date startDateTime, Date endDateTime) {
+        this.name = name;
+        this.startDateTime = startDateTime;
+        this.endDateTime = endDateTime;
     }
 
     public Event() {
@@ -42,10 +50,6 @@ public class Event implements Serializable{
         this.eventCategory = eventCategory;
     }
 
-    public void setBudget(double budget) {
-        this.budget = budget;
-    }
-
     public List<ShoppingItem> getShoppingItemList() {
         return shoppingItemList;
     }
@@ -54,11 +58,11 @@ public class Event implements Serializable{
         this.shoppingItemList = shoppingItemList;
     }
 
-    public long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -94,19 +98,48 @@ public class Event implements Serializable{
         this.description = description;
     }
 
-    public double getBudget() {
+    public long getBudget() {
         return budget;
     }
 
-  /*  public void setBudget(float budget) {
+    public void setBudget(long budget) {
         this.budget = budget;
     }
-*/
+
     public String getImage() {
         return image;
     }
 
     public void setImage(String image) {
         this.image = image;
+    }
+
+    public List<PlaceOffer> getPotentialPlaces() {
+        return potentialPlaces;
+    }
+
+    public void setPotentialPlaces(List<PlaceOffer> potentialPlaces) {
+        this.potentialPlaces = potentialPlaces;
+    }
+
+    public PlaceOffer getFinalPlace() {
+        return finalPlace;
+    }
+
+    public void setFinalPlace(PlaceOffer finalPlace) {
+        this.finalPlace = finalPlace;
+    }
+    
+    @Override
+    public String toString() {
+        return "Event{" +
+                "id='" + id + '\'' +
+                ", name='" + name + '\'' +
+                ", startDateTime=" + startDateTime +
+                ", endDateTime=" + endDateTime +
+                ", description='" + description + '\'' +
+                ", budget=" + budget +
+                ", eventCategory=" + eventCategory +
+                '}';
     }
 }

@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="rs.ac.uns.ftn.pma.event_organizer">
-
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <application
         android:allowBackup="true"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
@@ -14,7 +16,7 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyACF0eBzPtMZIbnjc0hAcnt3cnHh0L6VjQ" />
 
-        <activity android:name=".activity.MainActivity">
+        <activity android:name=".activity.LoginActivity">
 
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -22,7 +24,17 @@
             </intent-filter>
         </activity>
 
-       <activity
+
+        <activity android:name=".activity.MainActivity"/>
+        <activity android:name=".activity.EventsActivity"/>
+        <activity
+            android:name=".activity.AddNewEventActivity"
+            android:parentActivityName=".activity.EventsActivity"/>
+        <activity
+            android:name=".activity.EventActivity"
+            android:parentActivityName=".activity.EventsActivity" />
+        <activity android:name=".activity.RegisterActivity"/>
+        <activity
             android:name=".activity.PlaceOfferOverviewActivity"
             android:parentActivityName=".activity.EventActivity" />
         <activity
@@ -42,18 +54,10 @@
         <activity
             android:name=".activity.EditShoppingItemActivity"
             android:parentActivityName=".activity.ShoppingItemOverviewActivity" />
-        <activity android:name=".activity.MyEventsActivity" />
-        <activity android:name=".activity.MyEventsListViewActivity" />
         <activity android:name=".activity.InvitationListViewActivity" />
-        <activity
-            android:name=".activity.InvitationsActivity"
-            android:parentActivityName=".activity.MainActivity" />
+        <activity android:name=".activity.InvitationsActivity" />
         <activity android:name=".activity.InvitationActivity"></activity>
-        <activity android:name=".activity.AddNewEventActivity" />
         <activity android:name=".activity.UserProfileActivity" />
-        <!--<activity android:name=".activity.RegisterActivity"></activity>-->
-        <activity android:name=".activity.LoginActivity"></activity>
-
     </application>
 
 </manifest>
