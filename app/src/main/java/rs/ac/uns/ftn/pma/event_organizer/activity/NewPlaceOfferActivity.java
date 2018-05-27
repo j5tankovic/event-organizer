@@ -27,10 +27,11 @@ import rs.ac.uns.ftn.pma.event_organizer.model.PlaceOffer;
 
 public class NewPlaceOfferActivity extends AppCompatActivity {
 
-    public static final String TAG = NewPlaceOfferActivity.class.getSimpleName();
     public static final String ADDED_OFFER = "rs.ac.uns.ftn.pma.event_organizer.ADDED_OFFER";
 
     private DatabaseReference databaseReference;
+
+    private Event selectedEvent;
     private Location location;
 
     @Override
@@ -44,21 +45,18 @@ public class NewPlaceOfferActivity extends AppCompatActivity {
         ActionBar ab = getSupportActionBar();
         ab.setDisplayHomeAsUpEnabled(true);
 
+        databaseReference = FirebaseDatabase.getInstance().getReference("events");
+
         Button add = findViewById(R.id.add_placeoffer);
         add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                PlaceOffer offer = formPlaceOffer();
-                Event selectedEvent = (Event) getIntent().getExtras().get(PlaceOffersFragment.SELECTED_EVENT);
+                PlaceOffer placeOffer = formData();
 
-                List<PlaceOffer> placeOffers = new ArrayList<>();
-                if(selectedEvent.getPotentialPlaces() != null) {
-                    placeOffers = selectedEvent.getPotentialPlaces();
-                }
-                placeOffers.add(offer);
-                selectedEvent.setPotentialPlaces(placeOffers);
-                save(selectedEvent);
-                formResult(selectedEvent);
+                selectedEvent = (Event) getIntent().getExtras().get(PlaceOffersFragment.SELECTED_EVENT);
+                Event event = add(selectedEvent, placeOffer);
+                save(event);
+                formResult(event);
             }
         });
 
@@ -83,11 +81,9 @@ public class NewPlaceOfferActivity extends AppCompatActivity {
             }
         });
 
-        databaseReference = FirebaseDatabase.getInstance().getReference("events");
-
     }
 
-    private PlaceOffer formPlaceOffer() {
+    private PlaceOffer formData() {
         //TextView location = findViewById(R.id.new_placeoffer_location);
         TextView capacity = findViewById(R.id.new_placeoffer_capacity);
         TextView notes = findViewById(R.id.new_placeoffer_notes);
@@ -103,6 +99,17 @@ public class NewPlaceOfferActivity extends AppCompatActivity {
         offer.setLocation(location);
 
         return offer;
+    }
+
+    private Event add(Event selectedEvent, PlaceOffer placeOffer) {
+        List<PlaceOffer> placeOffers = new ArrayList<>();
+        if(selectedEvent.getPotentialPlaces() != null) {
+            placeOffers = selectedEvent.getPotentialPlaces();
+        }
+        placeOffers.add(placeOffer);
+        selectedEvent.setPotentialPlaces(placeOffers);
+
+        return selectedEvent;
     }
 
     private void formResult(Event event) {

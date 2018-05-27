@@ -36,8 +36,9 @@ public class PlaceOfferOverviewActivity extends AppCompatActivity implements OnM
 
     private static final String MAP_VIEW_BUNDLE_KEY = "MapViewBundleKey";
     public static final String SELECTED_EVENT = "rs.ac.uns.ftn.pma.event_organizer.SELECTED_EVENT";
-    public static final String PLACE_OFFER_ID = "rs.ac.uns.ftn.pma.event_organizer.PLACE_OFFER_ID";
     public static final String PLACE_OFFER = "rs.ac.uns.ftn.pma.event_organizer.PLACE_OFFER";
+    public static final String PLACE_OFFER_ID = "rs.ac.uns.ftn.pma.event_organizer.PLACE_OFFER_ID";
+
 
     private DatabaseReference databaseReference;
 

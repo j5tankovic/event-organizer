@@ -22,7 +22,6 @@ import rs.ac.uns.ftn.pma.event_organizer.model.Event;
  */
 public class EventGeneralFragment extends Fragment {
 
-
     public static final String SELECTED_EVENT = "rs.ac.uns.ftn.pma.event_organizer.SELECTED_EVENT";
 
     private View view;

@@ -68,24 +68,27 @@ public class ShoppingListFragment extends Fragment {
         selectedEvent = (Event) getActivity().getIntent().getExtras().get(EventsActivity.SELECTED_EVENT);
 
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
+
+        //ZA PRIKAZ JEDNOG ITEM-A, U NJEMU JE EDIT
         adapter = new ShoppingListAdapter(testData, new ClickListener() {
             @Override
             public void onPositionClicked(int position) {
-                Log.d(TAG, "onPositionClicked");
                 Intent intent = new Intent(getContext(), ShoppingItemOverviewActivity.class);
+                intent.putExtra(SELECTED_EVENT, selectedEvent);
                 intent.putExtra(SHOPPING_ITEM, testData.get(position));
                 startActivityForResult(intent, 998);
             }
 
             @Override
             public void onLongClicked(int position) {
-                Log.d(TAG, "onLongClicked");
+
             }
         });
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
         recyclerView.addItemDecoration(new DividerItemDecoration(getContext(), LinearLayoutManager.VERTICAL));
 
+        //ZA DODAVANJE NOVOG
         addShoppingItem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -97,25 +100,14 @@ public class ShoppingListFragment extends Fragment {
 
         dbReference = FirebaseDatabase.getInstance().getReference("events");
         dbReference.addChildEventListener(new ChildEventListener() {
+
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 if(dataSnapshot.child("shoppingItemList").getValue() != null && dataSnapshot.child("id").getValue().equals(selectedEvent.getId())) {
                     List<Map<String, Object>> list = (List<Map<String, Object>>) dataSnapshot.child("shoppingItemList").getValue();
                     for (Map<String, Object> map : list) {
-                        ShoppingItem shoppingItem = new ShoppingItem();
-                        for (Map.Entry<String, Object> entry : map.entrySet()) {
-                            if(entry.getKey().equals("name")) {
-                                shoppingItem.setName((String) entry.getValue());
-                            } else if(entry.getKey().equals("description")) {
-                                shoppingItem.setDescription((String) entry.getValue());
-                            } else if(entry.getKey().equals("quantity")) {
-                                shoppingItem.setQuantity((Long) entry.getValue());
-                            } else if(entry.getKey().equals("price")) {
-                                shoppingItem.setPrice((Long) entry.getValue());
-                            } else if(entry.getKey().equals("status")) {
-                                shoppingItem.setStatus((Boolean) entry.getValue());
-                            }
-                        }
+                        ShoppingItem shoppingItem = getFromMap(map);
+
                         testData.add(shoppingItem);
                         adapter.notifyDataSetChanged();
                     }
@@ -125,12 +117,13 @@ public class ShoppingListFragment extends Fragment {
 
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                ShoppingItem item = dataSnapshot.getValue(ShoppingItem.class);
-                for (ShoppingItem si: testData) {
-                    if (item.getId().equals(si.getId())) {
-                        adapter.notifyDataSetChanged();
-                    }
-                }
+                adapter.notifyDataSetChanged();
+//                ShoppingItem item = dataSnapshot.getValue(ShoppingItem.class);
+//                for (ShoppingItem si: testData) {
+//                    if (item.getId().equals(si.getId())) {
+//                        adapter.notifyDataSetChanged();
+//                    }
+//                }
             }
 
             @Override
@@ -163,10 +156,30 @@ public class ShoppingListFragment extends Fragment {
 //                //removeFromList(item);
 //                adapter.notifyDataSetChanged();
 //            }
-        } else if (requestCode == 995 && resultCode == RESULT_OK) {
+        } else if (requestCode == 995 && resultCode == RESULT_OK) { //DODAVANJE
             ShoppingItem item = (ShoppingItem) data.getExtras().get(NewShoppingItemActivity.ADDED_ITEM);
+            testData.add(item);
             adapter.notifyDataSetChanged();
         }
+    }
+
+    private ShoppingItem getFromMap(Map<String, Object> map) {
+        ShoppingItem shoppingItem = new ShoppingItem();
+        for (Map.Entry<String, Object> entry : map.entrySet()) {
+            if(entry.getKey().equals("name")) {
+                shoppingItem.setName((String) entry.getValue());
+            } else if(entry.getKey().equals("description")) {
+                shoppingItem.setDescription((String) entry.getValue());
+            } else if(entry.getKey().equals("quantity")) {
+                shoppingItem.setQuantity((Long) entry.getValue());
+            } else if(entry.getKey().equals("price")) {
+                shoppingItem.setPrice((Long) entry.getValue());
+            } else if(entry.getKey().equals("status")) {
+                shoppingItem.setStatus((Boolean) entry.getValue());
+            }
+        }
+
+        return shoppingItem;
     }
 
     private ShoppingItem findById(String id) {

@@ -23,6 +23,11 @@ import rs.ac.uns.ftn.pma.event_organizer.model.PlaceOffer;
 
 public class EditPlaceOfferActivity extends AppCompatActivity {
 
+    public static final String SELECTED_EVENT = "rs.ac.uns.ftn.pma.event_organizer.SELECTED_EVENT";
+    public static final String EDITED_OFFER = "rs.ac.uns.ftn.pma.event_organizer.EDITED_OFFER";
+
+    private DatabaseReference databaseReference;
+
     private Event selectedEvent;
     private PlaceOffer placeOffer;
     private PlaceOffer placeOffer2Remove;
@@ -31,9 +36,6 @@ public class EditPlaceOfferActivity extends AppCompatActivity {
     private TextView notes;
     private TextView capacity;
     private TextView price;
-
-    public static final String SELECTED_EVENT = "rs.ac.uns.ftn.pma.event_organizer.SELECTED_EVENT";
-    public static final String EDITED_OFFER = "rs.ac.uns.ftn.pma.event_organizer.EDITED_OFFER";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,12 +48,13 @@ public class EditPlaceOfferActivity extends AppCompatActivity {
         ActionBar ab = getSupportActionBar();
         ab.setDisplayHomeAsUpEnabled(true);
 
+        databaseReference = FirebaseDatabase.getInstance().getReference("events");
+
         Intent intent = getIntent();
         selectedEvent = (Event) intent.getExtras().get(PlaceOfferOverviewActivity.SELECTED_EVENT);
-
         placeOffer = (PlaceOffer) intent.getExtras().get(PlaceOfferOverviewActivity.PLACE_OFFER);
-
         placeOffer2Remove = (PlaceOffer) intent.getExtras().get(PlaceOfferOverviewActivity.PLACE_OFFER);
+
 
         location = findViewById(R.id.edit_placeoffer_location);
         location.setText(placeOffer.getLocation().getAddress());
@@ -70,28 +73,12 @@ public class EditPlaceOfferActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 placeOffer = formData();
-                Event selectedEvent = (Event) getIntent().getExtras().get(PlaceOfferOverviewActivity.SELECTED_EVENT);
-
-                List<PlaceOffer> placeOffers = selectedEvent.getPotentialPlaces();
-                System.out.println("------------" + placeOffers.size());
-                System.out.println("------------" + placeOffers.get(0).toString());
-                System.out.println("------------" + placeOffer2Remove.toString());
-                for (int i = 0; i < placeOffers.size(); i++) {
-                    if(placeOffers.get(i).getId().equals(placeOffer2Remove.getId())) {
-                        //placeOffers.remove(i);
-                        placeOffers.get(i).setLocationName(placeOffer.getLocationName());
-                        placeOffers.get(i).setNotes(placeOffer.getNotes());
-                        placeOffers.get(i).setCapacity(placeOffer.getCapacity());
-                        placeOffers.get(i).setPrice(placeOffer.getPrice());
-                    }
-                }
-                System.out.println("------------" + placeOffers.size());
-                //placeOffers.add(placeOffer);
-                selectedEvent.setPotentialPlaces(placeOffers);
-                edit(selectedEvent);
-                formResult();
+                Event event = edit(selectedEvent);
+                save(event);
+                formResult(event);
             }
         });
+
     }
 
     private PlaceOffer formData() {
@@ -101,18 +88,30 @@ public class EditPlaceOfferActivity extends AppCompatActivity {
         return  placeOffer;
     }
 
-    private void formResult() {
+    private Event edit(Event selectedEvent) {
+        List<PlaceOffer> placeOffers = selectedEvent.getPotentialPlaces();
+
+        for (int i = 0; i < placeOffers.size(); i++) {
+            if(placeOffers.get(i).getId().equals(placeOffer2Remove.getId())) {
+                placeOffers.get(i).setLocationName(placeOffer.getLocationName());
+                placeOffers.get(i).setNotes(placeOffer.getNotes());
+                placeOffers.get(i).setCapacity(placeOffer.getCapacity());
+                placeOffers.get(i).setPrice(placeOffer.getPrice());
+            }
+        }
+        selectedEvent.setPotentialPlaces(placeOffers);
+        return selectedEvent;
+    }
+
+    private void formResult(Event event) {
         Intent i = new Intent();
-        i.putExtra(SELECTED_EVENT, selectedEvent);
+        i.putExtra(SELECTED_EVENT, event);
         i.putExtra(EDITED_OFFER, placeOffer);
         setResult(RESULT_OK, i);
         finish();
     }
 
-    private void edit(Event event) {
-        DatabaseReference databaseReference = FirebaseDatabase.getInstance()
-                .getReference("events");
-
+    private void save(Event event) {
         databaseReference.child(event.getId()).setValue(event);
     }
 }

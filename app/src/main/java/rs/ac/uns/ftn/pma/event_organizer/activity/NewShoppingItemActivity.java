@@ -96,13 +96,6 @@ public class NewShoppingItemActivity extends AppCompatActivity {
         finish();
     }
 
-//    private void save(ShoppingItem item) {
-//        String key = databaseReference.push().getKey();
-//
-//        item.setId(key);
-//        databaseReference.child(key).setValue(item);
-//    }
-
     private void save(Event event) {
         databaseReference.child(event.getId()).setValue(event);
     }
