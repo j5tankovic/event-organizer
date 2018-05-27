@@ -1,7 +1,9 @@
 package rs.ac.uns.ftn.pma.event_organizer.activity;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -17,6 +19,10 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.firebase.ui.storage.images.FirebaseImageLoader;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 
 import com.google.firebase.database.ChildEventListener;
@@ -24,7 +30,9 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
@@ -37,6 +45,8 @@ import rs.ac.uns.ftn.pma.event_organizer.adapter.EventsAdapter;
 import rs.ac.uns.ftn.pma.event_organizer.model.Event;
 import rs.ac.uns.ftn.pma.event_organizer.model.EventCategory;
 import rs.ac.uns.ftn.pma.event_organizer.model.ShoppingItem;
+import rs.ac.uns.ftn.pma.event_organizer.model.User;
+import rs.ac.uns.ftn.pma.event_organizer.services.AuthentificationService;
 
 
 public class EventsActivity extends AppCompatActivity {
@@ -61,11 +71,13 @@ public class EventsActivity extends AppCompatActivity {
     private NavigationView navigationView;
     private DrawerLayout drawer;
     private View navHeader;
+    private ImageView imageView;
     private TextView txtName;
     private Toolbar myToolbar;
 
-    private DatabaseReference databaseReference;
     private FirebaseDatabase firebaseDatabase;
+    private DatabaseReference databaseReference;
+    private DatabaseReference databaseReferenceUsers;
     private StorageReference storageReference;
     private FirebaseAuth mAuth;
 
@@ -82,14 +94,59 @@ public class EventsActivity extends AppCompatActivity {
         myToolbar = (Toolbar) findViewById(R.id.my_events_toolbar);
         myToolbar.showOverflowMenu();
 
+        drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        navigationView = (NavigationView) findViewById(R.id.nav_view);
+
+        // Navigation view header
+        navHeader = navigationView.getHeaderView(0);
+        txtName = (TextView) navHeader.findViewById(R.id.name);
+        imageView = navHeader.findViewById(R.id.image);
+
+        // load toolbar titles from string resources
+        activityTitles = getResources().getStringArray(R.array.nav_item_activity_titles);
+
+        // showing dot next to notifications label
+        //navigationView.getMenu().getItem(3).setActionView(R.layout.);
+
+        // initializing navigation menu
+        setUpNavigationView();
         ImageView profileImage = (ImageView) findViewById(R.id.my_events_profile_image);
         profileImage.setImageResource(R.drawable.profile);
         profileImage.setClickable(true);
 
         firebaseDatabase = FirebaseDatabase.getInstance();
         databaseReference = firebaseDatabase.getReference().child("events");
-
+        databaseReferenceUsers = FirebaseDatabase.getInstance().getReference("users");
         mAuth = FirebaseAuth.getInstance();
+
+        Query query = databaseReferenceUsers.orderByChild("email").equalTo(mAuth.getCurrentUser().getEmail());
+        query.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                User loggedUser = null;
+                for (DataSnapshot user: dataSnapshot.getChildren()) {
+                    loggedUser = user.getValue(User.class);
+                }
+
+                //imageView.setImage
+                txtName.setText(loggedUser.getName() + " " + loggedUser.getLastName()); //UPISATI IME I PREZIME ULOGOVANOG
+                storageReference = FirebaseStorage.getInstance().getReference().child(loggedUser.getProfilePicture());
+
+
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+        AuthentificationService service = new AuthentificationService();
+        User loggedUser = service.getLoggedUser(mAuth.getCurrentUser().getEmail());
+
+        Glide.with(this)
+                .using(new FirebaseImageLoader())
+                .load(storageReference)
+                .into(imageView);
 
 //        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
 //            @Override
@@ -155,23 +212,7 @@ public class EventsActivity extends AppCompatActivity {
             }
         });
 
-        drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        navigationView = (NavigationView) findViewById(R.id.nav_view);
 
-        // Navigation view header
-        navHeader = navigationView.getHeaderView(0);
-        txtName = (TextView) navHeader.findViewById(R.id.name);
-
-        // load toolbar titles from string resources
-        activityTitles = getResources().getStringArray(R.array.nav_item_activity_titles);
-
-        txtName.setText("Jovan Jovanovic"); //UPISATI IME I PREZIME ULOGOVANOG
-
-        // showing dot next to notifications label
-        //navigationView.getMenu().getItem(3).setActionView(R.layout.);
-
-        // initializing navigation menu
-        setUpNavigationView();
 
     }
 
