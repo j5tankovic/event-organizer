@@ -18,8 +18,13 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
@@ -35,6 +40,8 @@ import java.util.List;
 import rs.ac.uns.ftn.pma.event_organizer.R;
 import rs.ac.uns.ftn.pma.event_organizer.model.Event;
 import rs.ac.uns.ftn.pma.event_organizer.model.EventCategory;
+import rs.ac.uns.ftn.pma.event_organizer.model.User;
+import rs.ac.uns.ftn.pma.event_organizer.services.AuthentificationService;
 
 public class AddNewEventActivity extends AppCompatActivity {
 
@@ -62,6 +69,13 @@ public class AddNewEventActivity extends AppCompatActivity {
     private DatabaseReference databaseReferenceEventCategories;
     private FirebaseDatabase firebaseDatabase;
     private StorageReference storageReference;
+    private DatabaseReference databaseReferenceUsers;
+    private FirebaseAuth mAuth;
+
+
+    private User currentUser;
+
+    Event event = new Event();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,15 +84,21 @@ public class AddNewEventActivity extends AppCompatActivity {
 
         firebaseDatabase = FirebaseDatabase.getInstance();
         databaseReference = firebaseDatabase.getReference("events");
-        databaseReferenceEventCategories = firebaseDatabase.getReference("event_categories");
+        databaseReferenceEventCategories = firebaseDatabase.getReference("eventCategories");
         storageReference = FirebaseStorage.getInstance().getReference();
+        databaseReferenceUsers = FirebaseDatabase.getInstance().getReference("users");
+        mAuth = FirebaseAuth.getInstance();
+
 
 //        EventCategory eventCategory1 = new EventCategory();
-//        eventCategory1.setName("Kategorija 1");
+//        eventCategory1.setName("Rodjendan");
 //        saveCategory(eventCategory1);
 //        EventCategory eventCategory2 = new EventCategory();
-//        eventCategory2.setName("Kategorija 2");
+//        eventCategory2.setName("Zurka");
 //        saveCategory(eventCategory2);
+//        EventCategory eventCategory3 = new EventCategory();
+//        eventCategory3.setName("Svadba");
+//        saveCategory(eventCategory3);
 
         name = findViewById(R.id.new_event_name);
         description = findViewById(R.id.new_event_description);
@@ -114,12 +134,32 @@ public class AddNewEventActivity extends AppCompatActivity {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         categories.setAdapter(adapter);
 
+        Query query = databaseReferenceUsers.orderByChild("email").equalTo(mAuth.getCurrentUser().getEmail());
+        query.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                User loggedUser = null;
+                for (DataSnapshot user: dataSnapshot.getChildren()) {
+                    loggedUser = user.getValue(User.class);
+                    event.setCreator(loggedUser);
+
+                }
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+        AuthentificationService service = new AuthentificationService();
+        User loggedUser = service.getLoggedUser(mAuth.getCurrentUser().getEmail());
+
 
         add = findViewById(R.id.add_new_event);
         add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Event event = formEvent();
+                event = formEvent();
                 save(event);
                 formResult(event);
 
@@ -135,7 +175,6 @@ public class AddNewEventActivity extends AppCompatActivity {
     }
 
     private Event formEvent() {
-        Event event = new Event();
         event.setName(name.getText().toString());
         event.setDescription(description.getText().toString());
         SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy HH:mm");
@@ -172,12 +211,12 @@ public class AddNewEventActivity extends AppCompatActivity {
         databaseReference.child(key).setValue(event);
     }
 
-//    private void saveCategory(EventCategory eventCategory) {
-//        String key = databaseReferenceEventCategories.push().getKey();
-//
-//        eventCategory.setId(key);
-//        databaseReferenceEventCategories.child(key).setValue(eventCategory);
-//    }
+    private void saveCategory(EventCategory eventCategory) {
+        String key = databaseReferenceEventCategories.push().getKey();
+
+        eventCategory.setId(key);
+        databaseReferenceEventCategories.child(key).setValue(eventCategory);
+    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {

@@ -11,6 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scaleType="fitXY"
+        android:src="@drawable/background"
         />
 
     <LinearLayout
@@ -33,6 +34,6 @@
         android:layout_height="wrap_content"
         android:paddingTop="@dimen/nav_header_vertical_spacing"
         android:textColor="@color/primary_text" />
-       
+
     </LinearLayout>
 </RelativeLayout>

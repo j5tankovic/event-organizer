@@ -21,6 +21,7 @@ public class Event implements Serializable {
     private List<PlaceOffer> potentialPlaces;
     private PlaceOffer finalPlace;
     private EventCategory eventCategory;
+    private User creator;
 
     public Event(String id, String name, Date startDateTime, Date endDateTime, String description, long budget, String image) {
         this.id = id;
@@ -128,7 +129,15 @@ public class Event implements Serializable {
     public void setFinalPlace(PlaceOffer finalPlace) {
         this.finalPlace = finalPlace;
     }
-    
+
+    public User getCreator() {
+        return creator;
+    }
+
+    public void setCreator(User creator) {
+        this.creator = creator;
+    }
+
     @Override
     public String toString() {
         return "Event{" +
@@ -138,7 +147,12 @@ public class Event implements Serializable {
                 ", endDateTime=" + endDateTime +
                 ", description='" + description + '\'' +
                 ", budget=" + budget +
+                ", image='" + image + '\'' +
+                ", shoppingItemList=" + shoppingItemList +
+                ", potentialPlaces=" + potentialPlaces +
+                ", finalPlace=" + finalPlace +
                 ", eventCategory=" + eventCategory +
+                ", creator=" + creator +
                 '}';
     }
 }
