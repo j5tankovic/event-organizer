@@ -125,6 +125,8 @@ public class ShoppingListFragment extends Fragment {
 //                        adapter.notifyDataSetChanged();
 //                    }
 //                }
+                Event event = dataSnapshot.getValue(Event.class);
+                selectedEvent = event;
             }
 
             @Override

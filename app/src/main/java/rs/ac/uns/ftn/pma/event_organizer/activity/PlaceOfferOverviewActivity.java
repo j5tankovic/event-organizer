@@ -38,6 +38,7 @@ public class PlaceOfferOverviewActivity extends AppCompatActivity implements OnM
 
     private Event selectedEvent;
     private PlaceOffer placeOffer;
+    private String pos;
 
     private DatabaseReference databaseReference;
 
@@ -55,6 +56,7 @@ public class PlaceOfferOverviewActivity extends AppCompatActivity implements OnM
         Intent intent = getIntent();
         selectedEvent = (Event) intent.getExtras().get(PlaceOffersFragment.SELECTED_EVENT);
         placeOffer = (PlaceOffer) intent.getExtras().get(PlaceOffersFragment.PLACE_OFFER);
+        pos = String.valueOf(intent.getIntExtra("PLACE_OFFER_POS", -1));
 
         fillUi();
 
@@ -173,7 +175,7 @@ public class PlaceOfferOverviewActivity extends AppCompatActivity implements OnM
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        //delete(selectedEvent);
+                        delete(placeOffer);
                         formResult();
                     }
                 })
@@ -212,7 +214,7 @@ public class PlaceOfferOverviewActivity extends AppCompatActivity implements OnM
         finish();
     }
 
-//    private void delete(Event event) {
-//        databaseReference.child(event.getId()).setValue(event);
-//    }
+    private void delete(PlaceOffer placeOffer) {
+        databaseReference.child("potentialPlaces").child(pos).setValue(null);
+    }
 }

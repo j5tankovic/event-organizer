@@ -74,6 +74,7 @@ public class PlaceOffersFragment extends Fragment {
                 Intent intent = new Intent(getContext(), PlaceOfferOverviewActivity.class);
                 intent.putExtra(SELECTED_EVENT, selectedEvent);
                 intent.putExtra(PLACE_OFFER, testData.get(position));
+                intent.putExtra("PLACE_OFFER_POS", position);
                 startActivityForResult(intent, 998);
             }
 
@@ -114,8 +115,8 @@ public class PlaceOffersFragment extends Fragment {
 
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
-                //adapter.notifyDataSetChanged();
+               Event event = dataSnapshot.getValue(Event.class);
+               selectedEvent = event;
             }
 
             @Override

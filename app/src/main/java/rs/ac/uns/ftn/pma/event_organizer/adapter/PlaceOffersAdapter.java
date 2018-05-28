@@ -76,7 +76,7 @@ public class PlaceOffersAdapter extends RecyclerView.Adapter<PlaceOffersAdapter.
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-          holder.textView.setText(testSet.get(position).getLocationName());
+//          holder.textView.setText(testSet.get(position).getLocationName());
     //    holder.textView.setText(testSet.get(position).getLocation().getName()); //PUCA
     }
 
