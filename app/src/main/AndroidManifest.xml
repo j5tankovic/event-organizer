@@ -16,7 +16,7 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyACF0eBzPtMZIbnjc0hAcnt3cnHh0L6VjQ" />
 
-        <activity android:name=".activity.LoginActivity">
+        <activity android:name=".activity.UserProfileActivity">
 
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -57,7 +57,10 @@
         <activity android:name=".activity.InvitationListViewActivity" />
         <activity android:name=".activity.InvitationsActivity" />
         <activity android:name=".activity.InvitationActivity"></activity>
-        <activity android:name=".activity.UserProfileActivity" />
+       <!-- <activity android:name=".activity.UserProfileActivity" />-->
+<!--
+        <activity android:name=".activity.LoginActivity" />
+-->
     </application>
 
 </manifest>

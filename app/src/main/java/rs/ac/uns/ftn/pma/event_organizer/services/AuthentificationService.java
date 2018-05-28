@@ -59,7 +59,7 @@ public class AuthentificationService {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 
-                //System.out.println("**********************DATA SNAPSHOT: " + dataSnapshot.toString());
+                System.out.println("**********************DATA SNAPSHOT: " + dataSnapshot.toString());
                 System.out.println("\n\nDATA SNAPSHOT: " + dataSnapshot.toString());
                 for (DataSnapshot snapshot: dataSnapshot.getChildren()) {
                     user = snapshot.getValue(User.class);

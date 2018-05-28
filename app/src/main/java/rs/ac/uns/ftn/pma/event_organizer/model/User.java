@@ -31,6 +31,18 @@ public class User implements Serializable {
         this.invitations = invitations;
     }
 
+    public User(long id, String username, String password, String email, String name, String lastName, String profilePicture, List<Event> createdEvents, List<Invitation> invitations) {
+        this.id = id;
+        this.username = username;
+        this.password = password;
+        this.email = email;
+        this.name = name;
+        this.lastName = lastName;
+        this.profilePicture = profilePicture;
+        this.createdEvents = createdEvents;
+        this.invitations = invitations;
+    }
+
     public User(long id, String username, String password, String email, String name, String lastName) {
         this.id = id;
         this.username = username;
@@ -128,6 +140,7 @@ public class User implements Serializable {
                 ", email='" + email + '\'' +
                 ", name='" + name + '\'' +
                 ", lastName='" + lastName + '\'' +
+                ", profilePicture='" + profilePicture + '\'' +
                 ", createdEvents=" + createdEvents +
                 ", invitations=" + invitations +
                 '}';
