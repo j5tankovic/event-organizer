@@ -37,9 +37,9 @@ public class EventsAdapter extends ArrayAdapter<Event> {
         String date1str = "";
         String date2str = "";
         if(events.get(position).getStartDateTime() != null)
-            date1str = new SimpleDateFormat("dd.MM.yyyy").format(events.get(position).getStartDateTime());
+            date1str = new SimpleDateFormat("dd.MM.yyyy HH:mm").format(events.get(position).getStartDateTime());
         if(events.get(position).getEndDateTime() != null)
-            date2str = new SimpleDateFormat("dd.MM.yyyy").format(events.get(position).getEndDateTime());
+            date2str = new SimpleDateFormat("dd.MM.yyyy HH:mm").format(events.get(position).getEndDateTime());
 
         date.setText(date1str + " - " + date2str);
 

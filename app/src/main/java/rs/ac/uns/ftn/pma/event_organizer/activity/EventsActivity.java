@@ -1,7 +1,11 @@
 package rs.ac.uns.ftn.pma.event_organizer.activity;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -17,6 +21,10 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.firebase.ui.storage.images.FirebaseImageLoader;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 
 import com.google.firebase.database.ChildEventListener;
@@ -24,9 +32,12 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -37,6 +48,8 @@ import rs.ac.uns.ftn.pma.event_organizer.adapter.EventsAdapter;
 import rs.ac.uns.ftn.pma.event_organizer.model.Event;
 import rs.ac.uns.ftn.pma.event_organizer.model.EventCategory;
 import rs.ac.uns.ftn.pma.event_organizer.model.ShoppingItem;
+import rs.ac.uns.ftn.pma.event_organizer.model.User;
+import rs.ac.uns.ftn.pma.event_organizer.services.AuthentificationService;
 
 
 public class EventsActivity extends AppCompatActivity {
@@ -46,9 +59,11 @@ public class EventsActivity extends AppCompatActivity {
 
     // tags used to attach the fragments
     public static final String EVENT = "rs.ac.uns.ftn.pma.event_organizer.EVENT";
-    private static final String TAG_HOME = "home";
-    private static final String TAG_SETTINGS = "settings";
+    public static final String SELECTED_EVENT = "rs.ac.uns.ftn.pma.event_organizer.SELECTED_EVENT";
+    private static final String TAG_HOME = "My events";
+    private static final String TAG_INVITATIONS = "My invitations";
     private static final String TAG_LOGOUT = "logout";
+    private static final String TAG_PROFILE = "profile";
 
     public static String CURRENT_TAG = TAG_HOME;
 
@@ -59,17 +74,22 @@ public class EventsActivity extends AppCompatActivity {
     private NavigationView navigationView;
     private DrawerLayout drawer;
     private View navHeader;
+    private ImageView imageView;
     private TextView txtName;
     private Toolbar myToolbar;
 
-    private DatabaseReference databaseReference;
     private FirebaseDatabase firebaseDatabase;
+    private DatabaseReference databaseReference;
+    private DatabaseReference databaseReferenceUsers;
     private StorageReference storageReference;
     private FirebaseAuth mAuth;
 
     private List<Event> allEvents = new ArrayList<>();
     private List<Event> testData = new ArrayList<>();
     private EventsAdapter adapter;
+    Uri filePath;
+
+    User loggedUser = new User();
 
 
     @Override
@@ -80,14 +100,91 @@ public class EventsActivity extends AppCompatActivity {
         myToolbar = (Toolbar) findViewById(R.id.my_events_toolbar);
         myToolbar.showOverflowMenu();
 
-        ImageView profileImage = (ImageView) findViewById(R.id.my_events_profile_image);
-        profileImage.setImageResource(R.drawable.profile);
-        profileImage.setClickable(true);
+        drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        navigationView = (NavigationView) findViewById(R.id.nav_view);
+
+        // Navigation view header
+        navHeader = navigationView.getHeaderView(0);
+        txtName = (TextView) navHeader.findViewById(R.id.name);
+        imageView = navHeader.findViewById(R.id.image);
+
+        // load toolbar titles from string resources
+        activityTitles = getResources().getStringArray(R.array.nav_item_activity_titles);
+
+        // showing dot next to notifications label
+        //navigationView.getMenu().getItem(3).setActionView(R.layout.);
+
+        // initializing navigation menu
+        setUpNavigationView();
 
         firebaseDatabase = FirebaseDatabase.getInstance();
         databaseReference = firebaseDatabase.getReference().child("events");
-
+        databaseReferenceUsers = FirebaseDatabase.getInstance().getReference("users");
         mAuth = FirebaseAuth.getInstance();
+
+        adapter = new EventsAdapter(this,R.layout.activity_events_list, testData);
+        listView = (ListView) findViewById(R.id.my_events_list);
+        listView.setAdapter(adapter);
+
+        Query query = databaseReferenceUsers.orderByChild("email").equalTo(mAuth.getCurrentUser().getEmail());
+        query.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot user: dataSnapshot.getChildren()) {
+                    loggedUser = user.getValue(User.class);
+                }
+
+                txtName.setText(loggedUser.getName() + " " + loggedUser.getLastName()); //UPISATI IME I PREZIME ULOGOVANOG
+//                storageReference = FirebaseStorage.getInstance().getReference().child(loggedUser.getProfilePicture());
+
+                databaseReference.addChildEventListener(new ChildEventListener() {
+
+                    @Override
+                    public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+
+                        Event event = dataSnapshot.getValue(Event.class);
+                        if(event.getCreator().getUsername().equals(loggedUser.getUsername())) {
+                            testData.add(event);
+                            adapter.notifyDataSetChanged();
+
+                        }
+                    }
+
+                    @Override
+                    public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+                    }
+
+                    @Override
+                    public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+                    }
+
+                    @Override
+                    public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+//        AuthentificationService service = new AuthentificationService();
+//        final User loggedUser = service.getLoggedUser(mAuth.getCurrentUser().getEmail());
+
+//        Glide.with(this)
+//                .using(new FirebaseImageLoader())
+//                .load(storageReference)
+//                .into(imageView);
 
 //        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
 //            @Override
@@ -100,37 +197,44 @@ public class EventsActivity extends AppCompatActivity {
 //            }
 //        });
 
-        databaseReference.addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                Event event = dataSnapshot.getValue(Event.class);
-                testData.add(event);
-                adapter.notifyDataSetChanged();
-            }
+//
+//        databaseReference.addChildEventListener(new ChildEventListener() {
+//
+//            @Override
+//            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+//
+//                Event event = dataSnapshot.getValue(Event.class);
+//                if(event.getCreator().getUsername().equals(loggedUser.getUsername())) {
+//                    testData.add(event);
+//                    adapter.notifyDataSetChanged();
+//
+//                }
+//            }
+//
+//            @Override
+//            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+//
+//            }
+//
+//            @Override
+//            public void onChildRemoved(DataSnapshot dataSnapshot) {
+//
+//            }
+//
+//            @Override
+//            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+//
+//            }
+//
+//            @Override
+//            public void onCancelled(DatabaseError databaseError) {
+//
+//            }
+//        });
 
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
 
-            }
 
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
 
-            }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-        adapter = new EventsAdapter(this,R.layout.activity_events_list, testData);
-        listView = (ListView) findViewById(R.id.my_events_list);
-        listView.setAdapter(adapter);
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -138,7 +242,7 @@ public class EventsActivity extends AppCompatActivity {
                 Intent intent = new Intent(getApplicationContext(),
                         EventActivity.class);
 
-                intent.putExtra(EVENT, testData.get(position));
+                intent.putExtra(SELECTED_EVENT, testData.get(position));
 
                 startActivity(intent);
             }
@@ -152,30 +256,25 @@ public class EventsActivity extends AppCompatActivity {
             }
         });
 
-        drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        navigationView = (NavigationView) findViewById(R.id.nav_view);
-
-        // Navigation view header
-        navHeader = navigationView.getHeaderView(0);
-        txtName = (TextView) navHeader.findViewById(R.id.name);
-
-        // load toolbar titles from string resources
-        activityTitles = getResources().getStringArray(R.array.nav_item_activity_titles);
-
-        txtName.setText("Jovan Jovanovic");
-
-        // showing dot next to notifications label
-        //navigationView.getMenu().getItem(3).setActionView(R.layout.);
-
-        // initializing navigation menu
-        setUpNavigationView();
-
     }
+
+
+//    public List<Event> prepareTest(){
+//        for(Event event : allEvents){
+//            if(event.getCreator().getUsername().equals(loggedUser.getUsername())) {
+//                testData.add(event);
+//            }
+//        }
+//        return testData;
+//
+//    }
 
     public void prepareTest(){
         for(Event event : allEvents){
-            testData.add(event);
-            adapter.notifyDataSetChanged();
+            if(event.getCreator().getUsername().equals(loggedUser.getUsername())) {
+                testData.add(event);
+                adapter.notifyDataSetChanged();
+            }
         }
 
     }
@@ -200,6 +299,11 @@ public class EventsActivity extends AppCompatActivity {
             EventCategory eventCategory = new EventCategory((String) eventCategoryMap.get("name"));
             event.setEventCategory(eventCategory);
 
+            Map creatorMap = (Map) value.get("creator");
+            User creator = new User((String) creatorMap.get("username"));
+            event.setCreator(creator);
+
+
             allEvents.add(event);
         }
         prepareTest();
@@ -214,27 +318,34 @@ public class EventsActivity extends AppCompatActivity {
             public boolean onNavigationItemSelected(MenuItem menuItem) {
 
                 switch (menuItem.getItemId()) {
-                    case R.id.home:
+                    case R.id.my_invitations:
                         navItemIndex = 0;
-                        CURRENT_TAG = TAG_HOME;
+                        CURRENT_TAG = TAG_INVITATIONS;
+                        Intent intent = new Intent(EventsActivity.this, InvitationsActivity.class);
+                        startActivity(intent);
                         break;
-                    case R.id.settings:
+                    case R.id.my_events:
                         navItemIndex = 1;
-                        CURRENT_TAG = TAG_SETTINGS;
+                        CURRENT_TAG = TAG_HOME;
+                        Intent intent1 = new Intent(EventsActivity.this, EventsActivity.class);
+                        startActivity(intent1);
+                        break;
+                    case R.id.profile:
+                        navItemIndex = 2;
+                        CURRENT_TAG = TAG_PROFILE;
+                        openUserProfileActivity();
                         break;
                     case R.id.logout:
-                        navItemIndex = 2;
+                        navItemIndex = 3;
                         CURRENT_TAG = TAG_LOGOUT;
                         logout();
                         Toast.makeText(EventsActivity.this,"LOGOUT", Toast.LENGTH_LONG);
                         break;
 
-                    case R.id.my_invitations:
-                        Intent intent = new Intent(EventsActivity.this, InvitationsActivity.class);
-                        startActivity(intent);
-                        break;
                     default:
                         navItemIndex = 0;
+                        Intent intent2 = new Intent(EventsActivity.this, EventsActivity.class);
+                        startActivity(intent2);
                 }
 
                 //Checking if the item is in checked state or not, if not make it in checked state

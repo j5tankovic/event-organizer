@@ -23,17 +23,22 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import rs.ac.uns.ftn.pma.event_organizer.R;
 import rs.ac.uns.ftn.pma.event_organizer.fragment.PlaceOffersFragment;
+import rs.ac.uns.ftn.pma.event_organizer.model.Event;
 import rs.ac.uns.ftn.pma.event_organizer.model.PlaceOffer;
 
 public class PlaceOfferOverviewActivity extends AppCompatActivity implements OnMapReadyCallback {
 
+    private static final String MAP_VIEW_BUNDLE_KEY = "MapViewBundleKey";
+    public static final String SELECTED_EVENT = "rs.ac.uns.ftn.pma.event_organizer.SELECTED_EVENT";
+    public static final String PLACE_OFFER = "rs.ac.uns.ftn.pma.event_organizer.PLACE_OFFER";
+    public static final String PLACE_OFFER_ID = "rs.ac.uns.ftn.pma.event_organizer.PLACE_OFFER_ID";
+
     private MapView mapView;
     private GoogleMap gMap;
-    private PlaceOffer placeOffer;
 
-    private static final String MAP_VIEW_BUNDLE_KEY = "MapViewBundleKey";
-    public static final String PLACE_OFFER_ID = "rs.ac.uns.ftn.pma.event_organizer.PLACE_OFFER_ID";
-    public static final String PLACE_OFFER = "rs.ac.uns.ftn.pma.event_organizer.PLACE_OFFER";
+    private Event selectedEvent;
+    private PlaceOffer placeOffer;
+    private String pos;
 
     private DatabaseReference databaseReference;
 
@@ -49,7 +54,9 @@ public class PlaceOfferOverviewActivity extends AppCompatActivity implements OnM
         ab.setDisplayHomeAsUpEnabled(true);
 
         Intent intent = getIntent();
+        selectedEvent = (Event) intent.getExtras().get(PlaceOffersFragment.SELECTED_EVENT);
         placeOffer = (PlaceOffer) intent.getExtras().get(PlaceOffersFragment.PLACE_OFFER);
+        pos = String.valueOf(intent.getIntExtra("PLACE_OFFER_POS", -1));
 
         fillUi();
 
@@ -62,7 +69,7 @@ public class PlaceOfferOverviewActivity extends AppCompatActivity implements OnM
         mapView.onCreate(mapViewBundle);
         mapView.getMapAsync(this);
 
-        databaseReference = FirebaseDatabase.getInstance().getReference("place_offers");
+        databaseReference = FirebaseDatabase.getInstance().getReference("events");
     }
 
     @Override
@@ -148,6 +155,7 @@ public class PlaceOfferOverviewActivity extends AppCompatActivity implements OnM
     private void openEditActivity() {
         Intent intent = new Intent(this, EditPlaceOfferActivity.class);
         intent.putExtra(PLACE_OFFER, placeOffer);
+        intent.putExtra(SELECTED_EVENT, selectedEvent);
         startActivityForResult(intent, 997);
     }
 
@@ -167,7 +175,7 @@ public class PlaceOfferOverviewActivity extends AppCompatActivity implements OnM
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        delete();
+                        delete(placeOffer);
                         formResult();
                     }
                 })
@@ -181,7 +189,8 @@ public class PlaceOfferOverviewActivity extends AppCompatActivity implements OnM
 
     private void fillUi() {
         TextView location = findViewById(R.id.placeoffer_location);
-        location.setText(placeOffer.getLocation().getAddress());
+        //location.setText(placeOffer.getLocation().getAddress());
+        location.setText(placeOffer.getLocationName());
 
         TextView notes = findViewById(R.id.placeoffer_notes);
         notes.setText(placeOffer.getNotes());
@@ -192,18 +201,20 @@ public class PlaceOfferOverviewActivity extends AppCompatActivity implements OnM
         TextView price = findViewById(R.id.placeoffer_price);
         price.setText(String.valueOf(placeOffer.getPrice()));
 
-        getSupportActionBar().setTitle(placeOffer.getLocation().getAddress());
+        //getSupportActionBar().setTitle(placeOffer.getLocation().getAddress());
+        getSupportActionBar().setTitle(placeOffer.getLocationName());
 
     }
 
     private void formResult() {
         Intent i = new Intent();
         i.putExtra(PLACE_OFFER_ID, placeOffer.getId());
+        i.putExtra(PLACE_OFFER, placeOffer);
         setResult(RESULT_OK, i);
         finish();
     }
 
-    private void delete() {
-        databaseReference.child(placeOffer.getId()).setValue(null);
+    private void delete(PlaceOffer placeOffer) {
+        databaseReference.child("potentialPlaces").child(pos).setValue(null);
     }
 }

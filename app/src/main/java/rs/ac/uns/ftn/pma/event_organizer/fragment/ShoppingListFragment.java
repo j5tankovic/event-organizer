@@ -21,13 +21,21 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
+import rs.ac.uns.ftn.pma.event_organizer.activity.EditShoppingItemActivity;
+import rs.ac.uns.ftn.pma.event_organizer.activity.EventsActivity;
 import rs.ac.uns.ftn.pma.event_organizer.activity.NewShoppingItemActivity;
 import rs.ac.uns.ftn.pma.event_organizer.R;
 import rs.ac.uns.ftn.pma.event_organizer.activity.ShoppingItemOverviewActivity;
 import rs.ac.uns.ftn.pma.event_organizer.adapter.ShoppingListAdapter;
 import rs.ac.uns.ftn.pma.event_organizer.listener.ClickListener;
+import rs.ac.uns.ftn.pma.event_organizer.model.Event;
+import rs.ac.uns.ftn.pma.event_organizer.model.Location;
+import rs.ac.uns.ftn.pma.event_organizer.model.PlaceOffer;
 import rs.ac.uns.ftn.pma.event_organizer.model.ShoppingItem;
+import rs.ac.uns.ftn.pma.event_organizer.model.enums.Currency;
+import rs.ac.uns.ftn.pma.event_organizer.model.enums.ShoppingItemCategory;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -36,12 +44,14 @@ import static android.app.Activity.RESULT_OK;
  */
 public class ShoppingListFragment extends Fragment {
     public static final String TAG = ShoppingListFragment.class.getSimpleName();
+    public static final String SELECTED_EVENT = "rs.ac.uns.ftn.pma.event_organizer.SELECTED_EVENT";
     public static final String SHOPPING_ITEM = "rs.ac.uns.ftn.pma.event_organizer.SHOPPING_ITEM";
 
     private List<ShoppingItem> testData = new ArrayList<>();
     private RecyclerView.Adapter adapter;
     private DatabaseReference dbReference;
 
+    Event selectedEvent;
 
     public ShoppingListFragment() {
         // Required empty public constructor
@@ -56,58 +66,75 @@ public class ShoppingListFragment extends Fragment {
         RecyclerView recyclerView = view.findViewById(R.id.shopping_list_rv);
         FloatingActionButton addShoppingItem = view.findViewById(R.id.add_shopping_item);
 
+        selectedEvent = (Event) getActivity().getIntent().getExtras().get(EventsActivity.SELECTED_EVENT);
+
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
+
+        //ZA PRIKAZ JEDNOG ITEM-A, U NJEMU JE EDIT
         adapter = new ShoppingListAdapter(testData, new ClickListener() {
             @Override
             public void onPositionClicked(int position) {
-                Log.d(TAG, "onPositionClicked");
                 Intent intent = new Intent(getContext(), ShoppingItemOverviewActivity.class);
+                intent.putExtra(SELECTED_EVENT, selectedEvent);
                 intent.putExtra(SHOPPING_ITEM, testData.get(position));
                 startActivityForResult(intent, 999);
             }
 
             @Override
             public void onLongClicked(int position) {
-                Log.d(TAG, "onLongClicked");
+
             }
         });
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
         recyclerView.addItemDecoration(new DividerItemDecoration(getContext(), LinearLayoutManager.VERTICAL));
 
+        //ZA DODAVANJE NOVOG
         addShoppingItem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getContext(), NewShoppingItemActivity.class);
+                intent.putExtra(SELECTED_EVENT, selectedEvent);
                 startActivityForResult(intent, 994);
             }
         });
 
-        dbReference = FirebaseDatabase.getInstance().getReference("shopping_items");
+        dbReference = FirebaseDatabase.getInstance().getReference("events");
         dbReference.addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                ShoppingItem item = dataSnapshot.getValue(ShoppingItem.class);
-                testData.add(item);
-                adapter.notifyDataSetChanged();
-            }
 
             @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                ShoppingItem item = dataSnapshot.getValue(ShoppingItem.class);
-                for (ShoppingItem si: testData) {
-                    if (item.getId().equals(si.getId())) {
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                if(dataSnapshot.child("shoppingItemList").getValue() != null && dataSnapshot.child("id").getValue().equals(selectedEvent.getId())) {
+                    List<Map<String, Object>> list = (List<Map<String, Object>>) dataSnapshot.child("shoppingItemList").getValue();
+                    for (Map<String, Object> map : list) {
+                        ShoppingItem shoppingItem = getFromMap(map);
+
+                        testData.add(shoppingItem);
                         adapter.notifyDataSetChanged();
                     }
+
                 }
             }
 
             @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                //adapter.notifyDataSetChanged();
+//                ShoppingItem item = dataSnapshot.getValue(ShoppingItem.class);
+//                for (ShoppingItem si: testData) {
+//                    if (item.getId().equals(si.getId())) {
+//                        adapter.notifyDataSetChanged();
+//                    }
+//                }
+                Event event = dataSnapshot.getValue(Event.class);
+                selectedEvent = event;
+            }
+
+            @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {
-                String key = dataSnapshot.getKey();
-                ShoppingItem item = findById(key);
-                testData.remove(item);
-                adapter.notifyDataSetChanged();
+//                String key = dataSnapshot.getKey();
+//                ShoppingItem item = findById(key);
+//                testData.remove(item);
+//                adapter.notifyDataSetChanged();
             }
 
             @Override
@@ -126,16 +153,41 @@ public class ShoppingListFragment extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == 999 && resultCode == RESULT_OK) {
-            String id = data.getStringExtra(ShoppingItemOverviewActivity.ITEM_ID);
-            ShoppingItem item = findById(id);
+            ShoppingItem item = (ShoppingItem) data.getExtras().get(EditShoppingItemActivity.EDITED_ITEM);
+            testData.add(item);
+            adapter.notifyDataSetChanged();
+//            String id = data.getStringExtra(ShoppingItemOverviewActivity.ITEM_ID);
+//            ShoppingItem item = findById(id);
 //            if (item != null) {
 //                //removeFromList(item);
 //                adapter.notifyDataSetChanged();
 //            }
-        } else if (requestCode == 994 && resultCode == RESULT_OK) {
+        } else if (requestCode == 994 && resultCode == RESULT_OK) { //DODAVANJE
             ShoppingItem item = (ShoppingItem) data.getExtras().get(NewShoppingItemActivity.ADDED_ITEM);
+            testData.add(item);
             adapter.notifyDataSetChanged();
         }
+    }
+
+    private ShoppingItem getFromMap(Map<String, Object> map) {
+        ShoppingItem shoppingItem = new ShoppingItem();
+        for (Map.Entry<String, Object> entry : map.entrySet()) {
+            if(entry.getKey().equals("id")) {
+                shoppingItem.setId((String) entry.getValue());
+            } else if(entry.getKey().equals("name")) {
+                shoppingItem.setName((String) entry.getValue());
+            } else if(entry.getKey().equals("description")) {
+                shoppingItem.setDescription((String) entry.getValue());
+            } else if(entry.getKey().equals("quantity")) {
+                shoppingItem.setQuantity((Long) entry.getValue());
+            } else if(entry.getKey().equals("price")) {
+                shoppingItem.setPrice((Long) entry.getValue());
+            } else if(entry.getKey().equals("status")) {
+                shoppingItem.setStatus((Boolean) entry.getValue());
+            }
+        }
+
+        return shoppingItem;
     }
 
     private ShoppingItem findById(String id) {
