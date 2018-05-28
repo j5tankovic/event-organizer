@@ -13,9 +13,9 @@
     <item android:title="Other">
         <menu>
             <item
-                android:id="@+id/settings"
-                android:icon="@drawable/ic_settings_black_24dp"
-                android:title="@string/nav_settings" />
+                android:id="@+id/profile"
+                android:icon="@drawable/ic_event_note_black_24dp"
+                android:title="@string/nav_profile" />
             <item
                 android:id="@+id/logout"
                 android:icon="@drawable/ic_logout_24dp"

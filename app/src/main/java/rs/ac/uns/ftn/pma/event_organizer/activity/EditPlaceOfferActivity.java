@@ -9,22 +9,33 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import rs.ac.uns.ftn.pma.event_organizer.R;
+import rs.ac.uns.ftn.pma.event_organizer.fragment.PlaceOffersFragment;
+import rs.ac.uns.ftn.pma.event_organizer.model.Event;
 import rs.ac.uns.ftn.pma.event_organizer.model.PlaceOffer;
 
 public class EditPlaceOfferActivity extends AppCompatActivity {
 
+    public static final String SELECTED_EVENT = "rs.ac.uns.ftn.pma.event_organizer.SELECTED_EVENT";
+    public static final String EDITED_OFFER = "rs.ac.uns.ftn.pma.event_organizer.EDITED_OFFER";
+
+    private DatabaseReference databaseReference;
+
+    private Event selectedEvent;
     private PlaceOffer placeOffer;
+    private PlaceOffer placeOffer2Remove;
 
     private TextView location;
     private TextView notes;
     private TextView capacity;
     private TextView price;
-
-    public static final String EDITED_OFFER = "rs.ac.uns.ftn.pma.event_organizer.EDITED_OFFER";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,8 +48,13 @@ public class EditPlaceOfferActivity extends AppCompatActivity {
         ActionBar ab = getSupportActionBar();
         ab.setDisplayHomeAsUpEnabled(true);
 
+        databaseReference = FirebaseDatabase.getInstance().getReference("events");
+
         Intent intent = getIntent();
+        selectedEvent = (Event) intent.getExtras().get(PlaceOfferOverviewActivity.SELECTED_EVENT);
         placeOffer = (PlaceOffer) intent.getExtras().get(PlaceOfferOverviewActivity.PLACE_OFFER);
+        placeOffer2Remove = (PlaceOffer) intent.getExtras().get(PlaceOfferOverviewActivity.PLACE_OFFER);
+
 
         location = findViewById(R.id.edit_placeoffer_location);
         location.setText(placeOffer.getLocation().getAddress());
@@ -56,30 +72,49 @@ public class EditPlaceOfferActivity extends AppCompatActivity {
         edit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                formData();
-                edit();
-                formResult();
+                placeOffer = formData();
+                Event event = edit(selectedEvent);
+                save(event);
+                formResult(event);
             }
         });
+
     }
 
-    private void formData() {
+    private PlaceOffer formData() {
         placeOffer.setCapacity(Integer.parseInt(capacity.getText().toString()));
         placeOffer.setNotes(notes.getText().toString());
-        placeOffer.setPrice(Double.parseDouble(price.getText().toString()));
+        placeOffer.setPrice(Long.parseLong(price.getText().toString()));
+
+        return  placeOffer;
     }
 
-    private void formResult() {
+    private Event edit(Event selectedEvent) {
+        List<PlaceOffer> placeOffers = selectedEvent.getPotentialPlaces();
+
+        for (int i = 0; i < placeOffers.size(); i++) {
+            if(placeOffers.get(i).getId().equals(placeOffer2Remove.getId())) {
+                PlaceOffer offer = placeOffers.get(i);
+                placeOffers.get(i).setId(placeOffer.getId());
+                placeOffers.get(i).setLocationName(placeOffer.getLocationName());
+                placeOffers.get(i).setNotes(placeOffer.getNotes());
+                placeOffers.get(i).setCapacity(placeOffer.getCapacity());
+                placeOffers.get(i).setPrice(placeOffer.getPrice());
+            }
+        }
+        selectedEvent.setPotentialPlaces(placeOffers);
+        return selectedEvent;
+    }
+
+    private void formResult(Event event) {
         Intent i = new Intent();
+        i.putExtra(SELECTED_EVENT, event);
         i.putExtra(EDITED_OFFER, placeOffer);
         setResult(RESULT_OK, i);
         finish();
     }
 
-    private void edit() {
-        DatabaseReference databaseReference = FirebaseDatabase.getInstance()
-                .getReference("place_offers");
-
-        databaseReference.child(placeOffer.getId()).setValue(placeOffer);
+    private void save(Event event) {
+        databaseReference.child(event.getId()).setValue(event);
     }
 }

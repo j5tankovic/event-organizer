@@ -4,13 +4,11 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.Bundle;
 import android.provider.MediaStore;
-import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -25,6 +23,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
@@ -41,8 +40,8 @@ import java.util.List;
 import rs.ac.uns.ftn.pma.event_organizer.R;
 import rs.ac.uns.ftn.pma.event_organizer.model.Event;
 import rs.ac.uns.ftn.pma.event_organizer.model.EventCategory;
-
-import static java.security.AccessController.getContext;
+import rs.ac.uns.ftn.pma.event_organizer.model.User;
+import rs.ac.uns.ftn.pma.event_organizer.services.AuthentificationService;
 
 public class AddNewEventActivity extends AppCompatActivity {
 
@@ -70,6 +69,13 @@ public class AddNewEventActivity extends AppCompatActivity {
     private DatabaseReference databaseReferenceEventCategories;
     private FirebaseDatabase firebaseDatabase;
     private StorageReference storageReference;
+    private DatabaseReference databaseReferenceUsers;
+    private FirebaseAuth mAuth;
+
+
+    private User currentUser;
+
+    Event event = new Event();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,15 +84,21 @@ public class AddNewEventActivity extends AppCompatActivity {
 
         firebaseDatabase = FirebaseDatabase.getInstance();
         databaseReference = firebaseDatabase.getReference("events");
-        databaseReferenceEventCategories = firebaseDatabase.getReference("event_categories");
+        databaseReferenceEventCategories = firebaseDatabase.getReference("eventCategories");
         storageReference = FirebaseStorage.getInstance().getReference();
+        databaseReferenceUsers = FirebaseDatabase.getInstance().getReference("users");
+        mAuth = FirebaseAuth.getInstance();
+
 
 //        EventCategory eventCategory1 = new EventCategory();
-//        eventCategory1.setName("Kategorija 1");
+//        eventCategory1.setName("Rodjendan");
 //        saveCategory(eventCategory1);
 //        EventCategory eventCategory2 = new EventCategory();
-//        eventCategory2.setName("Kategorija 2");
+//        eventCategory2.setName("Zurka");
 //        saveCategory(eventCategory2);
+//        EventCategory eventCategory3 = new EventCategory();
+//        eventCategory3.setName("Svadba");
+//        saveCategory(eventCategory3);
 
         name = findViewById(R.id.new_event_name);
         description = findViewById(R.id.new_event_description);
@@ -99,37 +111,55 @@ public class AddNewEventActivity extends AppCompatActivity {
         upload = findViewById(R.id.new_event_upload_image);
         uploadedPicture = findViewById(R.id.new_event_image);
 
-        databaseReferenceEventCategories.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot eventCategoryShapshot: dataSnapshot.getChildren()) {
-                    String id = (String) eventCategoryShapshot.child("id").getValue();
-                    String name = (String) eventCategoryShapshot.child("name").getValue();
-
-                    EventCategory eventCategory = new EventCategory(id, name);
-                    eventCategoryList.add(name);
-                    System.out.println(eventCategory);
-                }
-            }
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                System.out.println("The read failed: " + databaseError.getCode());
-            }
-        });
+//        databaseReferenceEventCategories.addListenerForSingleValueEvent(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(DataSnapshot dataSnapshot) {
+//                for (DataSnapshot eventCategoryShapshot: dataSnapshot.getChildren()) {
+//                    String id = (String) eventCategoryShapshot.child("id").getValue();
+//                    String name = (String) eventCategoryShapshot.child("name").getValue();
+//
+//                    EventCategory eventCategory = new EventCategory(id, name);
+//                    eventCategoryList.add(name);
+//                }
+//            }
+//            @Override
+//            public void onCancelled(DatabaseError databaseError) {
+//                System.out.println("The read failed: " + databaseError.getCode());
+//            }
+//        });
 
         Spinner categories = findViewById(R.id.new_event_category);
-       // ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, eventCategoryList);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
                 R.array.event_categories, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         categories.setAdapter(adapter);
+
+        Query query = databaseReferenceUsers.orderByChild("email").equalTo(mAuth.getCurrentUser().getEmail());
+        query.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                User loggedUser = null;
+                for (DataSnapshot user: dataSnapshot.getChildren()) {
+                    loggedUser = user.getValue(User.class);
+                    event.setCreator(loggedUser);
+
+                }
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+        AuthentificationService service = new AuthentificationService();
+        User loggedUser = service.getLoggedUser(mAuth.getCurrentUser().getEmail());
 
 
         add = findViewById(R.id.add_new_event);
         add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Event event = formEvent();
+                event = formEvent();
                 save(event);
                 formResult(event);
 
@@ -145,10 +175,9 @@ public class AddNewEventActivity extends AppCompatActivity {
     }
 
     private Event formEvent() {
-        Event event = new Event();
         event.setName(name.getText().toString());
         event.setDescription(description.getText().toString());
-        SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy");
+        SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy HH:mm");
         String start_date_string = start_date.getText().toString();
         Date start_date_date = null;
         String end_date_string = end_date.getText().toString();
@@ -163,13 +192,7 @@ public class AddNewEventActivity extends AppCompatActivity {
         event.setEndDateTime(end_date_date);
         event.setBudget(Long.valueOf(budget.getText().toString()));
         String eventCategoryName = eventCategory.getSelectedItem().toString();
-        System.out.println("**************");
-        System.out.println("**************");
-        System.out.println(eventCategoryName);
-        System.out.println("**************");
-        System.out.println("**************");
         event.setEventCategory(new EventCategory(eventCategoryName));
-
 
         return event;
     }
@@ -177,7 +200,6 @@ public class AddNewEventActivity extends AppCompatActivity {
     private void formResult(Event event) {
         Intent i = new Intent();
         i.putExtra(ADDED_EVENT, event);
-        //startActivityForResult(i, 994);
         setResult(RESULT_OK, i);
         finish();
     }

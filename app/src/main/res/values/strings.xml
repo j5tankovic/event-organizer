@@ -50,7 +50,7 @@
     <string name="nav_my_events">My events</string>
     <string name="nav_invitations">Invitations</string>
     <string name="nav_settings">Settings</string>
-
+    <string name="nav_profile">Profile</string>
 
     <!-- Add new event -->
     <string name="add_new_event">Add event</string>
@@ -63,8 +63,9 @@
     <string name="new_event_image">Upload image</string>
 
     <string-array name="event_categories">
-        <item value = "1">Kategorija 1</item>
-        <item value = "2">Kategorija 2</item>
+        <item value = "1">Rodjendan</item>
+        <item value = "2">Zurka</item>
+        <item value = "3">Svadba</item>
     </string-array>
 
     <!-- Toolbar titles when navigation menu item is selected -->
