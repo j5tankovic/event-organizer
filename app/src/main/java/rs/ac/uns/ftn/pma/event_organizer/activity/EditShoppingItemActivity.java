@@ -105,6 +105,7 @@ public class EditShoppingItemActivity extends AppCompatActivity {
 
                 //shoppingItems.remove(i);
                 ShoppingItem item = shoppingItems.get(i);
+                shoppingItems.get(i).setId(shoppingItem.getId());
                 shoppingItems.get(i).setName(shoppingItem.getName());
                 shoppingItems.get(i).setDescription(shoppingItem.getDescription());
                 shoppingItems.get(i).setQuantity(shoppingItem.getQuantity());

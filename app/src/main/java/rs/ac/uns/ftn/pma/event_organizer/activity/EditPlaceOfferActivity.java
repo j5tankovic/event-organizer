@@ -95,6 +95,7 @@ public class EditPlaceOfferActivity extends AppCompatActivity {
         for (int i = 0; i < placeOffers.size(); i++) {
             if(placeOffers.get(i).getId().equals(placeOffer2Remove.getId())) {
                 PlaceOffer offer = placeOffers.get(i);
+                placeOffers.get(i).setId(placeOffer.getId());
                 placeOffers.get(i).setLocationName(placeOffer.getLocationName());
                 placeOffers.get(i).setNotes(placeOffer.getNotes());
                 placeOffers.get(i).setCapacity(placeOffer.getCapacity());
