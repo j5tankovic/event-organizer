@@ -63,9 +63,9 @@
     <string name="new_event_image">Upload image</string>
 
     <string-array name="event_categories">
-        <item value = "1">Rodjendan</item>
-        <item value = "2">Zurka</item>
-        <item value = "3">Svadba</item>
+        <item value="1">Rodjendan</item>
+        <item value="2">Zurka</item>
+        <item value="3">Svadba</item>
     </string-array>
 
     <!-- Toolbar titles when navigation menu item is selected -->

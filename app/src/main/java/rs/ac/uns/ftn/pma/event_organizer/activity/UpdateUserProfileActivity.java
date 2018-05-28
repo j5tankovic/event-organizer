@@ -1,19 +1,13 @@
 package rs.ac.uns.ftn.pma.event_organizer.activity;
 
-import android.content.Intent;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-import com.firebase.ui.storage.images.FirebaseImageLoader;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -26,14 +20,11 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
-import java.sql.SQLOutput;
-
 import rs.ac.uns.ftn.pma.event_organizer.R;
 import rs.ac.uns.ftn.pma.event_organizer.model.User;
-import rs.ac.uns.ftn.pma.event_organizer.services.AuthentificationService;
 import rs.ac.uns.ftn.pma.event_organizer.services.GlideApp;
 
-public class UserProfileActivity extends AppCompatActivity {
+public class UpdateUserProfileActivity extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
     private DatabaseReference databaseReference;
@@ -47,7 +38,7 @@ public class UserProfileActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_user_profile);
+        setContentView(R.layout.activity_update_user_profile);
 
         setSupportActionBar((Toolbar) findViewById(R.id.user_profile_toolbar));
 
@@ -108,50 +99,5 @@ public class UserProfileActivity extends AppCompatActivity {
             }
         });
 
-
-
-        //AuthentificationService service = new AuthentificationService();
-        //User loggedUser = service.getLoggedUser(mAuth.getCurrentUser().getEmail());
     }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater menuInflater = getMenuInflater();
-        menuInflater.inflate(R.menu.base_menu, menu);
-
-        return super.onCreateOptionsMenu(menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle item selection
-        switch (item.getItemId()) {
-            case R.id.action_profile_settings:
-                return true;
-            case R.id.action_profile_edit:
-                openUpdateUserProfileActiviti();
-                return true;
-            case R.id.action_profile_logout:
-                logout();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
-
-    private void logout(){
-        mAuth.signOut();
-        openLoginActivity();
-    }
-
-    private void openUpdateUserProfileActiviti(){
-        Intent intent = new Intent(this, UpdateUserProfileActivity.class);
-        startActivity(intent);
-    }
-
-    private void openLoginActivity(){
-        Intent intent = new Intent(this, LoginActivity.class);
-        startActivity(intent);
-    }
-
 }
