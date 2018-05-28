@@ -137,6 +137,39 @@ public class EventsActivity extends AppCompatActivity {
                 txtName.setText(loggedUser.getName() + " " + loggedUser.getLastName()); //UPISATI IME I PREZIME ULOGOVANOG
 //                storageReference = FirebaseStorage.getInstance().getReference().child(loggedUser.getProfilePicture());
 
+                databaseReference.addChildEventListener(new ChildEventListener() {
+
+                    @Override
+                    public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+
+                        Event event = dataSnapshot.getValue(Event.class);
+                        if(event.getCreator().getUsername().equals(loggedUser.getUsername())) {
+                            testData.add(event);
+                            adapter.notifyDataSetChanged();
+
+                        }
+                    }
+
+                    @Override
+                    public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+                    }
+
+                    @Override
+                    public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+                    }
+
+                    @Override
+                    public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
 
             }
             @Override
@@ -164,40 +197,40 @@ public class EventsActivity extends AppCompatActivity {
 //            }
 //        });
 
-
-        databaseReference.addChildEventListener(new ChildEventListener() {
-
-            @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-
-                Event event = dataSnapshot.getValue(Event.class);
-                if(event.getCreator().getUsername().equals(loggedUser.getUsername())) {
-                    testData.add(event);
-                    adapter.notifyDataSetChanged();
-
-                }
-            }
-
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
+//
+//        databaseReference.addChildEventListener(new ChildEventListener() {
+//
+//            @Override
+//            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+//
+//                Event event = dataSnapshot.getValue(Event.class);
+//                if(event.getCreator().getUsername().equals(loggedUser.getUsername())) {
+//                    testData.add(event);
+//                    adapter.notifyDataSetChanged();
+//
+//                }
+//            }
+//
+//            @Override
+//            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+//
+//            }
+//
+//            @Override
+//            public void onChildRemoved(DataSnapshot dataSnapshot) {
+//
+//            }
+//
+//            @Override
+//            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+//
+//            }
+//
+//            @Override
+//            public void onCancelled(DatabaseError databaseError) {
+//
+//            }
+//        });
 
 
 
