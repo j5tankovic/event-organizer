@@ -5,6 +5,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -31,7 +32,13 @@ public class NewShoppingItemActivity extends AppCompatActivity {
 
     private DatabaseReference databaseReference;
 
+    private TextView txtName;
+    private TextView txtDescription;
+    private TextView txtQuantity;
+    private TextView txtPrice;
+
     private Event selectedEvent;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,10 +53,18 @@ public class NewShoppingItemActivity extends AppCompatActivity {
 
         databaseReference = FirebaseDatabase.getInstance().getReference("events");
 
+        txtName = findViewById(R.id.new_shoppingitem_name);
+        txtDescription = findViewById(R.id.new_shoppingitem_description);
+        txtQuantity = findViewById(R.id.new_shoppingitem_quantity);
+        txtPrice = findViewById(R.id.new_shoppingitem_price);
+
         Button add = findViewById(R.id.add_shoppingitem);
         add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if(!validateForm()) {
+                    return;
+                }
                 ShoppingItem item = formShoppingItem();
                 selectedEvent = (Event) getIntent().getExtras().get(ShoppingListFragment.SELECTED_EVENT);
 
@@ -68,19 +83,51 @@ public class NewShoppingItemActivity extends AppCompatActivity {
 
     }
 
-    private ShoppingItem formShoppingItem() {
-        TextView name = findViewById(R.id.new_shoppingitem_name);
-        TextView description = findViewById(R.id.new_shoppingitem_description);
-        TextView quantity = findViewById(R.id.new_shoppingitem_quantity);
-        TextView price = findViewById(R.id.new_shoppingitem_price);
+    private boolean validateForm() {
+        boolean valid = true;
 
+        String name = txtName.getText().toString();
+        if(TextUtils.isEmpty(name)) {
+            txtName.setError("Required");
+            valid = false;
+        }
+        String description = txtDescription.getText().toString();
+        if(TextUtils.isEmpty(description)) {
+            txtDescription.setError("Required");
+            valid = false;
+        }
+        String price = txtPrice.getText().toString();
+        if(TextUtils.isEmpty(price)) {
+            txtPrice.setError("Required");
+            valid = false;
+        } else {
+            if(!TextUtils.isDigitsOnly(price)) {
+                txtPrice.setError("Only digits allowed");
+                valid = false;
+            }
+        }
+        String quantity = txtQuantity.getText().toString();
+        if(TextUtils.isEmpty(quantity)) {
+            txtQuantity.setError("Required");
+            valid = false;
+        } else {
+            if(!TextUtils.isDigitsOnly(quantity)) {
+                txtQuantity.setError("Only digits allowed");
+                valid = false;
+            }
+        }
+
+        return valid;
+    }
+
+    private ShoppingItem formShoppingItem() {
         ShoppingItem item = new ShoppingItem();
         String key = databaseReference.push().getKey();
         item.setId(key);
-        item.setName(name.getText().toString());
-        item.setDescription(description.getText().toString());
-        item.setQuantity(Integer.valueOf(quantity.getText().toString()));
-        item.setPrice(Long.valueOf(price.getText().toString()));
+        item.setName(txtName.getText().toString());
+        item.setDescription(txtDescription.getText().toString());
+        item.setQuantity(Integer.valueOf(txtQuantity.getText().toString()));
+        item.setPrice(Long.valueOf(txtPrice.getText().toString()));
         item.setCategory(ShoppingItemCategory.FOOD);
 
         return item;

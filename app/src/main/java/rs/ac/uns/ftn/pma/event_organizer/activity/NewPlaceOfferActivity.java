@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -32,7 +33,11 @@ public class NewPlaceOfferActivity extends AppCompatActivity {
     private DatabaseReference databaseReference;
 
     private Event selectedEvent;
+
     private Location location;
+    private TextView txtCapacity;
+    private TextView txtNotes;
+    private TextView txtPrice;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,12 +52,18 @@ public class NewPlaceOfferActivity extends AppCompatActivity {
 
         databaseReference = FirebaseDatabase.getInstance().getReference("events");
 
+        txtCapacity = findViewById(R.id.new_placeoffer_capacity);
+        txtNotes = findViewById(R.id.new_placeoffer_notes);
+        txtPrice = findViewById(R.id.new_placeoffer_price);
+
         Button add = findViewById(R.id.add_placeoffer);
         add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if(!validateForm()) {
+                    return;
+                }
                 PlaceOffer placeOffer = formData();
-
                 selectedEvent = (Event) getIntent().getExtras().get(PlaceOffersFragment.SELECTED_EVENT);
                 Event event = add(selectedEvent, placeOffer);
                 save(event);
@@ -77,25 +88,52 @@ public class NewPlaceOfferActivity extends AppCompatActivity {
 
             @Override
             public void onError(Status status) {
-                // TODO: Handle the error.
+
             }
         });
 
     }
 
-    private PlaceOffer formData() {
-        //TextView location = findViewById(R.id.new_placeoffer_location);
-        TextView capacity = findViewById(R.id.new_placeoffer_capacity);
-        TextView notes = findViewById(R.id.new_placeoffer_notes);
-        TextView price = findViewById(R.id.new_placeoffer_price);
+    private boolean validateForm() {
+        boolean valid = true;
 
+        String notes = txtNotes.getText().toString();
+        if(TextUtils.isEmpty(notes)) {
+            txtNotes.setError("Required");
+            valid = false;
+        }
+        String capacity = txtCapacity.getText().toString();
+        if(TextUtils.isEmpty(capacity)) {
+            txtCapacity.setError("Required");
+            valid = false;
+        } else {
+            if(!TextUtils.isDigitsOnly(capacity)) {
+                txtCapacity.setError("Only digits allowed");
+                valid = false;
+            }
+        }
+        String price = txtPrice.getText().toString();
+        if(TextUtils.isEmpty(price)) {
+            txtPrice.setError("Required");
+            valid = false;
+        } else {
+            if(!TextUtils.isDigitsOnly(price)) {
+                txtPrice.setError("Only digits allowed");
+                valid = false;
+            }
+        }
+
+        return valid;
+    }
+
+    private PlaceOffer formData() {
         PlaceOffer offer = new PlaceOffer();
         String key = databaseReference.push().getKey();
         offer.setId(key);
         offer.setLocationName(location.getName());//PROBAJ SA OVIM
-        offer.setCapacity(Integer.valueOf(capacity.getText().toString()));
-        offer.setNotes(notes.getText().toString());
-        offer.setPrice(Long.parseLong(price.getText().toString()));
+        offer.setCapacity(Integer.valueOf(txtCapacity.getText().toString()));
+        offer.setNotes(txtNotes.getText().toString());
+        offer.setPrice(Long.parseLong(txtPrice.getText().toString()));
         offer.setLocation(location);
 
         return offer;

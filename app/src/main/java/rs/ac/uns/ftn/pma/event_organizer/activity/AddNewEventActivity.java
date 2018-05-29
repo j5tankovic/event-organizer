@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -33,25 +34,22 @@ import com.google.firebase.storage.UploadTask;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 import rs.ac.uns.ftn.pma.event_organizer.R;
 import rs.ac.uns.ftn.pma.event_organizer.model.Event;
 import rs.ac.uns.ftn.pma.event_organizer.model.EventCategory;
 import rs.ac.uns.ftn.pma.event_organizer.model.User;
-import rs.ac.uns.ftn.pma.event_organizer.services.AuthentificationService;
 
 public class AddNewEventActivity extends AppCompatActivity {
 
     public static final String ADDED_EVENT = "rs.ac.uns.ftn.pma.event_organizer.ADDED_EVENT";
 
-    private TextView name;
-    private TextView description;
-    private TextView start_date;
-    private TextView end_date;
-    private TextView budget;
+    private TextView txtName;
+    private TextView txtDescription;
+    private TextView txtStartDate;
+    private TextView txtEndDate;
+    private TextView txtBudget;
     private Spinner eventCategory;
 
     private Button upload;
@@ -63,17 +61,11 @@ public class AddNewEventActivity extends AppCompatActivity {
     private final int PICK_IMAGE_REQUEST = 71;
     private String eventPicturePath;
 
-    private List<String> eventCategoryList = new ArrayList<>();
-
     private DatabaseReference databaseReference;
-    private DatabaseReference databaseReferenceEventCategories;
     private FirebaseDatabase firebaseDatabase;
     private StorageReference storageReference;
     private DatabaseReference databaseReferenceUsers;
     private FirebaseAuth mAuth;
-
-
-    private User currentUser;
 
     Event event = new Event();
 
@@ -84,49 +76,20 @@ public class AddNewEventActivity extends AppCompatActivity {
 
         firebaseDatabase = FirebaseDatabase.getInstance();
         databaseReference = firebaseDatabase.getReference("events");
-        databaseReferenceEventCategories = firebaseDatabase.getReference("eventCategories");
         storageReference = FirebaseStorage.getInstance().getReference();
         databaseReferenceUsers = FirebaseDatabase.getInstance().getReference("users");
         mAuth = FirebaseAuth.getInstance();
 
-
-//        EventCategory eventCategory1 = new EventCategory();
-//        eventCategory1.setName("Rodjendan");
-//        saveCategory(eventCategory1);
-//        EventCategory eventCategory2 = new EventCategory();
-//        eventCategory2.setName("Zurka");
-//        saveCategory(eventCategory2);
-//        EventCategory eventCategory3 = new EventCategory();
-//        eventCategory3.setName("Svadba");
-//        saveCategory(eventCategory3);
-
-        name = findViewById(R.id.new_event_name);
-        description = findViewById(R.id.new_event_description);
-        start_date = findViewById(R.id.new_event_start_date);
-        end_date = findViewById(R.id.new_event_end_date);
-        budget = findViewById(R.id.new_event_budget);
+        txtName = findViewById(R.id.new_event_name);
+        txtDescription = findViewById(R.id.new_event_description);
+        txtStartDate = findViewById(R.id.new_event_start_date);
+        txtEndDate = findViewById(R.id.new_event_end_date);
+        txtBudget = findViewById(R.id.new_event_budget);
         eventCategory = findViewById(R.id.new_event_category);
 
 
         upload = findViewById(R.id.new_event_upload_image);
         uploadedPicture = findViewById(R.id.new_event_image);
-
-//        databaseReferenceEventCategories.addListenerForSingleValueEvent(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(DataSnapshot dataSnapshot) {
-//                for (DataSnapshot eventCategoryShapshot: dataSnapshot.getChildren()) {
-//                    String id = (String) eventCategoryShapshot.child("id").getValue();
-//                    String name = (String) eventCategoryShapshot.child("name").getValue();
-//
-//                    EventCategory eventCategory = new EventCategory(id, name);
-//                    eventCategoryList.add(name);
-//                }
-//            }
-//            @Override
-//            public void onCancelled(DatabaseError databaseError) {
-//                System.out.println("The read failed: " + databaseError.getCode());
-//            }
-//        });
 
         Spinner categories = findViewById(R.id.new_event_category);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
@@ -151,14 +114,13 @@ public class AddNewEventActivity extends AppCompatActivity {
             }
         });
 
-        AuthentificationService service = new AuthentificationService();
-        User loggedUser = service.getLoggedUser(mAuth.getCurrentUser().getEmail());
-
-
         add = findViewById(R.id.add_new_event);
         add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if(!validateForm()) {
+                    return;
+                }
                 event = formEvent();
                 save(event);
                 formResult(event);
@@ -174,13 +136,50 @@ public class AddNewEventActivity extends AppCompatActivity {
         });
     }
 
+    private boolean validateForm() {
+        boolean valid = true;
+
+        String name = txtName.getText().toString();
+        if(TextUtils.isEmpty(name)) {
+            txtName.setError("Required");
+            valid = false;
+        }
+        String description = txtDescription.getText().toString();
+        if(TextUtils.isEmpty(description)) {
+            txtDescription.setError("Required");
+            valid = false;
+        }
+        String start_date_string = txtStartDate.getText().toString();
+        if(TextUtils.isEmpty(start_date_string)) {
+            txtStartDate.setError("Required");
+            valid = false;
+        }
+        String end_date_string = txtEndDate.getText().toString();
+        if(TextUtils.isEmpty(end_date_string)) {
+            txtEndDate.setError("Required");
+            valid = false;
+        }
+        String budget = txtBudget.getText().toString();
+        if(TextUtils.isEmpty(budget)) {
+            txtBudget.setError("Required");
+            valid = false;
+        } else {
+            if(!TextUtils.isDigitsOnly(budget)) {
+                txtBudget.setError("Only digits allowed");
+                valid = false;
+            }
+        }
+
+        return valid;
+    }
+
     private Event formEvent() {
-        event.setName(name.getText().toString());
-        event.setDescription(description.getText().toString());
+        event.setName(txtName.getText().toString());
+        event.setDescription(txtDescription.getText().toString());
         SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy HH:mm");
-        String start_date_string = start_date.getText().toString();
+        String start_date_string = txtStartDate.getText().toString();
         Date start_date_date = null;
-        String end_date_string = end_date.getText().toString();
+        String end_date_string = txtEndDate.getText().toString();
         Date end_date_date = null;
         try {
             start_date_date = formatter.parse(start_date_string);
@@ -190,7 +189,7 @@ public class AddNewEventActivity extends AppCompatActivity {
         }
         event.setStartDateTime(start_date_date);
         event.setEndDateTime(end_date_date);
-        event.setBudget(Long.valueOf(budget.getText().toString()));
+        event.setBudget(Long.valueOf(txtBudget.getText().toString()));
         String eventCategoryName = eventCategory.getSelectedItem().toString();
         event.setEventCategory(new EventCategory(eventCategoryName));
 
@@ -209,16 +208,8 @@ public class AddNewEventActivity extends AppCompatActivity {
 
     private void save(Event event) {
         String key = databaseReference.push().getKey();
-
         event.setId(key);
         databaseReference.child(key).setValue(event);
-    }
-
-    private void saveCategory(EventCategory eventCategory) {
-        String key = databaseReferenceEventCategories.push().getKey();
-
-        eventCategory.setId(key);
-        databaseReferenceEventCategories.child(key).setValue(eventCategory);
     }
 
     @Override
@@ -255,7 +246,7 @@ public class AddNewEventActivity extends AppCompatActivity {
             progressDialog.setTitle("Uploading...");
             progressDialog.show();
 
-            eventPicturePath = "images/events/"+ name.getText().toString()+".jpg";
+            eventPicturePath = "images/events/"+ txtName.getText().toString()+".jpg";
             StorageReference ref = storageReference.child(eventPicturePath);
             ref.putFile(filePath)
                     .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {

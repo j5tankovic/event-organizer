@@ -1,10 +1,8 @@
 package rs.ac.uns.ftn.pma.event_organizer.activity;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -21,12 +19,9 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
-import com.firebase.ui.storage.images.FirebaseImageLoader;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
-
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -37,7 +32,6 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -47,9 +41,7 @@ import rs.ac.uns.ftn.pma.event_organizer.R;
 import rs.ac.uns.ftn.pma.event_organizer.adapter.EventsAdapter;
 import rs.ac.uns.ftn.pma.event_organizer.model.Event;
 import rs.ac.uns.ftn.pma.event_organizer.model.EventCategory;
-import rs.ac.uns.ftn.pma.event_organizer.model.ShoppingItem;
 import rs.ac.uns.ftn.pma.event_organizer.model.User;
-import rs.ac.uns.ftn.pma.event_organizer.services.AuthentificationService;
 import rs.ac.uns.ftn.pma.event_organizer.services.GlideApp;
 
 
@@ -88,10 +80,8 @@ public class EventsActivity extends AppCompatActivity {
     private List<Event> allEvents = new ArrayList<>();
     private List<Event> testData = new ArrayList<>();
     private EventsAdapter adapter;
-    Uri filePath;
 
     User loggedUser = new User();
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -111,9 +101,6 @@ public class EventsActivity extends AppCompatActivity {
 
         // load toolbar titles from string resources
         activityTitles = getResources().getStringArray(R.array.nav_item_activity_titles);
-
-        // showing dot next to notifications label
-        //navigationView.getMenu().getItem(3).setActionView(R.layout.);
 
         // initializing navigation menu
         setUpNavigationView();
@@ -135,9 +122,7 @@ public class EventsActivity extends AppCompatActivity {
                     loggedUser = user.getValue(User.class);
                 }
 
-                txtName.setText(loggedUser.getName() + " " + loggedUser.getLastName()); //UPISATI IME I PREZIME ULOGOVANOG
-//                storageReference = FirebaseStorage.getInstance().getReference().child(loggedUser.getProfilePicture());
-
+                txtName.setText(loggedUser.getName() + " " + loggedUser.getLastName());
 
                 if (loggedUser.getProfilePicture() != null){
                     storageReference = FirebaseStorage.getInstance().getReference().child(loggedUser.getProfilePicture());
@@ -160,8 +145,6 @@ public class EventsActivity extends AppCompatActivity {
                         }
                     });
                 }
-
-
 
                 databaseReference.addChildEventListener(new ChildEventListener() {
 
@@ -204,64 +187,6 @@ public class EventsActivity extends AppCompatActivity {
             }
         });
 
-//        AuthentificationService service = new AuthentificationService();
-//        final User loggedUser = service.getLoggedUser(mAuth.getCurrentUser().getEmail());
-
-//        Glide.with(this)
-//                .using(new FirebaseImageLoader())
-//                .load(storageReference)
-//                .into(imageView);
-
-//        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(DataSnapshot dataSnapshot) {
-//                getAllEvents((Map<String,Object>)dataSnapshot.getValue());
-//            }
-//            @Override
-//            public void onCancelled(DatabaseError databaseError) {
-//                System.out.println("The read failed: " + databaseError.getCode());
-//            }
-//        });
-
-//
-//        databaseReference.addChildEventListener(new ChildEventListener() {
-//
-//            @Override
-//            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-//
-//                Event event = dataSnapshot.getValue(Event.class);
-//                if(event.getCreator().getUsername().equals(loggedUser.getUsername())) {
-//                    testData.add(event);
-//                    adapter.notifyDataSetChanged();
-//
-//                }
-//            }
-//
-//            @Override
-//            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-//
-//            }
-//
-//            @Override
-//            public void onChildRemoved(DataSnapshot dataSnapshot) {
-//
-//            }
-//
-//            @Override
-//            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-//
-//            }
-//
-//            @Override
-//            public void onCancelled(DatabaseError databaseError) {
-//
-//            }
-//        });
-
-
-
-
-
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -283,17 +208,6 @@ public class EventsActivity extends AppCompatActivity {
         });
 
     }
-
-
-//    public List<Event> prepareTest(){
-//        for(Event event : allEvents){
-//            if(event.getCreator().getUsername().equals(loggedUser.getUsername())) {
-//                testData.add(event);
-//            }
-//        }
-//        return testData;
-//
-//    }
 
     public void prepareTest(){
         for(Event event : allEvents){
