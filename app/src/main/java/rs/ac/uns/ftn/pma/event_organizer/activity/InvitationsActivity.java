@@ -20,6 +20,7 @@ import java.util.Map;
 import rs.ac.uns.ftn.pma.event_organizer.R;
 import rs.ac.uns.ftn.pma.event_organizer.adapter.InvitationsAdapter;
 import rs.ac.uns.ftn.pma.event_organizer.model.Event;
+import rs.ac.uns.ftn.pma.event_organizer.model.EventCategory;
 import rs.ac.uns.ftn.pma.event_organizer.model.Invitation;
 import rs.ac.uns.ftn.pma.event_organizer.model.User;
 import rs.ac.uns.ftn.pma.event_organizer.model.enums.InvitationStatus;
@@ -134,6 +135,12 @@ public class InvitationsActivity extends AppCompatActivity {
             newEvent.setId((String)eventMap.get("id"));
             newEvent.setDescription((String)eventMap.get("description"));
 
+            /*
+            EventCategory newEventCat=new EventCategory();
+            Map eventCat=(Map) singleInvitation.get("eventCategory");
+            newEventCat.setName((String)eventCat.get("name"));
+            newEvent.setEventCategory(newEventCat);
+*/
             Map date=(Map)eventMap.get("startDateTime");
             Date startTime=new Date((long)date.get("time"));
             newEvent.setStartDateTime(startTime);
