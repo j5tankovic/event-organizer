@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.Map;
 
 import rs.ac.uns.ftn.pma.event_organizer.R;
+import rs.ac.uns.ftn.pma.event_organizer.activity.EventsActivity;
 import rs.ac.uns.ftn.pma.event_organizer.adapter.PeopleOverviewAdapter;
 import rs.ac.uns.ftn.pma.event_organizer.model.Event;
 import rs.ac.uns.ftn.pma.event_organizer.model.EventCategory;
@@ -47,7 +48,8 @@ public class PeopleOverviewFragment extends Fragment {
     private List<User> allUsers=new ArrayList<>();
     private List<Invitation> allInvitations=new ArrayList<>();
     private List<Invitation> eventInvitations=new ArrayList<>();
-    private String eventId="1a"; //npr.=1 rodjendan   -   FIND THIS EVENT; FROM GENERAL FRAGMENT?
+    Event selectedEvent;
+    private String eventId; //npr.=1 rodjendan   -   FIND THIS EVENT; FROM GENERAL FRAGMENT?
 
     public PeopleOverviewFragment() {}
 
@@ -62,6 +64,9 @@ public class PeopleOverviewFragment extends Fragment {
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
         recyclerView.addItemDecoration(new DividerItemDecoration(getContext(), LinearLayoutManager.VERTICAL));
+
+        selectedEvent = (Event) getActivity().getIntent().getExtras().get(EventsActivity.SELECTED_EVENT);
+        eventId=selectedEvent.getId();
 
         firebaseDatabase = FirebaseDatabase.getInstance();
         databaseReference = firebaseDatabase.getReference("invitations");
@@ -103,7 +108,7 @@ public class PeopleOverviewFragment extends Fragment {
                 //YOU CAN'T INVITE SOMEONE WHO IS ALREADY INVITED
                 //CAN YOU INVITE YOURSELF?
                 if(foundedUser!=null) {
-                    createNewInvitation(foundedUser, null);//THIS EVENT
+                    createNewInvitation(foundedUser, selectedEvent);//THIS EVENT
                     adapter.notifyDataSetChanged();
                 } else{
                     Toast.makeText(getContext(), email+" doesn't have a profile", Toast.LENGTH_LONG).show();
@@ -117,15 +122,7 @@ public class PeopleOverviewFragment extends Fragment {
         String invitationId = databaseReference.push().getKey();
         Invitation newInvitation=new Invitation();
         newInvitation.setInvitedUser(foundedUser);
-        newInvitation.setId(invitationId);//FIX
-        event=new Event();
-        event.setId("1");
-        event.setStartDateTime(new Date());
-        event.setEndDateTime(new Date());
-        event.setName("Rodjendan");
-        event.setBudget(50);
-        event.setDescription("opis rodjendana: prvi rodjendan male tare");
-        event.setEventCategory(new EventCategory("1","Rodjendan"));
+        newInvitation.setId(invitationId);
         newInvitation.setEvent(event);
         newInvitation.setStatus(InvitationStatus.PENDING);
 

@@ -1,6 +1,8 @@
 package rs.ac.uns.ftn.pma.event_organizer.activity;
 
 import android.content.Intent;
+import android.net.Uri;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -21,6 +23,12 @@ import rs.ac.uns.ftn.pma.event_organizer.model.Event;
 import rs.ac.uns.ftn.pma.event_organizer.model.Invitation;
 import rs.ac.uns.ftn.pma.event_organizer.model.User;
 import rs.ac.uns.ftn.pma.event_organizer.model.enums.InvitationStatus;
+import rs.ac.uns.ftn.pma.event_organizer.services.AuthentificationService;
+import rs.ac.uns.ftn.pma.event_organizer.services.GlideApp;
+
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -28,6 +36,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
 
 public class InvitationsActivity extends AppCompatActivity {
     public static final String EVENT = "rs.ac.uns.ftn.pma.event_organizer.EVENT";
@@ -36,12 +45,31 @@ public class InvitationsActivity extends AppCompatActivity {
     private DatabaseReference databaseReferenceInvitations;
     private FirebaseDatabase firebaseDatabase;
     private InvitationsAdapter adapter;
+    private FirebaseAuth mAuth;
+    private DatabaseReference databaseReference;
+    private User loggedUser = new User();
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_invitations);
+        mAuth = FirebaseAuth.getInstance();
+
+        databaseReference = FirebaseDatabase.getInstance().getReference("users");
+        Query query = databaseReference.orderByChild("email").equalTo(mAuth.getCurrentUser().getEmail());
+        query.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot user: dataSnapshot.getChildren()) {
+                    loggedUser = user.getValue(User.class);
+                 }
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
 
         firebaseDatabase = FirebaseDatabase.getInstance();
         databaseReferenceInvitations=firebaseDatabase.getReference().child("invitations");
@@ -72,23 +100,20 @@ public class InvitationsActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-
     }
 
     public void getInvitations(List<Invitation> allInvitations){
-       // ulogovan npr:
-        User user1=new User(1,"ja","ja","ja@gmail.com","ja","ja",null, null);
 
         for(Invitation inv:allInvitations){
             if(inv.getInvitedUser()!=null) {
-                if (inv.getInvitedUser().getEmail().equals(user1.getEmail())) {
+                if (inv.getInvitedUser().getEmail().equals(loggedUser.getEmail())) {
                     testDataInvitations.add(inv);
                     adapter.notifyDataSetChanged();
                 }
             }
         }
-
     }
+
     public void getAllInvitations(Map<String,Object> invitations){
         List<Invitation> allInvitations=new ArrayList<>();
         for (Map.Entry<String, Object> entry : invitations.entrySet()){
@@ -122,9 +147,6 @@ public class InvitationsActivity extends AppCompatActivity {
             Map userMap=(Map)singleInvitation.get("invitedUser");
             User newUser=new User();
             newUser.setEmail((String)userMap.get("email"));
-//            newUser.setId((long)eventMap.get("id"));
-            newUser.setLastName((String)eventMap.get("lastname"));
-            newUser.setUsername((String)eventMap.get("username"));
             newInvitation.setInvitedUser(newUser);
 
             allInvitations.add(newInvitation);
