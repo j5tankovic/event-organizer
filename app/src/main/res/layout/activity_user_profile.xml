@@ -40,6 +40,7 @@
         android:layout_marginLeft="28dp"
         android:text="Username: "
         android:textSize="18sp"
+        android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -49,9 +50,10 @@
         android:layout_width="86dp"
         android:layout_height="24dp"
         android:layout_marginStart="28dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="40dp"
         android:text="Email: "
         android:textSize="18sp"
+        android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/username_lbl" />
 
@@ -60,9 +62,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="28dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="40dp"
         android:text="First name: "
         android:textSize="18sp"
+        android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/email_lbl" />
 
@@ -71,9 +74,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="28dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="40dp"
         android:text="Last name: "
         android:textSize="18sp"
+        android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/first_name_lbl" />
 
@@ -91,7 +95,8 @@
         android:id="@+id/email2"
         android:layout_width="wrap_content"
         android:layout_height="24dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginLeft="12dp"
+        android:layout_marginTop="40dp"
         android:text="sandra@gmail.com"
         android:textSize="18sp"
         app:layout_constraintLeft_toRightOf="@+id/email_lbl"
@@ -101,7 +106,7 @@
         android:id="@+id/first_name2"
         android:layout_width="wrap_content"
         android:layout_height="24dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="40dp"
         android:text="Sandra"
         android:textSize="18sp"
         app:layout_constraintLeft_toRightOf="@+id/first_name_lbl"
@@ -111,7 +116,7 @@
         android:id="@+id/last_name2"
         android:layout_width="wrap_content"
         android:layout_height="24dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="40dp"
         android:text="Mili"
         android:textSize="18sp"
         app:layout_constraintLeft_toRightOf="@+id/last_name_lbl"
