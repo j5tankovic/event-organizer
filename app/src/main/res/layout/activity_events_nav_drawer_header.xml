@@ -26,7 +26,7 @@
             android:layout_width="@dimen/profile_width"
             android:layout_height="@dimen/profile_height"
             android:paddingTop="@dimen/nav_header_vertical_spacing"
-            android:src="@drawable/profile"/>
+            />
 
         <TextView
         android:id="@+id/name"

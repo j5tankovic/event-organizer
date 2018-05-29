@@ -50,6 +50,7 @@ import rs.ac.uns.ftn.pma.event_organizer.model.EventCategory;
 import rs.ac.uns.ftn.pma.event_organizer.model.ShoppingItem;
 import rs.ac.uns.ftn.pma.event_organizer.model.User;
 import rs.ac.uns.ftn.pma.event_organizer.services.AuthentificationService;
+import rs.ac.uns.ftn.pma.event_organizer.services.GlideApp;
 
 
 public class EventsActivity extends AppCompatActivity {
@@ -106,7 +107,7 @@ public class EventsActivity extends AppCompatActivity {
         // Navigation view header
         navHeader = navigationView.getHeaderView(0);
         txtName = (TextView) navHeader.findViewById(R.id.name);
-        imageView = navHeader.findViewById(R.id.image);
+        imageView = navHeader.findViewById(R.id.img_profile);
 
         // load toolbar titles from string resources
         activityTitles = getResources().getStringArray(R.array.nav_item_activity_titles);
@@ -136,6 +137,30 @@ public class EventsActivity extends AppCompatActivity {
 
                 txtName.setText(loggedUser.getName() + " " + loggedUser.getLastName()); //UPISATI IME I PREZIME ULOGOVANOG
 //                storageReference = FirebaseStorage.getInstance().getReference().child(loggedUser.getProfilePicture());
+
+                if (loggedUser.getProfilePicture() != null){
+                    storageReference = FirebaseStorage.getInstance().getReference().child(loggedUser.getProfilePicture());
+
+                    storageReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                        @Override
+                        public void onSuccess(Uri uri) {
+                            String imageURL = uri.toString();
+                            GlideApp.with(getApplicationContext())
+                                    .load(imageURL)
+                                    .placeholder(R.drawable.user_picture)
+                                    .into(imageView)
+                            ;
+                            System.out.println("User picture loaded!");
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception exception) {
+                            System.out.println("Failed to load a picture!");
+                        }
+                    });
+                }
+
+
 
                 databaseReference.addChildEventListener(new ChildEventListener() {
 
