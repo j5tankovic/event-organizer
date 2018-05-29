@@ -194,6 +194,9 @@ public class AddNewEventActivity extends AppCompatActivity {
         String eventCategoryName = eventCategory.getSelectedItem().toString();
         event.setEventCategory(new EventCategory(eventCategoryName));
 
+        if(eventPicturePath != null) {
+            event.setImage(eventPicturePath);
+        }
         return event;
     }
 

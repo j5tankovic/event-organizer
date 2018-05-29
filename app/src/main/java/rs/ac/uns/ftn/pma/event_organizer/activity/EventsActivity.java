@@ -138,6 +138,7 @@ public class EventsActivity extends AppCompatActivity {
                 txtName.setText(loggedUser.getName() + " " + loggedUser.getLastName()); //UPISATI IME I PREZIME ULOGOVANOG
 //                storageReference = FirebaseStorage.getInstance().getReference().child(loggedUser.getProfilePicture());
 
+
                 if (loggedUser.getProfilePicture() != null){
                     storageReference = FirebaseStorage.getInstance().getReference().child(loggedUser.getProfilePicture());
 
