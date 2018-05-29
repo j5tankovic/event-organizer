@@ -17,12 +17,12 @@
         app:titleTextColor="@color/primary_text"
         >
 
-        <ImageView
-            android:id="@+id/my_events_profile_image"
-            android:layout_width="40sp"
-            android:layout_height="match_parent"
-            android:layout_gravity="right"
-            android:src="@drawable/profile" />
+        <!--<ImageView-->
+            <!--android:id="@+id/my_events_profile_image"-->
+            <!--android:layout_width="40sp"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:layout_gravity="right"-->
+            <!--android:src="@drawable/profile" />-->
     </android.support.v7.widget.Toolbar>
 
     <RelativeLayout

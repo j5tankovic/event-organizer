@@ -48,6 +48,7 @@ public class LoginActivity extends AppCompatActivity {
         System.out.println("LOGGED USER: ");
         if(loggedUser != null){
             System.out.println(loggedUser.toString());
+            finish(); //BACK, nece ici na login
             openMainActivity();
         }
         registerBtn.setOnClickListener(new View.OnClickListener() {

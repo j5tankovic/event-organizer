@@ -208,6 +208,7 @@ public class RegisterActivity extends AppCompatActivity {
                             Log.d(TAG, "createUserWithEmail:success");
                             FirebaseUser user = mAuth.getCurrentUser();
                             createUser(username,password,email,firstname,lastname);
+                            finish();
                             openUserProfileActivity();
                         } else {
                             // If sign in fails, display a message to the user.
@@ -262,7 +263,7 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     private void openUserProfileActivity(){
-        Intent intent = new Intent(this, UserProfileActivity.class);
+        Intent intent = new Intent(this, EventsActivity.class);
         startActivity(intent);
     }
 
