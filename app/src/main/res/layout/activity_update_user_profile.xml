@@ -36,11 +36,10 @@
 
     <Button
         android:id="@+id/button"
-        android:layout_width="380dp"
-        android:layout_height="wrap_content"
+        android:layout_width="159dp"
+        android:layout_height="40dp"
         android:layout_marginTop="24dp"
         android:text="change pitcure"
-        app:layout_constraintHorizontal_bias="0.429"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/user_picture_iv" />
@@ -103,17 +102,15 @@
 
         android:text="SandraSIIT"
         android:textSize="18sp"
-        app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintLeft_toRightOf="@+id/username_lbl"
-        app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/button" />
 
     <EditText
         android:id="@+id/email2"
         android:layout_width="@android:dimen/thumbnail_width"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="12dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginLeft="28dp"
+        android:layout_marginTop="16dp"
         android:text="sandra@gmail.com"
         android:textSize="18sp"
         app:layout_constraintLeft_toRightOf="@+id/email_lbl"
@@ -123,8 +120,8 @@
         android:id="@+id/first_name2"
         android:layout_width="@android:dimen/thumbnail_width"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="4dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="16dp"
         android:text="Sandra"
         android:textSize="18sp"
         app:layout_constraintLeft_toRightOf="@+id/first_name_lbl"
@@ -134,8 +131,8 @@
         android:id="@+id/last_name2"
         android:layout_width="@android:dimen/thumbnail_width"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="8dp"
-        android:layout_marginTop="12dp"
+        android:layout_marginLeft="24dp"
+        android:layout_marginTop="16dp"
         android:text="Mili"
         android:textSize="18sp"
         app:layout_constraintLeft_toRightOf="@+id/last_name_lbl"
@@ -143,10 +140,10 @@
 
     <Button
         android:id="@+id/button2"
-        android:layout_width="374dp"
-        android:layout_height="49dp"
-        android:layout_marginTop="16dp"
+        android:layout_width="241dp"
+        android:layout_height="43dp"
         android:text="save"
+        app:layout_constraintHorizontal_bias="0.547"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/last_name2" />
