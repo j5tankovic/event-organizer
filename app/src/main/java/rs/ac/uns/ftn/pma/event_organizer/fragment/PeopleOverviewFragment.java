@@ -5,6 +5,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +13,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -48,8 +50,10 @@ public class PeopleOverviewFragment extends Fragment {
     private List<User> allUsers=new ArrayList<>();
     private List<Invitation> allInvitations=new ArrayList<>();
     private List<Invitation> eventInvitations=new ArrayList<>();
-    Event selectedEvent;
-    private String eventId; //npr.=1 rodjendan   -   FIND THIS EVENT; FROM GENERAL FRAGMENT?
+    private Event selectedEvent;
+    private FirebaseAuth mAuth;
+    private User loggedUser = new User();
+    private  DatabaseReference databaseReferenceLogged;
 
     public PeopleOverviewFragment() {}
 
@@ -66,7 +70,6 @@ public class PeopleOverviewFragment extends Fragment {
         recyclerView.addItemDecoration(new DividerItemDecoration(getContext(), LinearLayoutManager.VERTICAL));
 
         selectedEvent = (Event) getActivity().getIntent().getExtras().get(EventsActivity.SELECTED_EVENT);
-        eventId=selectedEvent.getId();
 
         firebaseDatabase = FirebaseDatabase.getInstance();
         databaseReference = firebaseDatabase.getReference("invitations");
@@ -95,24 +98,58 @@ public class PeopleOverviewFragment extends Fragment {
             }
         });
 
+        mAuth = FirebaseAuth.getInstance();
+
+        databaseReferenceLogged = FirebaseDatabase.getInstance().getReference("users");
+        Query query = databaseReferenceLogged.orderByChild("email").equalTo(mAuth.getCurrentUser().getEmail());
+        query.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot user: dataSnapshot.getChildren()) {
+                    loggedUser = user.getValue(User.class);
+                }
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
         ImageButton button=(ImageButton)view.findViewById(R.id.new_invitation_email_button);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 TextView textViewEmail=(TextView)view.findViewById(R.id.new_invitation_email_edittext);
                 String email=(textViewEmail).getText().toString();
-                Toast.makeText(getContext(), "Inviting "+email, Toast.LENGTH_LONG).show();
-                textViewEmail.setText("");
 
-                User foundedUser=findUserByEmail(email);
-                //YOU CAN'T INVITE SOMEONE WHO IS ALREADY INVITED
-                //CAN YOU INVITE YOURSELF?
-                if(foundedUser!=null) {
-                    createNewInvitation(foundedUser, selectedEvent);//THIS EVENT
-                    adapter.notifyDataSetChanged();
-                } else{
-                    Toast.makeText(getContext(), email+" doesn't have a profile", Toast.LENGTH_LONG).show();
-                    //IF THIS USER DOESN'T HAVE PROFILE
+                if(TextUtils.isEmpty(email)) {
+                    textViewEmail.setError("Required");
+                } else {
+                    Toast.makeText(getContext(), "Inviting " + email, Toast.LENGTH_LONG).show();
+                    textViewEmail.setText("");
+
+                    User foundedUser = findUserByEmail(email);
+
+                    if (foundedUser == null) {
+                        Toast.makeText(getContext(), email + " doesn't have a profile", Toast.LENGTH_LONG).show();
+                        //IF THIS USER DOESN'T HAVE PROFILE
+                    } else {
+                        boolean invited = false;
+                        if (foundedUser.getEmail().equals(loggedUser.getEmail())) {
+                            Toast.makeText(getContext(), "You're creator of event.", Toast.LENGTH_LONG).show();
+                            invited = true;
+                        } else for (Invitation inv : eventInvitations) {
+                            if (inv.getInvitedUser().getEmail().equals(foundedUser.getEmail())) {
+                                Toast.makeText(getContext(), "User " + foundedUser.getUsername() + " is already invited.", Toast.LENGTH_LONG).show();
+                                invited = true;
+                            }
+                        }
+                        if (!invited) {
+                            createNewInvitation(foundedUser, selectedEvent);
+                            adapter.notifyDataSetChanged();
+                        }
+                    }
+
                 }
             }
         });
@@ -154,38 +191,39 @@ public class PeopleOverviewFragment extends Fragment {
         }
     }
 
-    public void getAllInvitations(Map<String,Object> invitations){
-        for (Map.Entry<String, Object> entry : invitations.entrySet()){
-            Map singleInvitation = (Map) entry.getValue();
+    public void getAllInvitations(Map<String,Object> invitations) {
+        if (invitations != null) {
+            for (Map.Entry<String, Object> entry : invitations.entrySet()) {
+                Map singleInvitation = (Map) entry.getValue();
 
-            Invitation newInvitation=new Invitation();
-            newInvitation.setId((String)singleInvitation.get("id"));
+                Invitation newInvitation = new Invitation();
+                newInvitation.setId((String) singleInvitation.get("id"));
 
-            if(singleInvitation.get("status").equals("ACCEPTED"))
-                newInvitation.setStatus(InvitationStatus.ACCEPTED);
-            else if(singleInvitation.get("status").equals("REJECTED"))
-                newInvitation.setStatus(InvitationStatus.REJECTED);
-            else
-                newInvitation.setStatus(InvitationStatus.PENDING);
+                if (singleInvitation.get("status").equals("ACCEPTED"))
+                    newInvitation.setStatus(InvitationStatus.ACCEPTED);
+                else if (singleInvitation.get("status").equals("REJECTED"))
+                    newInvitation.setStatus(InvitationStatus.REJECTED);
+                else
+                    newInvitation.setStatus(InvitationStatus.PENDING);
 
-            Map eventMap= (Map) singleInvitation.get("event");
-            Event newEvent=new Event();
-            newEvent.setId((String)eventMap.get("id"));
-            newInvitation.setEvent(newEvent);
+                Map eventMap = (Map) singleInvitation.get("event");
+                Event newEvent = new Event();
+                newEvent.setId((String) eventMap.get("id"));
+                newInvitation.setEvent(newEvent);
 
-            Map userMap=(Map)singleInvitation.get("invitedUser");
-            User newUser=new User();
-            newUser.setEmail((String)userMap.get("email"));
-            newInvitation.setInvitedUser(newUser);
+                Map userMap = (Map) singleInvitation.get("invitedUser");
+                User newUser = new User();
+                newUser.setEmail((String) userMap.get("email"));
+                newInvitation.setInvitedUser(newUser);
 
-            allInvitations.add(newInvitation);
+                allInvitations.add(newInvitation);
+            }
+            prepareTestData();
         }
-        prepareTestData();
-       }
-
+    }
     private void prepareTestData() {
         for(Invitation inv:allInvitations){
-            if(String.valueOf(inv.getEvent().getId()).equals(eventId)){
+            if(String.valueOf(inv.getEvent().getId()).equals(selectedEvent.getId())){
                 eventInvitations.add(inv);
             }
         }

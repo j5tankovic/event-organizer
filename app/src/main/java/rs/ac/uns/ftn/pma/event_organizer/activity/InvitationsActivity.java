@@ -135,12 +135,11 @@ public class InvitationsActivity extends AppCompatActivity {
             newEvent.setId((String)eventMap.get("id"));
             newEvent.setDescription((String)eventMap.get("description"));
 
-            /*
             EventCategory newEventCat=new EventCategory();
-            Map eventCat=(Map) singleInvitation.get("eventCategory");
+            Map eventCat=(Map) eventMap.get("eventCategory");
             newEventCat.setName((String)eventCat.get("name"));
             newEvent.setEventCategory(newEventCat);
-*/
+
             Map date=(Map)eventMap.get("startDateTime");
             Date startTime=new Date((long)date.get("time"));
             newEvent.setStartDateTime(startTime);
@@ -148,8 +147,16 @@ public class InvitationsActivity extends AppCompatActivity {
             Date endTime=new Date((long)dateEnd.get("time"));
             newEvent.setEndDateTime(endTime);
 
+            newEvent.setImage((String)eventMap.get("image"));
+
             newEvent.setName((String)eventMap.get("name"));
             newInvitation.setEvent(newEvent);
+
+            Map creatorMap=(Map)eventMap.get("creator");
+            User creator=new User();
+            creator.setName((String)creatorMap.get("name"));
+            creator.setLastName((String)creatorMap.get("lastName"));
+            newEvent.setCreator(creator);
 
             Map userMap=(Map)singleInvitation.get("invitedUser");
             User newUser=new User();

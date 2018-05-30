@@ -2,12 +2,14 @@ package rs.ac.uns.ftn.pma.event_organizer.adapter;
 
 import android.app.Activity;
 import android.content.Context;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
@@ -18,12 +20,19 @@ import java.util.List;
 import rs.ac.uns.ftn.pma.event_organizer.R;
 import rs.ac.uns.ftn.pma.event_organizer.model.Invitation;
 import rs.ac.uns.ftn.pma.event_organizer.model.enums.InvitationStatus;
+import rs.ac.uns.ftn.pma.event_organizer.services.GlideApp;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 public class InvitationsAdapter extends ArrayAdapter<Invitation> {
     private Context context;
     private List<Invitation> invitations;
+    private StorageReference storageReference;
+    private ImageView imageView;
 
     public InvitationsAdapter(Context context, int resource, List<Invitation> invitations) {
         super(context, resource, invitations);
@@ -85,6 +94,30 @@ public class InvitationsAdapter extends ArrayAdapter<Invitation> {
                 date2str = new SimpleDateFormat("dd/MM/yyyy").format(inv.getEvent().getEndDateTime());
 
             date.setText(date1str+" - "+date2str);
+
+            imageView = view.findViewById(R.id.invitation_image);
+
+            if (inv.getEvent().getImage() != null){
+                storageReference = FirebaseStorage.getInstance().getReference().child(inv.getEvent().getImage());
+
+                storageReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                    @Override
+                    public void onSuccess(Uri uri) {
+                        String imageURL = uri.toString();
+                        GlideApp.with(getContext())
+                                .load(imageURL)
+                                .placeholder(R.drawable.background)
+                                .into(imageView)
+                        ;
+                        System.out.println("Event picture loaded!");
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception exception) {
+                        System.out.println("Failed to load a picture!");
+                    }
+                });
+            }
         }
         return view;
     };
