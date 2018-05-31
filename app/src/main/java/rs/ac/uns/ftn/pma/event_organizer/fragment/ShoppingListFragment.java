@@ -50,6 +50,7 @@ public class ShoppingListFragment extends Fragment {
     private List<ShoppingItem> testData = new ArrayList<>();
     private RecyclerView.Adapter adapter;
     private DatabaseReference dbReference;
+    private DatabaseReference dbReferenceShoppingItems;
 
     Event selectedEvent;
 
@@ -84,7 +85,7 @@ public class ShoppingListFragment extends Fragment {
             public void onLongClicked(int position) {
 
             }
-        });
+        }, selectedEvent);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
         recyclerView.addItemDecoration(new DividerItemDecoration(getContext(), LinearLayoutManager.VERTICAL));
@@ -100,41 +101,32 @@ public class ShoppingListFragment extends Fragment {
         });
 
         dbReference = FirebaseDatabase.getInstance().getReference("events");
-        dbReference.addChildEventListener(new ChildEventListener() {
+        dbReferenceShoppingItems = dbReference.child(selectedEvent.getId()).child("shoppingItemList");
 
+        dbReferenceShoppingItems.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                if(dataSnapshot.child("shoppingItemList").getValue() != null && dataSnapshot.child("id").getValue().equals(selectedEvent.getId())) {
-                    List<Map<String, Object>> list = (List<Map<String, Object>>) dataSnapshot.child("shoppingItemList").getValue();
-                    for (Map<String, Object> map : list) {
-                        ShoppingItem shoppingItem = getFromMap(map);
-
-                        testData.add(shoppingItem);
-                        adapter.notifyDataSetChanged();
-                    }
-
-                }
+                ShoppingItem item = dataSnapshot.getValue(ShoppingItem.class);
+                testData.add(item);
+                adapter.notifyDataSetChanged();
             }
 
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                //adapter.notifyDataSetChanged();
-//                ShoppingItem item = dataSnapshot.getValue(ShoppingItem.class);
-//                for (ShoppingItem si: testData) {
-//                    if (item.getId().equals(si.getId())) {
-//                        adapter.notifyDataSetChanged();
-//                    }
-//                }
-                Event event = dataSnapshot.getValue(Event.class);
-                selectedEvent = event;
+                ShoppingItem item = dataSnapshot.getValue(ShoppingItem.class);
+                for (ShoppingItem si: testData) {
+                    if (item.getId().equals(si.getId())) {
+                        adapter.notifyDataSetChanged();
+                    }
+                }
             }
 
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {
-//                String key = dataSnapshot.getKey();
-//                ShoppingItem item = findById(key);
-//                testData.remove(item);
-//                adapter.notifyDataSetChanged();
+                String key = dataSnapshot.getKey();
+                ShoppingItem item = findById(key);
+                testData.remove(item);
+                adapter.notifyDataSetChanged();
             }
 
             @Override
@@ -147,15 +139,63 @@ public class ShoppingListFragment extends Fragment {
 
             }
         });
+
+//        dbReference.addChildEventListener(new ChildEventListener() {
+//
+//            @Override
+//            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+//                if(dataSnapshot.child("shoppingItemList").getValue() != null && dataSnapshot.child("id").getValue().equals(selectedEvent.getId())) {
+//                    List<Map<String, Object>> list = (List<Map<String, Object>>) dataSnapshot.child("shoppingItemList").getValue();
+//                    for (Map<String, Object> map : list) {
+//                        ShoppingItem shoppingItem = getFromMap(map);
+//
+//                        testData.add(shoppingItem);
+//                        adapter.notifyDataSetChanged();
+//                    }
+//
+//                }
+//            }
+//
+//            @Override
+//            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+//                //adapter.notifyDataSetChanged();
+////                ShoppingItem item = dataSnapshot.getValue(ShoppingItem.class);
+////                for (ShoppingItem si: testData) {
+////                    if (item.getId().equals(si.getId())) {
+////                        adapter.notifyDataSetChanged();
+////                    }
+////                }
+////                Event event = dataSnapshot.getValue(Event.class);
+////                selectedEvent = event;
+//            }
+//
+//            @Override
+//            public void onChildRemoved(DataSnapshot dataSnapshot) {
+////                String key = dataSnapshot.getKey();
+////                ShoppingItem item = findById(key);
+////                testData.remove(item);
+////                adapter.notifyDataSetChanged();
+//            }
+//
+//            @Override
+//            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+//
+//            }
+//
+//            @Override
+//            public void onCancelled(DatabaseError databaseError) {
+//
+//            }
+//        });
         return view;
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == 999 && resultCode == RESULT_OK) {
-            ShoppingItem item = (ShoppingItem) data.getExtras().get(EditShoppingItemActivity.EDITED_ITEM);
-            testData.add(item);
-            adapter.notifyDataSetChanged();
+//            ShoppingItem item = (ShoppingItem) data.getExtras().get(EditShoppingItemActivity.EDITED_ITEM);
+//            testData.add(item);
+//            adapter.notifyDataSetChanged();
 //            String id = data.getStringExtra(ShoppingItemOverviewActivity.ITEM_ID);
 //            ShoppingItem item = findById(id);
 //            if (item != null) {
@@ -163,9 +203,9 @@ public class ShoppingListFragment extends Fragment {
 //                adapter.notifyDataSetChanged();
 //            }
         } else if (requestCode == 994 && resultCode == RESULT_OK) { //DODAVANJE
-            ShoppingItem item = (ShoppingItem) data.getExtras().get(NewShoppingItemActivity.ADDED_ITEM);
-            testData.add(item);
-            adapter.notifyDataSetChanged();
+//            ShoppingItem item = (ShoppingItem) data.getExtras().get(NewShoppingItemActivity.ADDED_ITEM);
+//            testData.add(item);
+//            adapter.notifyDataSetChanged();
         }
     }
 

@@ -16,11 +16,13 @@ import java.util.List;
 
 import rs.ac.uns.ftn.pma.event_organizer.R;
 import rs.ac.uns.ftn.pma.event_organizer.listener.ClickListener;
+import rs.ac.uns.ftn.pma.event_organizer.model.Event;
 import rs.ac.uns.ftn.pma.event_organizer.model.ShoppingItem;
 
 public class ShoppingListAdapter extends RecyclerView.Adapter<ShoppingListAdapter.ViewHolder> {
     private ClickListener clickListener;
     private List<ShoppingItem> testData;
+    private Event event;
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
         public TextView shoppingItemName;
@@ -45,8 +47,7 @@ public class ShoppingListAdapter extends RecyclerView.Adapter<ShoppingListAdapte
             if (v.getId() == shoppingItemStatus.getId()) {
                 ShoppingItem item = testData.get(getAdapterPosition());
                 item.setStatus(!item.isStatus());
-                FirebaseDatabase.getInstance().getReference("events")
-                        .child(item.getId()).setValue(item);
+                update(item);
             } else {
                 listenerRef.get().onPositionClicked(getAdapterPosition());
             }
@@ -58,9 +59,10 @@ public class ShoppingListAdapter extends RecyclerView.Adapter<ShoppingListAdapte
         }
     }
 
-    public ShoppingListAdapter(List<ShoppingItem> testData, ClickListener clickListener) {
+    public ShoppingListAdapter(List<ShoppingItem> testData, ClickListener clickListener, Event event) {
         this.testData = testData;
         this.clickListener = clickListener;
+        this.event = event;
     }
 
     @Override
@@ -83,5 +85,10 @@ public class ShoppingListAdapter extends RecyclerView.Adapter<ShoppingListAdapte
     @Override
     public int getItemCount() {
         return testData.size();
+    }
+
+    private void update(ShoppingItem item) {
+        FirebaseDatabase.getInstance().getReference("events").child(event.getId())
+                .child("shoppingItemList").child(item.getId()).setValue(item);
     }
 }

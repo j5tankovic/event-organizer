@@ -47,6 +47,7 @@ public class PlaceOffersFragment extends Fragment {
     private RecyclerView.Adapter adapter;
 
     private DatabaseReference dbReference;
+    private DatabaseReference dbReferencePlaces;
 
     Event selectedEvent;
 
@@ -98,33 +99,29 @@ public class PlaceOffersFragment extends Fragment {
         });
 
         dbReference = FirebaseDatabase.getInstance().getReference("events");
-        dbReference.addChildEventListener(new ChildEventListener() {
 
+        dbReferencePlaces = dbReference.child(selectedEvent.getId()).child("potentialPlaces");
+        dbReferencePlaces.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-
-                if(dataSnapshot.child("potentialPlaces").getValue() != null && dataSnapshot.child("id").getValue().equals(selectedEvent.getId())) {
-                    List<Map<String, Object>> list = (List<Map<String, Object>>) dataSnapshot.child("potentialPlaces").getValue();
-                    for (Map<String, Object> map : list) {
-                        PlaceOffer placeOffer = getFromMap(map);
-                        testData.add(placeOffer);
-                        adapter.notifyDataSetChanged();
-                    }
-                }
+                PlaceOffer offer = dataSnapshot.getValue(PlaceOffer.class);
+                testData.add(offer);
+                adapter.notifyDataSetChanged();
             }
 
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-               Event event = dataSnapshot.getValue(Event.class);
-               selectedEvent = event;
+                PlaceOffer offer = dataSnapshot.getValue(PlaceOffer.class);
+                testData.add(offer);
+                adapter.notifyDataSetChanged();
             }
 
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {
-//                String key = dataSnapshot.getKey();
-//                PlaceOffer offer = findById(key);
-//                testData.remove(offer);
-//                adapter.notifyDataSetChanged();
+                String key = dataSnapshot.getKey();
+                PlaceOffer offer = findById(key);
+                testData.remove(offer);
+                adapter.notifyDataSetChanged();
             }
 
             @Override
@@ -137,19 +134,59 @@ public class PlaceOffersFragment extends Fragment {
 
             }
         });
+
+//        dbReference.addChildEventListener(new ChildEventListener() {
+//
+//            @Override
+//            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+//
+//                if(dataSnapshot.child("potentialPlaces").getValue() != null && dataSnapshot.child("id").getValue().equals(selectedEvent.getId())) {
+//                    List<Map<String, Object>> list = (List<Map<String, Object>>) dataSnapshot.child("potentialPlaces").getValue();
+//                    for (Map<String, Object> map : list) {
+//                        PlaceOffer placeOffer = getFromMap(map);
+//                        testData.add(placeOffer);
+//                        adapter.notifyDataSetChanged();
+//                    }
+//                }
+//            }
+//
+//            @Override
+//            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+//               Event event = dataSnapshot.getValue(Event.class);
+//               selectedEvent = event;
+//            }
+//
+//            @Override
+//            public void onChildRemoved(DataSnapshot dataSnapshot) {
+////                String key = dataSnapshot.getKey();
+////                PlaceOffer offer = findById(key);
+////                testData.remove(offer);
+////                adapter.notifyDataSetChanged();
+//            }
+//
+//            @Override
+//            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+//
+//            }
+//
+//            @Override
+//            public void onCancelled(DatabaseError databaseError) {
+//
+//            }
+//        });
         return view;
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == 998 && resultCode == RESULT_OK) {
-            PlaceOffer placeOffer = (PlaceOffer) data.getExtras().get(EditPlaceOfferActivity.EDITED_OFFER);
-            testData.add(placeOffer);
-            adapter.notifyDataSetChanged();
+//            PlaceOffer placeOffer = (PlaceOffer) data.getExtras().get(EditPlaceOfferActivity.EDITED_OFFER);
+//            testData.add(placeOffer);
+//            adapter.notifyDataSetChanged();
         } else if (requestCode == 995 && resultCode == RESULT_OK) { //DODAVANJE
-            PlaceOffer placeOffer = (PlaceOffer) data.getExtras().get(NewPlaceOfferActivity.ADDED_OFFER);
-            testData.add(placeOffer);
-            adapter.notifyDataSetChanged();
+//            PlaceOffer placeOffer = (PlaceOffer) data.getExtras().get(NewPlaceOfferActivity.ADDED_OFFER);
+//            testData.add(placeOffer);
+//            adapter.notifyDataSetChanged();
         }
     }
 

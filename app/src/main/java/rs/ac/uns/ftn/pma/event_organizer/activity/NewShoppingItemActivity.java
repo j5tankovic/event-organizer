@@ -68,9 +68,9 @@ public class NewShoppingItemActivity extends AppCompatActivity {
                 ShoppingItem item = formShoppingItem();
                 selectedEvent = (Event) getIntent().getExtras().get(ShoppingListFragment.SELECTED_EVENT);
 
-                Event event = add(selectedEvent, item);
-                save(event);
-                formResult(event);
+               // Event event = add(selectedEvent, item);
+                save(item);
+                formResult(item);
             }
         });
 
@@ -133,26 +133,28 @@ public class NewShoppingItemActivity extends AppCompatActivity {
         return item;
     }
 
-    private Event add(Event selectedEvent, ShoppingItem shoppingItem) {
-        List<ShoppingItem> shoppingItems = new ArrayList<>();
-        if(selectedEvent.getShoppingItemList() != null) {
-            shoppingItems = selectedEvent.getShoppingItemList();
-        }
-        shoppingItems.add(shoppingItem);
-        selectedEvent.setShoppingItemList(shoppingItems);
+//    private Event add(Event selectedEvent, ShoppingItem shoppingItem) {
+//        List<ShoppingItem> shoppingItems = new ArrayList<>();
+//        if(selectedEvent.getShoppingItemList() != null) {
+//            shoppingItems = selectedEvent.getShoppingItemList();
+//        }
+//        shoppingItems.add(shoppingItem);
+//        selectedEvent.setShoppingItemList(shoppingItems);
+//
+//        return selectedEvent;
+//    }
 
-        return selectedEvent;
-    }
-
-    private void formResult(Event event) {
+    private void formResult(ShoppingItem item) {
         Intent i = new Intent();
-        ShoppingItem lastAdded = event.getShoppingItemList().get(event.getShoppingItemList().size()-1);
-        i.putExtra(ADDED_ITEM, lastAdded);
+        //ShoppingItem lastAdded = event.getShoppingItemList().get(event.getShoppingItemList().size()-1);
+        i.putExtra(ADDED_ITEM, item);
         setResult(RESULT_OK, i);
         finish();
     }
 
-    private void save(Event event) {
-        databaseReference.child(event.getId()).setValue(event);
+    private void save(ShoppingItem shoppingItem) {
+        String key = databaseReference.child(selectedEvent.getId()).child("shoppingItemList").push().getKey();
+        shoppingItem.setId(key);
+        databaseReference.child(selectedEvent.getId()).child("shoppingItemList").child(key).setValue(shoppingItem);
     }
 }

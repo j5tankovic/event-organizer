@@ -51,7 +51,8 @@ public class ShoppingItemOverviewActivity extends AppCompatActivity {
 
         fillUi();
 
-        databaseReference = FirebaseDatabase.getInstance().getReference("events");
+        databaseReference = FirebaseDatabase.getInstance().getReference("events")
+                .child(selectedEvent.getId());
     }
 
     @Override
@@ -98,7 +99,7 @@ public class ShoppingItemOverviewActivity extends AppCompatActivity {
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        //delete();
+                        delete();
                         formResult();
                     }
                 })
@@ -134,7 +135,7 @@ public class ShoppingItemOverviewActivity extends AppCompatActivity {
         finish();
     }
 
-//    private void delete() {
-//        databaseReference.child(shoppingItem.getId()).setValue(null);
-//    }
+    private void delete() {
+        databaseReference.child("shoppingItemList").child(shoppingItem.getId()).setValue(null);
+    }
 }

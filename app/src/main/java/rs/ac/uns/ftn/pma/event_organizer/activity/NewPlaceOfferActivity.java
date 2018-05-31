@@ -65,9 +65,9 @@ public class NewPlaceOfferActivity extends AppCompatActivity {
                 }
                 PlaceOffer placeOffer = formData();
                 selectedEvent = (Event) getIntent().getExtras().get(PlaceOffersFragment.SELECTED_EVENT);
-                Event event = add(selectedEvent, placeOffer);
-                save(event);
-                formResult(event);
+               // Event event = add(selectedEvent, placeOffer);
+                save(placeOffer);
+                formResult(placeOffer);
             }
         });
 
@@ -139,26 +139,28 @@ public class NewPlaceOfferActivity extends AppCompatActivity {
         return offer;
     }
 
-    private Event add(Event selectedEvent, PlaceOffer placeOffer) {
-        List<PlaceOffer> placeOffers = new ArrayList<>();
-        if(selectedEvent.getPotentialPlaces() != null) {
-            placeOffers = selectedEvent.getPotentialPlaces();
-        }
-        placeOffers.add(placeOffer);
-        selectedEvent.setPotentialPlaces(placeOffers);
+//    private Event add(Event selectedEvent, PlaceOffer placeOffer) {
+//        List<PlaceOffer> placeOffers = new ArrayList<>();
+//        if(selectedEvent.getPotentialPlaces() != null) {
+//            placeOffers = selectedEvent.getPotentialPlaces();
+//        }
+//        placeOffers.add(placeOffer);
+//        selectedEvent.setPotentialPlaces(placeOffers);
+//
+//        return selectedEvent;
+//    }
 
-        return selectedEvent;
-    }
-
-    private void formResult(Event event) {
+    private void formResult(PlaceOffer placeOffer) {
         Intent i = new Intent();
-        PlaceOffer lastAdded = event.getPotentialPlaces().get(event.getPotentialPlaces().size()-1);
-        i.putExtra(ADDED_OFFER, lastAdded);
+       // PlaceOffer lastAdded = event.getPotentialPlaces().get(event.getPotentialPlaces().size()-1);
+        i.putExtra(ADDED_OFFER, placeOffer);
         setResult(RESULT_OK, i);
         finish();
     }
 
-    private void save(Event event) {
-        databaseReference.child(event.getId()).setValue(event);
+    private void save(PlaceOffer placeOffer) {
+        String key = databaseReference.child(selectedEvent.getId()).child("potentialPlaces").push().getKey();
+        placeOffer.setId(key);
+        databaseReference.child(selectedEvent.getId()).child("potentialPlaces").child(key).setValue(placeOffer);
     }
 }

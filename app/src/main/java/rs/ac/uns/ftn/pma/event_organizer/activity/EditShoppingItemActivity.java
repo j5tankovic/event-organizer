@@ -74,9 +74,9 @@ public class EditShoppingItemActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 shoppingItem = formData();
-                Event event = edit(selectedEvent);
-                save(event);
-                formResult(event);
+               // Event event = edit(selectedEvent);
+                edit(shoppingItem);
+                formResult();
             }
         });
 
@@ -97,38 +97,41 @@ public class EditShoppingItemActivity extends AppCompatActivity {
         return  shoppingItem;
     }
 
-    private Event edit(Event selectedEvent) {
-        List<ShoppingItem> shoppingItems = selectedEvent.getShoppingItemList();
+//    private Event edit(Event selectedEvent) {
+//        List<ShoppingItem> shoppingItems = selectedEvent.getShoppingItemList();
+//
+//        for (int i = 0; i < shoppingItems.size(); i++) {
+//            if(shoppingItems.get(i).getId().equals(shoppingItem2Remove.getId())) {
+//
+//                //shoppingItems.remove(i);
+//                ShoppingItem item = shoppingItems.get(i);
+//                shoppingItems.get(i).setId(shoppingItem.getId());
+//                shoppingItems.get(i).setName(shoppingItem.getName());
+//                shoppingItems.get(i).setDescription(shoppingItem.getDescription());
+//                shoppingItems.get(i).setQuantity(shoppingItem.getQuantity());
+//                shoppingItems.get(i).setPrice(shoppingItem.getPrice());
+//                shoppingItems.get(i).setStatus(shoppingItem.isStatus());
+//                shoppingItems.get(i).setCategory(ShoppingItemCategory.FOOD);
+//            }
+//        }
+//        //shoppingItems.add(shoppingItem2Remove);
+//        selectedEvent.setShoppingItemList(shoppingItems);
+//        return selectedEvent;
+//    }
 
-        for (int i = 0; i < shoppingItems.size(); i++) {
-            if(shoppingItems.get(i).getId().equals(shoppingItem2Remove.getId())) {
-
-                //shoppingItems.remove(i);
-                ShoppingItem item = shoppingItems.get(i);
-                shoppingItems.get(i).setId(shoppingItem.getId());
-                shoppingItems.get(i).setName(shoppingItem.getName());
-                shoppingItems.get(i).setDescription(shoppingItem.getDescription());
-                shoppingItems.get(i).setQuantity(shoppingItem.getQuantity());
-                shoppingItems.get(i).setPrice(shoppingItem.getPrice());
-                shoppingItems.get(i).setStatus(shoppingItem.isStatus());
-                shoppingItems.get(i).setCategory(ShoppingItemCategory.FOOD);
-            }
-        }
-        //shoppingItems.add(shoppingItem2Remove);
-        selectedEvent.setShoppingItemList(shoppingItems);
-        return selectedEvent;
-    }
-
-    private void formResult(Event event) {
+    private void formResult() {
         Intent i = new Intent();
-        i.putExtra(SELECTED_EVENT, event);
+        i.putExtra(SELECTED_EVENT, selectedEvent);
         i.putExtra(EDITED_ITEM, shoppingItem);
         setResult(RESULT_OK, i);
         finish();
     }
 
-    private void save(Event event) {
-        databaseReference.child(event.getId()).setValue(event);
+    private void edit(ShoppingItem item) {
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance()
+                .getReference("events").child("shoppingItemList");
+
+        databaseReference.child(item.getId()).setValue(item);
     }
 
 }

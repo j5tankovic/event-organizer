@@ -69,7 +69,8 @@ public class PlaceOfferOverviewActivity extends AppCompatActivity implements OnM
         mapView.onCreate(mapViewBundle);
         mapView.getMapAsync(this);
 
-        databaseReference = FirebaseDatabase.getInstance().getReference("events");
+        databaseReference = FirebaseDatabase.getInstance().getReference("events")
+            .child(selectedEvent.getId());
     }
 
     @Override
@@ -215,6 +216,7 @@ public class PlaceOfferOverviewActivity extends AppCompatActivity implements OnM
     }
 
     private void delete(PlaceOffer placeOffer) {
-        databaseReference.child("potentialPlaces").child(pos).setValue(null);
+        //databaseReference.child("potentialPlaces").child(pos).setValue(null);
+        databaseReference.child("potentialPlaces").child(placeOffer.getId()).setValue(null);
     }
 }
