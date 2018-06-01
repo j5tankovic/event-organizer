@@ -31,8 +31,6 @@ public class ShoppingItemOverviewActivity extends AppCompatActivity {
     private Event selectedEvent;
     private ShoppingItem shoppingItem;
 
-    private DatabaseReference databaseReference;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,9 +48,6 @@ public class ShoppingItemOverviewActivity extends AppCompatActivity {
         shoppingItem = (ShoppingItem) intent.getExtras().get(ShoppingListFragment.SHOPPING_ITEM);
 
         fillUi();
-
-        databaseReference = FirebaseDatabase.getInstance().getReference("events")
-                .child(selectedEvent.getId());
     }
 
     @Override
@@ -136,6 +131,8 @@ public class ShoppingItemOverviewActivity extends AppCompatActivity {
     }
 
     private void delete() {
-        databaseReference.child("shoppingItemList").child(shoppingItem.getId()).setValue(null);
+        DatabaseReference dbReference = FirebaseDatabase.getInstance().getReference("events")
+                .child(selectedEvent.getId());
+        dbReference.child("shoppingItemList").child(shoppingItem.getId()).setValue(null);
     }
 }
