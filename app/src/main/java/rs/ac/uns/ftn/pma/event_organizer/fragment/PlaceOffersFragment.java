@@ -80,7 +80,7 @@ public class PlaceOffersFragment extends Fragment {
             public void onLongClicked(int position) {
 
             }
-        });
+        }, selectedEvent);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
         recyclerView.addItemDecoration(new DividerItemDecoration(getContext(), LinearLayoutManager.VERTICAL));
