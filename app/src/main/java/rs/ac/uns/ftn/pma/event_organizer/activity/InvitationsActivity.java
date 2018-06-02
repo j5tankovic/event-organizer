@@ -117,6 +117,7 @@ public class InvitationsActivity extends AppCompatActivity {
 
     public void getAllInvitations(Map<String,Object> invitations){
         List<Invitation> allInvitations=new ArrayList<>();
+        if(invitations!=null)
         for (Map.Entry<String, Object> entry : invitations.entrySet()){
             Map singleInvitation = (Map) entry.getValue();
 
