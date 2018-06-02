@@ -27,11 +27,9 @@ public class EditShoppingItemActivity extends AppCompatActivity {
     public static final String SELECTED_EVENT = "rs.ac.uns.ftn.pma.event_organizer.SELECTED_EVENT";
     public static final String EDITED_ITEM = "rs.ac.uns.ftn.pma.event_organizer.EDITED_ITEM";
 
-    private DatabaseReference databaseReference;
 
     private Event selectedEvent;
     private ShoppingItem shoppingItem;
-    private ShoppingItem shoppingItem2Remove;
 
 
     private TextView name;
@@ -50,12 +48,10 @@ public class EditShoppingItemActivity extends AppCompatActivity {
         ActionBar ab = getSupportActionBar();
         ab.setDisplayHomeAsUpEnabled(true);
 
-        databaseReference = FirebaseDatabase.getInstance().getReference("events");
 
         Intent intent = getIntent();
         selectedEvent = (Event) intent.getExtras().get(ShoppingItemOverviewActivity.SELECTED_EVENT);
         shoppingItem = (ShoppingItem) intent.getExtras().get(ShoppingItemOverviewActivity.SHOPPING_ITEM);
-        shoppingItem2Remove = (ShoppingItem) intent.getExtras().get(ShoppingItemOverviewActivity.SHOPPING_ITEM);
 
         name = findViewById(R.id.edit_shoppingitem_name);
         name.setText(shoppingItem.getName());
@@ -74,9 +70,8 @@ public class EditShoppingItemActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 shoppingItem = formData();
-                Event event = edit(selectedEvent);
-                save(event);
-                formResult(event);
+                edit(shoppingItem);
+                formResult();
             }
         });
 
@@ -97,38 +92,19 @@ public class EditShoppingItemActivity extends AppCompatActivity {
         return  shoppingItem;
     }
 
-    private Event edit(Event selectedEvent) {
-        List<ShoppingItem> shoppingItems = selectedEvent.getShoppingItemList();
-
-        for (int i = 0; i < shoppingItems.size(); i++) {
-            if(shoppingItems.get(i).getId().equals(shoppingItem2Remove.getId())) {
-
-                //shoppingItems.remove(i);
-                ShoppingItem item = shoppingItems.get(i);
-                shoppingItems.get(i).setId(shoppingItem.getId());
-                shoppingItems.get(i).setName(shoppingItem.getName());
-                shoppingItems.get(i).setDescription(shoppingItem.getDescription());
-                shoppingItems.get(i).setQuantity(shoppingItem.getQuantity());
-                shoppingItems.get(i).setPrice(shoppingItem.getPrice());
-                shoppingItems.get(i).setStatus(shoppingItem.isStatus());
-                shoppingItems.get(i).setCategory(ShoppingItemCategory.FOOD);
-            }
-        }
-        //shoppingItems.add(shoppingItem2Remove);
-        selectedEvent.setShoppingItemList(shoppingItems);
-        return selectedEvent;
-    }
-
-    private void formResult(Event event) {
+    private void formResult() {
         Intent i = new Intent();
-        i.putExtra(SELECTED_EVENT, event);
+        i.putExtra(SELECTED_EVENT, selectedEvent);
         i.putExtra(EDITED_ITEM, shoppingItem);
         setResult(RESULT_OK, i);
         finish();
     }
 
-    private void save(Event event) {
-        databaseReference.child(event.getId()).setValue(event);
+    private void edit(ShoppingItem item) {
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance()
+                .getReference("events").child(selectedEvent.getId()).child("shoppingItemList");
+
+        databaseReference.child(item.getId()).setValue(item);
     }
 
 }

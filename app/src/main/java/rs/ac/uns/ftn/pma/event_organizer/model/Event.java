@@ -2,7 +2,9 @@ package rs.ac.uns.ftn.pma.event_organizer.model;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Sandra on 4/27/2018.
@@ -17,8 +19,8 @@ public class Event implements Serializable{
     private String description;
     private long budget;
     private String image;
-    private List<ShoppingItem> shoppingItemList;
-    private List<PlaceOffer> potentialPlaces;
+    private HashMap<String, ShoppingItem> shoppingItemList;
+    private HashMap<String, PlaceOffer> potentialPlaces;
     private PlaceOffer finalPlace;
     private EventCategory eventCategory;
     private User creator;
@@ -50,11 +52,11 @@ public class Event implements Serializable{
         this.eventCategory = eventCategory;
     }
 
-    public List<ShoppingItem> getShoppingItemList() {
+    public Map<String, ShoppingItem> getShoppingItemList() {
         return shoppingItemList;
     }
 
-    public void setShoppingItemList(List<ShoppingItem> shoppingItemList) {
+    public void setShoppingItemList(HashMap<String, ShoppingItem> shoppingItemList) {
         this.shoppingItemList = shoppingItemList;
     }
 
@@ -114,11 +116,11 @@ public class Event implements Serializable{
         this.image = image;
     }
 
-    public List<PlaceOffer> getPotentialPlaces() {
+    public Map<String, PlaceOffer> getPotentialPlaces() {
         return potentialPlaces;
     }
 
-    public void setPotentialPlaces(List<PlaceOffer> potentialPlaces) {
+    public void setPotentialPlaces(HashMap<String, PlaceOffer> potentialPlaces) {
         this.potentialPlaces = potentialPlaces;
     }
 

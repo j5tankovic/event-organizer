@@ -30,8 +30,6 @@ public class NewPlaceOfferActivity extends AppCompatActivity {
 
     public static final String ADDED_OFFER = "rs.ac.uns.ftn.pma.event_organizer.ADDED_OFFER";
 
-    private DatabaseReference databaseReference;
-
     private Event selectedEvent;
 
     private Location location;
@@ -50,8 +48,6 @@ public class NewPlaceOfferActivity extends AppCompatActivity {
         ActionBar ab = getSupportActionBar();
         ab.setDisplayHomeAsUpEnabled(true);
 
-        databaseReference = FirebaseDatabase.getInstance().getReference("events");
-
         txtCapacity = findViewById(R.id.new_placeoffer_capacity);
         txtNotes = findViewById(R.id.new_placeoffer_notes);
         txtPrice = findViewById(R.id.new_placeoffer_price);
@@ -65,9 +61,8 @@ public class NewPlaceOfferActivity extends AppCompatActivity {
                 }
                 PlaceOffer placeOffer = formData();
                 selectedEvent = (Event) getIntent().getExtras().get(PlaceOffersFragment.SELECTED_EVENT);
-                Event event = add(selectedEvent, placeOffer);
-                save(event);
-                formResult(event);
+                save(placeOffer);
+                formResult(placeOffer);
             }
         });
 
@@ -128,9 +123,7 @@ public class NewPlaceOfferActivity extends AppCompatActivity {
 
     private PlaceOffer formData() {
         PlaceOffer offer = new PlaceOffer();
-        String key = databaseReference.push().getKey();
-        offer.setId(key);
-        offer.setLocationName(location.getName());//PROBAJ SA OVIM
+        offer.setLocationName(location.getName());
         offer.setCapacity(Integer.valueOf(txtCapacity.getText().toString()));
         offer.setNotes(txtNotes.getText().toString());
         offer.setPrice(Long.parseLong(txtPrice.getText().toString()));
@@ -139,26 +132,17 @@ public class NewPlaceOfferActivity extends AppCompatActivity {
         return offer;
     }
 
-    private Event add(Event selectedEvent, PlaceOffer placeOffer) {
-        List<PlaceOffer> placeOffers = new ArrayList<>();
-        if(selectedEvent.getPotentialPlaces() != null) {
-            placeOffers = selectedEvent.getPotentialPlaces();
-        }
-        placeOffers.add(placeOffer);
-        selectedEvent.setPotentialPlaces(placeOffers);
-
-        return selectedEvent;
-    }
-
-    private void formResult(Event event) {
+    private void formResult(PlaceOffer placeOffer) {
         Intent i = new Intent();
-        PlaceOffer lastAdded = event.getPotentialPlaces().get(event.getPotentialPlaces().size()-1);
-        i.putExtra(ADDED_OFFER, lastAdded);
+        i.putExtra(ADDED_OFFER, placeOffer);
         setResult(RESULT_OK, i);
         finish();
     }
 
-    private void save(Event event) {
-        databaseReference.child(event.getId()).setValue(event);
+    private void save(PlaceOffer placeOffer) {
+        DatabaseReference dbReference = FirebaseDatabase.getInstance().getReference("events");
+        String key = dbReference.child(selectedEvent.getId()).child("potentialPlaces").push().getKey();
+        placeOffer.setId(key);
+        dbReference.child(selectedEvent.getId()).child("potentialPlaces").child(key).setValue(placeOffer);
     }
 }

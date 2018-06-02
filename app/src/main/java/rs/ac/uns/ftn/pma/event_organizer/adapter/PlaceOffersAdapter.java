@@ -12,17 +12,22 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 import java.lang.ref.WeakReference;
 import java.util.List;
 
 import rs.ac.uns.ftn.pma.event_organizer.R;
 import rs.ac.uns.ftn.pma.event_organizer.activity.PlaceOfferOverviewActivity;
 import rs.ac.uns.ftn.pma.event_organizer.listener.ClickListener;
+import rs.ac.uns.ftn.pma.event_organizer.model.Event;
 import rs.ac.uns.ftn.pma.event_organizer.model.PlaceOffer;
 
 public class PlaceOffersAdapter extends RecyclerView.Adapter<PlaceOffersAdapter.ViewHolder> {
     private ClickListener clickListener;
     private List<PlaceOffer> testSet;
+    private Event event;
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
         public TextView textView;
@@ -46,9 +51,9 @@ public class PlaceOffersAdapter extends RecyclerView.Adapter<PlaceOffersAdapter.
         @Override
         public void onClick(View v) {
             if (v.getId() == R.id.placeoffer_accept) {
-                openConfirmationAboutAcceptance(v);
+                openConfirmationAboutAcceptance(v, getAdapterPosition());
             } else if (v.getId() == R.id.placeoffer_reject) {
-                openConfirmationAboutRejecting(v);
+                openConfirmationAboutRejecting(v, getAdapterPosition());
             } else {
                 listenerRef.get().onPositionClicked(getAdapterPosition());
             }
@@ -60,9 +65,10 @@ public class PlaceOffersAdapter extends RecyclerView.Adapter<PlaceOffersAdapter.
         }
     }
 
-    public PlaceOffersAdapter(List<PlaceOffer> testSet, ClickListener clickListener) {
+    public PlaceOffersAdapter(List<PlaceOffer> testSet, ClickListener clickListener, Event event) {
         this.testSet = testSet;
         this.clickListener = clickListener;
+        this.event = event;
     }
 
     @Override
@@ -77,7 +83,6 @@ public class PlaceOffersAdapter extends RecyclerView.Adapter<PlaceOffersAdapter.
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
           holder.textView.setText(testSet.get(position).getLocationName());
-    //    holder.textView.setText(testSet.get(position).getLocation().getName()); //PUCA
     }
 
     @Override
@@ -85,7 +90,7 @@ public class PlaceOffersAdapter extends RecyclerView.Adapter<PlaceOffersAdapter.
         return testSet.size();
     }
 
-    private void openConfirmationAboutAcceptance(View v) {
+    private void openConfirmationAboutAcceptance(View v, final int position) {
         final Context context = v.getContext();
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
 
@@ -94,6 +99,7 @@ public class PlaceOffersAdapter extends RecyclerView.Adapter<PlaceOffersAdapter.
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+                        updateFinalOffer(testSet.get(position));
                         Toast.makeText(context, "Accepted place offer", Toast.LENGTH_LONG).show();
                     }
                 })
@@ -105,7 +111,7 @@ public class PlaceOffersAdapter extends RecyclerView.Adapter<PlaceOffersAdapter.
                 }).show();
     }
 
-    private void openConfirmationAboutRejecting(View v) {
+    private void openConfirmationAboutRejecting(View v, final int position) {
         final Context context = v.getContext();
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
 
@@ -114,6 +120,7 @@ public class PlaceOffersAdapter extends RecyclerView.Adapter<PlaceOffersAdapter.
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+                        rejectPlaceOffer(testSet.get(position));
                         Toast.makeText(context, "Rejected place offer", Toast.LENGTH_LONG).show();
                     }
                 })
@@ -123,5 +130,18 @@ public class PlaceOffersAdapter extends RecyclerView.Adapter<PlaceOffersAdapter.
                         dialog.cancel();
                     }
                 }).show();
+    }
+
+    private void updateFinalOffer(PlaceOffer offer) {
+        DatabaseReference dbReference = FirebaseDatabase.getInstance().getReference("events").child(event.getId())
+                .child("finalPlace");
+        String key = dbReference.push().getKey();
+        dbReference.child(key).setValue(offer);
+    }
+
+    private void rejectPlaceOffer(PlaceOffer offer) {
+        DatabaseReference dbReference = FirebaseDatabase.getInstance().getReference("events").child(event.getId())
+                .child("potentialPlaces");
+        dbReference.child(offer.getId()).setValue(null);
     }
 }

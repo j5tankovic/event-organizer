@@ -46,8 +46,6 @@ public class PlaceOffersFragment extends Fragment {
     private List<PlaceOffer> testData = new ArrayList<PlaceOffer>();
     private RecyclerView.Adapter adapter;
 
-    private DatabaseReference dbReference;
-
     Event selectedEvent;
 
     public PlaceOffersFragment() {
@@ -82,7 +80,7 @@ public class PlaceOffersFragment extends Fragment {
             public void onLongClicked(int position) {
 
             }
-        });
+        }, selectedEvent);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
         recyclerView.addItemDecoration(new DividerItemDecoration(getContext(), LinearLayoutManager.VERTICAL));
@@ -97,34 +95,29 @@ public class PlaceOffersFragment extends Fragment {
             }
         });
 
-        dbReference = FirebaseDatabase.getInstance().getReference("events");
-        dbReference.addChildEventListener(new ChildEventListener() {
-
+        DatabaseReference dbReferencePlaces = FirebaseDatabase.getInstance().getReference("events")
+                .child(selectedEvent.getId()).child("potentialPlaces");
+        dbReferencePlaces.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-
-                if(dataSnapshot.child("potentialPlaces").getValue() != null && dataSnapshot.child("id").getValue().equals(selectedEvent.getId())) {
-                    List<Map<String, Object>> list = (List<Map<String, Object>>) dataSnapshot.child("potentialPlaces").getValue();
-                    for (Map<String, Object> map : list) {
-                        PlaceOffer placeOffer = getFromMap(map);
-                        testData.add(placeOffer);
-                        adapter.notifyDataSetChanged();
-                    }
-                }
+                PlaceOffer offer = dataSnapshot.getValue(PlaceOffer.class);
+                testData.add(offer);
+                adapter.notifyDataSetChanged();
             }
 
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-               Event event = dataSnapshot.getValue(Event.class);
-               selectedEvent = event;
+                PlaceOffer offer = dataSnapshot.getValue(PlaceOffer.class);
+                testData.add(offer);
+                adapter.notifyDataSetChanged();
             }
 
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {
-//                String key = dataSnapshot.getKey();
-//                PlaceOffer offer = findById(key);
-//                testData.remove(offer);
-//                adapter.notifyDataSetChanged();
+                String key = dataSnapshot.getKey();
+                PlaceOffer offer = findById(key);
+                testData.remove(offer);
+                adapter.notifyDataSetChanged();
             }
 
             @Override
@@ -142,51 +135,7 @@ public class PlaceOffersFragment extends Fragment {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == 998 && resultCode == RESULT_OK) {
-            PlaceOffer placeOffer = (PlaceOffer) data.getExtras().get(EditPlaceOfferActivity.EDITED_OFFER);
-            testData.add(placeOffer);
-            adapter.notifyDataSetChanged();
-        } else if (requestCode == 995 && resultCode == RESULT_OK) { //DODAVANJE
-            PlaceOffer placeOffer = (PlaceOffer) data.getExtras().get(NewPlaceOfferActivity.ADDED_OFFER);
-            testData.add(placeOffer);
-            adapter.notifyDataSetChanged();
-        }
-    }
-
-    private PlaceOffer getFromMap(Map<String, Object> map) {
-        PlaceOffer placeOffer = new PlaceOffer();
-        for (Map.Entry<String, Object> entry : map.entrySet()) {
-            if(entry.getKey().equals("id")) {
-                placeOffer.setId((String) entry.getValue());
-            } else if(entry.getKey().equals("capacity")) {
-                placeOffer.setCapacity((Long) entry.getValue());
-            } else if(entry.getKey().equals("notes")) {
-                placeOffer.setNotes((String) entry.getValue());
-            } else if(entry.getKey().equals("price")) {
-                placeOffer.setPrice((Long) entry.getValue());
-            } else if(entry.getKey().equals("locationName")) {
-                placeOffer.setLocationName((String) entry.getValue());
-            }
-
-            else if(entry.getKey().equals("location")) {
-                Location location = new Location();
-                Map<String, Object> mapLocation = (Map<String, Object>) entry.getValue();
-                for(Map.Entry<String, Object> entryValue : mapLocation.entrySet()) {
-                    if(entryValue.getKey().equals("lat")) {
-                        location.setLat((Double) entryValue.getValue());
-                    } else if(entryValue.getKey().equals("lng")) {
-                        location.setLng((Double) entryValue.getValue());
-                    } else if(entryValue.getKey().equals("address")) {
-                        location.setAddress((String) entryValue.getValue());
-                    } else if(entryValue.getKey().equals("name")) {
-                        location.setName((String) entryValue.getValue());
-                    }
-                }
-                placeOffer.setLocation(location);
-            }
-        }
-
-        return placeOffer;
+        //TODO: remove this when refactoring
     }
 
     private PlaceOffer findById(String id) {

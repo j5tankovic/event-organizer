@@ -31,8 +31,6 @@ public class ShoppingItemOverviewActivity extends AppCompatActivity {
     private Event selectedEvent;
     private ShoppingItem shoppingItem;
 
-    private DatabaseReference databaseReference;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,8 +48,6 @@ public class ShoppingItemOverviewActivity extends AppCompatActivity {
         shoppingItem = (ShoppingItem) intent.getExtras().get(ShoppingListFragment.SHOPPING_ITEM);
 
         fillUi();
-
-        databaseReference = FirebaseDatabase.getInstance().getReference("events");
     }
 
     @Override
@@ -98,7 +94,7 @@ public class ShoppingItemOverviewActivity extends AppCompatActivity {
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        //delete();
+                        delete();
                         formResult();
                     }
                 })
@@ -134,7 +130,9 @@ public class ShoppingItemOverviewActivity extends AppCompatActivity {
         finish();
     }
 
-//    private void delete() {
-//        databaseReference.child(shoppingItem.getId()).setValue(null);
-//    }
+    private void delete() {
+        DatabaseReference dbReference = FirebaseDatabase.getInstance().getReference("events")
+                .child(selectedEvent.getId());
+        dbReference.child("shoppingItemList").child(shoppingItem.getId()).setValue(null);
+    }
 }

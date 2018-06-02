@@ -150,7 +150,6 @@ public class EventsActivity extends AppCompatActivity {
 
                     @Override
                     public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-
                         Event event = dataSnapshot.getValue(Event.class);
                         if(event.getCreator().getUsername().equals(loggedUser.getUsername())) {
                             testData.add(event);

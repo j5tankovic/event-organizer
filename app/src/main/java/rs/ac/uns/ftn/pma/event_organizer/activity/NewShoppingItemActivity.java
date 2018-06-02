@@ -30,8 +30,6 @@ public class NewShoppingItemActivity extends AppCompatActivity {
 
     public static final String ADDED_ITEM = "rs.ac.uns.ftn.pma.event_organizer.ADDED_ITEM";
 
-    private DatabaseReference databaseReference;
-
     private TextView txtName;
     private TextView txtDescription;
     private TextView txtQuantity;
@@ -51,8 +49,6 @@ public class NewShoppingItemActivity extends AppCompatActivity {
         ActionBar ab = getSupportActionBar();
         ab.setDisplayHomeAsUpEnabled(true);
 
-        databaseReference = FirebaseDatabase.getInstance().getReference("events");
-
         txtName = findViewById(R.id.new_shoppingitem_name);
         txtDescription = findViewById(R.id.new_shoppingitem_description);
         txtQuantity = findViewById(R.id.new_shoppingitem_quantity);
@@ -68,9 +64,9 @@ public class NewShoppingItemActivity extends AppCompatActivity {
                 ShoppingItem item = formShoppingItem();
                 selectedEvent = (Event) getIntent().getExtras().get(ShoppingListFragment.SELECTED_EVENT);
 
-                Event event = add(selectedEvent, item);
-                save(event);
-                formResult(event);
+               // Event event = add(selectedEvent, item);
+                save(item);
+                formResult(item);
             }
         });
 
@@ -122,8 +118,6 @@ public class NewShoppingItemActivity extends AppCompatActivity {
 
     private ShoppingItem formShoppingItem() {
         ShoppingItem item = new ShoppingItem();
-        String key = databaseReference.push().getKey();
-        item.setId(key);
         item.setName(txtName.getText().toString());
         item.setDescription(txtDescription.getText().toString());
         item.setQuantity(Integer.valueOf(txtQuantity.getText().toString()));
@@ -133,26 +127,18 @@ public class NewShoppingItemActivity extends AppCompatActivity {
         return item;
     }
 
-    private Event add(Event selectedEvent, ShoppingItem shoppingItem) {
-        List<ShoppingItem> shoppingItems = new ArrayList<>();
-        if(selectedEvent.getShoppingItemList() != null) {
-            shoppingItems = selectedEvent.getShoppingItemList();
-        }
-        shoppingItems.add(shoppingItem);
-        selectedEvent.setShoppingItemList(shoppingItems);
 
-        return selectedEvent;
-    }
-
-    private void formResult(Event event) {
+    private void formResult(ShoppingItem item) {
         Intent i = new Intent();
-        ShoppingItem lastAdded = event.getShoppingItemList().get(event.getShoppingItemList().size()-1);
-        i.putExtra(ADDED_ITEM, lastAdded);
+        i.putExtra(ADDED_ITEM, item);
         setResult(RESULT_OK, i);
         finish();
     }
 
-    private void save(Event event) {
-        databaseReference.child(event.getId()).setValue(event);
+    private void save(ShoppingItem shoppingItem) {
+        DatabaseReference dbReference = FirebaseDatabase.getInstance().getReference("events");
+        String key = dbReference.child(selectedEvent.getId()).child("shoppingItemList").push().getKey();
+        shoppingItem.setId(key);
+        dbReference.child(selectedEvent.getId()).child("shoppingItemList").child(key).setValue(shoppingItem);
     }
 }
