@@ -29,6 +29,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
@@ -41,6 +42,7 @@ import rs.ac.uns.ftn.pma.event_organizer.R;
 import rs.ac.uns.ftn.pma.event_organizer.adapter.EventsAdapter;
 import rs.ac.uns.ftn.pma.event_organizer.model.Event;
 import rs.ac.uns.ftn.pma.event_organizer.model.EventCategory;
+import rs.ac.uns.ftn.pma.event_organizer.model.Message;
 import rs.ac.uns.ftn.pma.event_organizer.model.User;
 import rs.ac.uns.ftn.pma.event_organizer.services.GlideApp;
 
@@ -120,6 +122,7 @@ public class EventsActivity extends AppCompatActivity {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot user: dataSnapshot.getChildren()) {
                     loggedUser = user.getValue(User.class);
+                    subscribeToTopic();
                 }
 
                 txtName.setText(loggedUser.getName() + " " + loggedUser.getLastName());
@@ -206,6 +209,7 @@ public class EventsActivity extends AppCompatActivity {
             }
         });
 
+        subscribeToTopic();
     }
 
     public void prepareTest(){
@@ -347,4 +351,9 @@ public class EventsActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    private void subscribeToTopic() {
+        String mail = loggedUser.getEmail().replace("@", "_");
+        FirebaseMessaging.getInstance().subscribeToTopic("eventInvitationFor-" + mail);
+        Toast.makeText(this, "Subscribed to Topic: eventInvitationFor-" + mail, Toast.LENGTH_SHORT).show();
+    }
 }
