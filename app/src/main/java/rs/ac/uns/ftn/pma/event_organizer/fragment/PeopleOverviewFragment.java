@@ -246,7 +246,7 @@ public class PeopleOverviewFragment extends Fragment {
     private void setDropBox(){
         String[] users = new String[allUsers.size()];
         for(int i=0;i<allUsers.size();i++){
-            users[i]=allUsers.get(i).getEmail();
+            users[i]=allUsers.get(i).getUsername();
         }
         if(users.length!=0) {
             ArrayAdapter<String> adapterTextView = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, users);
