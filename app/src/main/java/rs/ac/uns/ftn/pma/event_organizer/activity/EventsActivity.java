@@ -208,8 +208,6 @@ public class EventsActivity extends AppCompatActivity {
                 startActivity(new Intent(EventsActivity.this, AddNewEventActivity.class));
             }
         });
-
-        subscribeToTopic();
     }
 
     public void prepareTest(){
