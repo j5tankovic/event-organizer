@@ -10,6 +10,7 @@ public class PlaceOffer implements Serializable {
     private Location location;
     private long price;
     private String locationName;
+    private boolean isAccepted;
 
     public PlaceOffer() {
     }
@@ -19,6 +20,16 @@ public class PlaceOffer implements Serializable {
         this.capacity = capacity;
         this.location = location;
         this.price = price;
+    }
+
+    public PlaceOffer(String id, long capacity, String notes, Location location, long price, String locationName, boolean isAccepted) {
+        this.id = id;
+        this.capacity = capacity;
+        this.notes = notes;
+        this.location = location;
+        this.price = price;
+        this.locationName = locationName;
+        this.isAccepted = isAccepted;
     }
 
     public String getId() {
@@ -64,6 +75,14 @@ public class PlaceOffer implements Serializable {
     public String getLocationName() { return locationName; }
 
     public void setLocationName(String locationName) { this.locationName = locationName; }
+
+    public boolean isAccepted() {
+        return isAccepted;
+    }
+
+    public void setAccepted(boolean accepted) {
+        isAccepted = accepted;
+    }
 
     @Override
     public String toString() {

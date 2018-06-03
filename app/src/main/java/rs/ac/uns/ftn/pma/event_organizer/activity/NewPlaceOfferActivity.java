@@ -128,6 +128,7 @@ public class NewPlaceOfferActivity extends AppCompatActivity {
         offer.setNotes(txtNotes.getText().toString());
         offer.setPrice(Long.parseLong(txtPrice.getText().toString()));
         offer.setLocation(location);
+        offer.setAccepted(false);
 
         return offer;
     }

@@ -88,7 +88,6 @@ public class ShoppingListFragment extends Fragment {
         recyclerView.setAdapter(adapter);
         recyclerView.addItemDecoration(new DividerItemDecoration(getContext(), LinearLayoutManager.VERTICAL));
 
-        //ZA DODAVANJE NOVOG
         addShoppingItem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

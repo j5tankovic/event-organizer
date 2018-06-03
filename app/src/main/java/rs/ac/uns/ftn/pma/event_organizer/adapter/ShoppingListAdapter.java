@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -48,6 +49,9 @@ public class ShoppingListAdapter extends RecyclerView.Adapter<ShoppingListAdapte
                 ShoppingItem item = testData.get(getAdapterPosition());
                 item.setStatus(!item.isStatus());
                 update(item);
+                long budget = updateBudget(item, event);
+                Toast.makeText(v.getContext(), "Your budget is now: "+ budget, Toast.LENGTH_LONG)
+                        .show();
             } else {
                 listenerRef.get().onPositionClicked(getAdapterPosition());
             }
@@ -90,5 +94,15 @@ public class ShoppingListAdapter extends RecyclerView.Adapter<ShoppingListAdapte
     private void update(ShoppingItem item) {
         FirebaseDatabase.getInstance().getReference("events").child(event.getId())
                 .child("shoppingItemList").child(item.getId()).setValue(item);
+    }
+
+    private long updateBudget(ShoppingItem item, Event event) {
+        long itemPrice = item.getPrice();
+        long newEventBudget = item.isStatus() ? event.getBudget() - itemPrice :
+                event.getBudget() + itemPrice;
+        event.setBudget(newEventBudget);
+        FirebaseDatabase.getInstance().getReference("events").child(event.getId()).child("budget")
+            .setValue(newEventBudget);
+        return newEventBudget;
     }
 }
