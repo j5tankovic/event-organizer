@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.android.gms.location.places.Place;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -32,6 +33,7 @@ import rs.ac.uns.ftn.pma.event_organizer.listener.ClickListener;
 import rs.ac.uns.ftn.pma.event_organizer.model.Event;
 import rs.ac.uns.ftn.pma.event_organizer.model.Location;
 import rs.ac.uns.ftn.pma.event_organizer.model.PlaceOffer;
+import rs.ac.uns.ftn.pma.event_organizer.model.ShoppingItem;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -109,8 +111,11 @@ public class PlaceOffersFragment extends Fragment {
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
                 PlaceOffer offer = dataSnapshot.getValue(PlaceOffer.class);
-                testData.add(offer);
-                adapter.notifyDataSetChanged();
+                for (PlaceOffer po: testData) {
+                    if (offer.getId().equals(po.getId())) {
+                        adapter.notifyDataSetChanged();
+                    }
+                }
             }
 
             @Override
