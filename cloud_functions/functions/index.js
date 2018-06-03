@@ -63,15 +63,15 @@ exports.notifyAboutPresence = functions.database.ref('events/{eventId}/invitatio
 
 
 const app = express();
-app.get('/:id', (req, res) => res.send("Tralalala" + req.params.id));
-app.get('/events/:event/invitations/:invitation/status', (req,res) => {
-	//res.send("Requst: " + "/events/:event/invitations/" + req.params.invitation + "/status" + req.param.status)
-    
-    return admin.database().ref('events/" + req.params.event + "/invitations/" + req.params.invitation + "/status')
-      .once('value').then(snapshot => {
-        // there, I queried!
-        return res.send("SNAPSHOT: " + snapshot);
-      });
-});
+app.get('/events/:event/invitations/:invitation/:status', (req,res) => {
+	const newStatus = {status : req.params.status};
+	const statusPath = '/events/' + req.params.event +
+		"/invitations/" + req.params.invitation;
+	return admin.database().ref(statusPath).update(newStatus).then(function() {
+		  return res.redirect(303, "https://firebasestorage.googleapis.com/v0/b/event-organizer-ftn.appspot.com/o/InvitationAcceptationPage.html?alt=media&token=71516f48-ab46-45b9-9f33-90fe1508accd");
+		}).catch(function(error) {
+		  return res.send("Status updating failed");
+		});
+	});
 
 exports.invitationAccepting = functions.https.onRequest(app);
