@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.View;
 
 import rs.ac.uns.ftn.pma.event_organizer.R;
 import rs.ac.uns.ftn.pma.event_organizer.adapter.TabAdapter;
@@ -22,9 +23,17 @@ public class EventActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event);
-        setSupportActionBar((Toolbar) findViewById(R.id.event_toolbar));
 
-        tabLayout = findViewById(R.id.tabLayout);
+        Toolbar t = findViewById(R.id.event_toolbar);
+        setSupportActionBar(t);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        t.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+
         viewPager = findViewById(R.id.pager);
 
         tabAdapter = new TabAdapter(this);

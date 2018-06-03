@@ -48,6 +48,8 @@ dependencies {
     annotationProcessor 'com.github.bumptech.glide:compiler:4.7.1'
     implementation 'com.firebaseui:firebase-ui-storage:3.3.0'
 
+    implementation 'com.android.support:preference-v7:27.1.1'
+
 }
 
 

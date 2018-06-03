@@ -59,9 +59,7 @@ public class UserProfileActivity extends AppCompatActivity {
                 finish();
             }
         });
-//        setSupportActionBar(t);
-//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-//        getSupportActionBar().setDisplayShowHomeEnabled(true);
+
 
         mAuth = FirebaseAuth.getInstance();
         databaseReference = FirebaseDatabase.getInstance().getReference("users");

@@ -39,11 +39,21 @@ public class EditPlaceOfferActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_place_offer);
 
-        Toolbar newPlaceOfferToolbar = findViewById(R.id.edit_placeoffer_toolbar);
-        setSupportActionBar(newPlaceOfferToolbar);
+//        Toolbar newPlaceOfferToolbar = findViewById(R.id.edit_placeoffer_toolbar);
+//        setSupportActionBar(newPlaceOfferToolbar);
+//
+//        ActionBar ab = getSupportActionBar();
+//        ab.setDisplayHomeAsUpEnabled(true);
 
-        ActionBar ab = getSupportActionBar();
-        ab.setDisplayHomeAsUpEnabled(true);
+        Toolbar t = findViewById(R.id.edit_placeoffer_toolbar);
+        setSupportActionBar(t);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        t.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
 
 
         Intent intent = getIntent();

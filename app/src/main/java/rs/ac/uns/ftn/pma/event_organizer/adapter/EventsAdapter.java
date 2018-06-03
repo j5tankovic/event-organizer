@@ -51,25 +51,26 @@ public class EventsAdapter extends ArrayAdapter<Event> {
         date = rowView.findViewById(R.id.event_date);
         imageView = rowView.findViewById(R.id.event_image);
 
-        name.setText(events.get(position).getName());
+        Event event = events.get(position);
+        name.setText(event.getName());
 
         String date1str = "";
         String date2str = "";
-        if(events.get(position).getStartDateTime() != null)
-            date1str = new SimpleDateFormat("dd.MM.yyyy HH:mm").format(events.get(position).getStartDateTime());
-        if(events.get(position).getEndDateTime() != null)
-            date2str = new SimpleDateFormat("dd.MM.yyyy HH:mm").format(events.get(position).getEndDateTime());
+        if(event.getStartDateTime() != null)
+            date1str = new SimpleDateFormat("dd.MM.yyyy HH:mm").format(event.getStartDateTime());
+        if(event.getEndDateTime() != null)
+            date2str = new SimpleDateFormat("dd.MM.yyyy HH:mm").format(event.getEndDateTime());
 
         date.setText(date1str + " - " + date2str);
 
-        if (events.get(position).getImage() != null){
-            storageReference = FirebaseStorage.getInstance().getReference().child(events.get(position).getImage());
+        if (event.getImage() != null) {
+            storageReference = FirebaseStorage.getInstance().getReference().child(event.getImage());
 
             storageReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                 @Override
                 public void onSuccess(Uri uri) {
                     String imageURL = uri.toString();
-                    GlideApp.with(context)
+                    GlideApp.with(getContext())
                             .load(imageURL)
                             .placeholder(R.drawable.background)
                             .into(imageView)

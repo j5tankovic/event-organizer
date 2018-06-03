@@ -114,6 +114,7 @@ public class EventsActivity extends AppCompatActivity {
         listView = (ListView) findViewById(R.id.my_events_list);
         listView.setAdapter(adapter);
 
+        //--------------------------------------------------
         Query query = databaseReferenceUsers.orderByChild("email").equalTo(mAuth.getCurrentUser().getEmail());
         query.addValueEventListener(new ValueEventListener() {
             @Override
@@ -186,6 +187,8 @@ public class EventsActivity extends AppCompatActivity {
             }
         });
 
+
+        //--------------------------------------------------
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {

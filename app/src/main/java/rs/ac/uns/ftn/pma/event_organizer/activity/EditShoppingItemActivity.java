@@ -42,11 +42,21 @@ public class EditShoppingItemActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_shopping_item);
 
-        Toolbar newPlaceOfferToolbar = findViewById(R.id.edit_shoppingitem_toolbar);
-        setSupportActionBar(newPlaceOfferToolbar);
+//        Toolbar newPlaceOfferToolbar = findViewById(R.id.edit_shoppingitem_toolbar);
+//        setSupportActionBar(newPlaceOfferToolbar);
+//
+//        ActionBar ab = getSupportActionBar();
+//        ab.setDisplayHomeAsUpEnabled(true);
 
-        ActionBar ab = getSupportActionBar();
-        ab.setDisplayHomeAsUpEnabled(true);
+        Toolbar t = findViewById(R.id.edit_shoppingitem_toolbar);
+        setSupportActionBar(t);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        t.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
 
 
         Intent intent = getIntent();

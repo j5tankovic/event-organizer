@@ -43,11 +43,19 @@ public class NewShoppingItemActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_shopping_item);
 
-        Toolbar newPlaceOfferToolbar = findViewById(R.id.new_shoppingitem_toolbar);
-        setSupportActionBar(newPlaceOfferToolbar);
+        Toolbar t = findViewById(R.id.new_shoppingitem_toolbar);
+        setSupportActionBar(t);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        t.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
 
-        ActionBar ab = getSupportActionBar();
-        ab.setDisplayHomeAsUpEnabled(true);
+
+//        ActionBar ab = getSupportActionBar();
+//        ab.setDisplayHomeAsUpEnabled(true);
 
         txtName = findViewById(R.id.new_shoppingitem_name);
         txtDescription = findViewById(R.id.new_shoppingitem_description);
