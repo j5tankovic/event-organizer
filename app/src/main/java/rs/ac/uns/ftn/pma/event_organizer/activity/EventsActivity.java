@@ -220,37 +220,6 @@ public class EventsActivity extends AppCompatActivity {
 
     }
 
-    public void getAllEvents(Map<String,Object> events){
-        for (Map.Entry<String, Object> entry : events.entrySet()){
-            Map value = (Map) entry.getValue();
-
-            Event event = new Event();
-
-            event.setId((String) value.get("id"));
-            event.setName((String) value.get("name"));
-            event.setDescription((String) value.get("description"));
-            event.setBudget((Long) value.get("budget"));
-            Map startDateTime = (Map) value.get("startDateTime");
-            Date startTime = new Date((long) startDateTime.get("time"));
-            event.setStartDateTime(startTime);
-            Map endDateTime = (Map) value.get("endDateTime");
-            Date endTime = new Date((long) endDateTime.get("time"));
-            event.setEndDateTime(endTime);
-            Map eventCategoryMap = (Map) value.get("eventCategory");
-            EventCategory eventCategory = new EventCategory((String) eventCategoryMap.get("name"));
-            event.setEventCategory(eventCategory);
-
-            Map creatorMap = (Map) value.get("creator");
-            User creator = new User((String) creatorMap.get("username"));
-            event.setCreator(creator);
-
-
-            allEvents.add(event);
-        }
-        prepareTest();
-
-    }
-
     private void setUpNavigationView() {
 
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
@@ -352,6 +321,6 @@ public class EventsActivity extends AppCompatActivity {
     private void subscribeToTopic() {
         String mail = loggedUser.getEmail().replace("@", "_");
         FirebaseMessaging.getInstance().subscribeToTopic("eventInvitationFor-" + mail);
-        Toast.makeText(this, "Subscribed to Topic: eventInvitationFor-" + mail, Toast.LENGTH_SHORT).show();
+        FirebaseMessaging.getInstance().subscribeToTopic("eventConfirmationFor-" + mail);
     }
 }

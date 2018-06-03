@@ -18,6 +18,7 @@ import java.text.SimpleDateFormat;
 import java.util.List;
 
 import rs.ac.uns.ftn.pma.event_organizer.R;
+import rs.ac.uns.ftn.pma.event_organizer.model.Event;
 import rs.ac.uns.ftn.pma.event_organizer.model.Invitation;
 import rs.ac.uns.ftn.pma.event_organizer.model.enums.InvitationStatus;
 import rs.ac.uns.ftn.pma.event_organizer.services.GlideApp;
@@ -36,31 +37,31 @@ public class InvitationsAdapter extends ArrayAdapter<Invitation> {
 
     public InvitationsAdapter(Context context, int resource, List<Invitation> invitations) {
         super(context, resource, invitations);
-        this.context=context;
-        this.invitations=invitations;
+        this.context = context;
+        this.invitations = invitations;
     }
 
     @Override
     public View getView(final int position, View view, ViewGroup parent) {
 
-        if(view==null) {
+        if (view == null) {
             LayoutInflater inflater = LayoutInflater.from(getContext());
             view = inflater.inflate(R.layout.activity_invitation_list_view, null, true);
         }
-        final Invitation inv=getItem(position);
-        final int pos=position;
-        if(inv!=null){
+        final Invitation inv = getItem(position);
+        final int pos = position;
+        if (inv != null) {
             TextView name = (TextView) view.findViewById(R.id.invitation_name);
             TextView date = (TextView) view.findViewById(R.id.invitation_date);
-            final ImageButton button_acc=(ImageButton)view.findViewById(R.id.invitation_status_acc);
-            final ImageButton button_rej=(ImageButton)view.findViewById(R.id.invitation_status_rej);
+            final ImageButton button_acc = (ImageButton) view.findViewById(R.id.invitation_status_acc);
+            final ImageButton button_rej = (ImageButton) view.findViewById(R.id.invitation_status_rej);
             button_acc.setFocusable(false);
             button_rej.setFocusable(false);
 
-            if(inv.getStatus().equals(InvitationStatus.ACCEPTED)){
+            if (inv.getStatus().equals(InvitationStatus.ACCEPTED)) {
                 button_acc.setImageResource(R.drawable.ic_check_green_24dp);
                 button_rej.setImageResource(R.drawable.ic_close_gray_24dp);
-           }else if (inv.getStatus().equals(InvitationStatus.REJECTED)){
+            } else if (inv.getStatus().equals(InvitationStatus.REJECTED)) {
                 button_acc.setImageResource(R.drawable.ic_check_gray_24dp);
                 button_rej.setImageResource(R.drawable.ic_close_red_24dp);
             }
@@ -70,34 +71,33 @@ public class InvitationsAdapter extends ArrayAdapter<Invitation> {
                 public void onClick(View v) {
                     button_acc.setImageResource(R.drawable.ic_check_green_24dp);
                     button_rej.setImageResource(R.drawable.ic_close_gray_24dp);
-                    FirebaseDatabase.getInstance().getReference("invitations")
-                            .child(String.valueOf(inv.getId())).child("status").setValue("ACCEPTED");
-                }});
+                    updateInvitationStatus(inv, "ACCEPTED");
+                }
+            });
 
             button_rej.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     button_rej.setImageResource(R.drawable.ic_close_red_24dp);
                     button_acc.setImageResource(R.drawable.ic_check_gray_24dp);
-                    FirebaseDatabase.getInstance().getReference("invitations")
-                            .child(String.valueOf(inv.getId())).child("status").setValue("REJECTED");
+                    updateInvitationStatus(inv, "REJECTED");
                 }
             });
 
 
             name.setText(inv.getEvent().getName());
-            String date1str="";
-            String date2str="";
-            if(inv.getEvent().getStartDateTime()!=null)
+            String date1str = "";
+            String date2str = "";
+            if (inv.getEvent().getStartDateTime() != null)
                 date1str = new SimpleDateFormat("dd/MM/yyyy").format(inv.getEvent().getStartDateTime());
-            if(inv.getEvent().getEndDateTime()!=null)
+            if (inv.getEvent().getEndDateTime() != null)
                 date2str = new SimpleDateFormat("dd/MM/yyyy").format(inv.getEvent().getEndDateTime());
 
-            date.setText(date1str+" - "+date2str);
+            date.setText(date1str + " - " + date2str);
 
             imageView = view.findViewById(R.id.invitation_image);
 
-            if (inv.getEvent().getImage() != null){
+            if (inv.getEvent().getImage() != null) {
                 storageReference = FirebaseStorage.getInstance().getReference().child(inv.getEvent().getImage());
 
                 storageReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
@@ -120,6 +120,11 @@ public class InvitationsAdapter extends ArrayAdapter<Invitation> {
             }
         }
         return view;
-    };
+    }
+
+    private void updateInvitationStatus(Invitation invitation, String status) {
+        FirebaseDatabase.getInstance().getReference("events").child(invitation.getEvent().getId())
+                .child("invitations").child(invitation.getId()).child("status").setValue(status);
+    }
 
 }

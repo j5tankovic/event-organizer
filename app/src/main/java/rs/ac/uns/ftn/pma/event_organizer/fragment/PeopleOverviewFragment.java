@@ -93,16 +93,21 @@ public class PeopleOverviewFragment extends Fragment {
             }
         });
 
-        databaseReferenceInvitations = firebaseDatabase.getReference().child("invitations");
-        databaseReferenceInvitations.addListenerForSingleValueEvent(new ValueEventListener() {
+        DatabaseReference dbReference = FirebaseDatabase.getInstance().getReference("events")
+                .child(selectedEvent.getId()).child("invitations");
+        dbReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                getAllInvitations((Map<String, Object>) dataSnapshot.getValue());
+                eventInvitations.clear();
+                for (DataSnapshot snapshot: dataSnapshot.getChildren()) {
+                    eventInvitations.add(snapshot.getValue(Invitation.class));
+                    adapter.notifyDataSetChanged();
+                }
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                System.out.println("The read failed: " + databaseError.getCode());
+
             }
         });
 
@@ -248,45 +253,5 @@ public class PeopleOverviewFragment extends Fragment {
             textView.setThreshold(1);
         }
 
-    }
-
-    public void getAllInvitations(Map<String, Object> invitations) {
-        if (invitations != null) {
-            for (Map.Entry<String, Object> entry : invitations.entrySet()) {
-                Map singleInvitation = (Map) entry.getValue();
-
-                Invitation newInvitation = new Invitation();
-                newInvitation.setId((String) singleInvitation.get("id"));
-
-                if (singleInvitation.get("status").equals("ACCEPTED"))
-                    newInvitation.setStatus(InvitationStatus.ACCEPTED);
-                else if (singleInvitation.get("status").equals("REJECTED"))
-                    newInvitation.setStatus(InvitationStatus.REJECTED);
-                else
-                    newInvitation.setStatus(InvitationStatus.PENDING);
-
-                Map eventMap = (Map) singleInvitation.get("event");
-                Event newEvent = new Event();
-                newEvent.setId((String) eventMap.get("id"));
-                newInvitation.setEvent(newEvent);
-
-                Map userMap = (Map) singleInvitation.get("invitedUser");
-                User newUser = new User();
-                newUser.setEmail((String) userMap.get("email"));
-                newInvitation.setInvitedUser(newUser);
-
-                allInvitations.add(newInvitation);
-            }
-            prepareTestData();
-        }
-    }
-
-    private void prepareTestData() {
-        for (Invitation inv : allInvitations) {
-            if (String.valueOf(inv.getEvent().getId()).equals(selectedEvent.getId())) {
-                eventInvitations.add(inv);
-            }
-        }
-        adapter.notifyDataSetChanged();
     }
 }
