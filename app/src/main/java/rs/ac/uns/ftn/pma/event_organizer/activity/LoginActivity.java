@@ -17,8 +17,10 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 import rs.ac.uns.ftn.pma.event_organizer.R;
+import rs.ac.uns.ftn.pma.event_organizer.model.User;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -79,7 +81,7 @@ public class LoginActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    private void signIn(String email, String password) {
+    private void signIn(final String email, String password) {
         Log.d(TAG, "signIn:" + email);
         if (!validateForm()) {
             return;
@@ -91,6 +93,7 @@ public class LoginActivity extends AppCompatActivity {
                 public void onComplete(@NonNull Task<AuthResult> task) {
                     if (task.isSuccessful()) {
                         // Sign in success, update UI with the signed-in user's information
+                        subscribeToTopics(email);
                         Log.d(TAG, "signInWithEmail:success");
                         FirebaseUser user = mAuth.getCurrentUser();
                         finish();
@@ -125,6 +128,13 @@ public class LoginActivity extends AppCompatActivity {
         }
 
         return valid;
+    }
+
+    private void subscribeToTopics(String email) {
+        String mail = email.replace("@", "_");
+        FirebaseMessaging.getInstance().subscribeToTopic("eventInvitationFor-" + mail);
+        FirebaseMessaging.getInstance().subscribeToTopic("eventConfirmationFor-" + mail);
+        //Toast.makeText(getApplicationContext(), "Subscribed to eventConfirmationFor-" + mail, Toast.LENGTH_LONG).show();
     }
 
 

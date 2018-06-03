@@ -262,13 +262,13 @@ public class PeopleOverviewFragment extends Fragment {
         String[] users = new String[allUsers.size()];
         for (int i = 0; i < allUsers.size(); i++) {
             users[i] = allUsers.get(i).getUsername();
-            }
-            if (users.length != 0) {
-                ArrayAdapter<String> adapterTextView = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, users);
-                AutoCompleteTextView textView = (AutoCompleteTextView) view.findViewById(R.id.new_invitation_email_edittext);
-                textView.setAdapter(adapterTextView);
-                textView.setThreshold(1);
-            }
-
         }
+        if (users.length != 0) {
+            ArrayAdapter<String> adapterTextView = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, users);
+            AutoCompleteTextView textView = (AutoCompleteTextView) view.findViewById(R.id.new_invitation_email_edittext);
+            textView.setAdapter(adapterTextView);
+            textView.setThreshold(1);
+        }
+
     }
+}

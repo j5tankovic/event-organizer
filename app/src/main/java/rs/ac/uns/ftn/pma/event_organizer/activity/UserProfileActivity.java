@@ -24,6 +24,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
@@ -152,6 +153,7 @@ public class UserProfileActivity extends AppCompatActivity {
     }
 
     private void logout(){
+        unsubscribeFromTopics();
         mAuth.signOut();
         openLoginActivity();
     }
@@ -164,6 +166,12 @@ public class UserProfileActivity extends AppCompatActivity {
     private void openLoginActivity(){
         Intent intent = new Intent(this, LoginActivity.class);
         startActivity(intent);
+    }
+
+    private void unsubscribeFromTopics() {
+        String mail = email.getText().toString().replace("@", "_");
+        FirebaseMessaging.getInstance().unsubscribeFromTopic("eventInvitationFor-" + email);
+        FirebaseMessaging.getInstance().unsubscribeFromTopic("eventConfirmationFor-" + email);
     }
 
 }

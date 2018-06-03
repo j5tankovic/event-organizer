@@ -122,7 +122,6 @@ public class EventsActivity extends AppCompatActivity {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot user: dataSnapshot.getChildren()) {
                     loggedUser = user.getValue(User.class);
-                    subscribeToTopic();
                 }
 
                 txtName.setText(loggedUser.getName() + " " + loggedUser.getLastName());
@@ -304,6 +303,7 @@ public class EventsActivity extends AppCompatActivity {
     }
 
     private void logout(){
+        unsubscribeFromTopics();
         mAuth.signOut();
         openLoginActivity();
     }
@@ -318,9 +318,9 @@ public class EventsActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    private void subscribeToTopic() {
-        String mail = loggedUser.getEmail().replace("@", "_");
-        FirebaseMessaging.getInstance().subscribeToTopic("eventInvitationFor-" + mail);
-        FirebaseMessaging.getInstance().subscribeToTopic("eventConfirmationFor-" + mail);
+    private void unsubscribeFromTopics() {
+        String email = loggedUser.getEmail().replace("@", "_");
+        FirebaseMessaging.getInstance().unsubscribeFromTopic("eventInvitationFor-" + email);
+        FirebaseMessaging.getInstance().unsubscribeFromTopic("eventConfirmationFor-" + email);
     }
 }
