@@ -8,19 +8,19 @@ admin.initializeApp(functions.config().firebase);
 
 exports.pushNotification = functions.database.ref('events/{eventId}/invitations/{invitationId}').onCreate((snapshot, context) => {
     console.log('Invitation created - Push notification event triggered');
-    
-    // console.log('Before', change.before.val());
-    // console.log('After', change.after.val());
 
     const valueObject = snapshot.val();
 
+    const creator = valueObject.event.creator;
+    console.log('Creator', creator.name);
+    const event = valueObject.event.name;
     const userMail = valueObject.invitedUser.email.replace("@", "_");
     console.log('User mail', userMail);
 
     const payload = {
         notification: {
             title: 'Event organizer',
-            body: 'Poziv na dogadjaj',
+            body: `${creator.name} ${creator.lastName} has invited you to event: ${event}`,
             sound: 'default'
         },
         data: {
@@ -37,19 +37,19 @@ exports.notifyAboutPresence = functions.database.ref('events/{eventId}/invitatio
     
     console.log('Before', change.before.val());
     console.log('After',  change.after.val());
-    
-    console.log('Parent', change.ref.parent.parent.child('creator').email);
 
-    const valueObject = snapshot.val();
-    const status = valueObject.status;
+    const status = change.after.val().status;
 
-    const creatorMail = change.ref.parent.parent.child('creator').email.replace("@", "_");
-    console.log('User mail', creatorMail);
+    const event = change.after.val().event.name;
+    const creatorMail = change.after.val().event.creator.email.replace('@', '_');
+    const invitedUser = change.after.val().invitedUser;
+    console.log('Invited user', invitedUser.name);
 
     const payload = {
         notification: {
             title: 'Event organizer',
-            body: `${status}`,
+            body: `${invitedUser.name} ${invitedUser.lastName} has ${status.toLowerCase()} your invitation
+            for event ${event}`,
             sound: 'default'
         },
         data: {
@@ -67,7 +67,7 @@ app.get('/:id', (req, res) => res.send("Tralalala" + req.params.id));
 app.get('/events/:event/invitations/:invitation/status', (req,res) => {
 	//res.send("Requst: " + "/events/:event/invitations/" + req.params.invitation + "/status" + req.param.status)
     
-    return admin.database().ref('/events/" + req.params.event + "/invitations/" + req.params.invitation + "/status')
+    return admin.database().ref('events/" + req.params.event + "/invitations/" + req.params.invitation + "/status')
       .once('value').then(snapshot => {
         // there, I queried!
         return res.send("SNAPSHOT: " + snapshot);
