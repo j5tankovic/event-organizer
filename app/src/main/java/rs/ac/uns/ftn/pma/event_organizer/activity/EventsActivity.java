@@ -29,6 +29,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
@@ -41,6 +42,7 @@ import rs.ac.uns.ftn.pma.event_organizer.R;
 import rs.ac.uns.ftn.pma.event_organizer.adapter.EventsAdapter;
 import rs.ac.uns.ftn.pma.event_organizer.model.Event;
 import rs.ac.uns.ftn.pma.event_organizer.model.EventCategory;
+import rs.ac.uns.ftn.pma.event_organizer.model.Message;
 import rs.ac.uns.ftn.pma.event_organizer.model.User;
 import rs.ac.uns.ftn.pma.event_organizer.services.GlideApp;
 
@@ -120,6 +122,7 @@ public class EventsActivity extends AppCompatActivity {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot user: dataSnapshot.getChildren()) {
                     loggedUser = user.getValue(User.class);
+                    subscribeToTopic();
                 }
 
                 txtName.setText(loggedUser.getName() + " " + loggedUser.getLastName());
@@ -205,7 +208,6 @@ public class EventsActivity extends AppCompatActivity {
                 startActivity(new Intent(EventsActivity.this, AddNewEventActivity.class));
             }
         });
-
     }
 
     public void prepareTest(){
@@ -215,37 +217,6 @@ public class EventsActivity extends AppCompatActivity {
                 adapter.notifyDataSetChanged();
             }
         }
-
-    }
-
-    public void getAllEvents(Map<String,Object> events){
-        for (Map.Entry<String, Object> entry : events.entrySet()){
-            Map value = (Map) entry.getValue();
-
-            Event event = new Event();
-
-            event.setId((String) value.get("id"));
-            event.setName((String) value.get("name"));
-            event.setDescription((String) value.get("description"));
-            event.setBudget((Long) value.get("budget"));
-            Map startDateTime = (Map) value.get("startDateTime");
-            Date startTime = new Date((long) startDateTime.get("time"));
-            event.setStartDateTime(startTime);
-            Map endDateTime = (Map) value.get("endDateTime");
-            Date endTime = new Date((long) endDateTime.get("time"));
-            event.setEndDateTime(endTime);
-            Map eventCategoryMap = (Map) value.get("eventCategory");
-            EventCategory eventCategory = new EventCategory((String) eventCategoryMap.get("name"));
-            event.setEventCategory(eventCategory);
-
-            Map creatorMap = (Map) value.get("creator");
-            User creator = new User((String) creatorMap.get("username"));
-            event.setCreator(creator);
-
-
-            allEvents.add(event);
-        }
-        prepareTest();
 
     }
 
@@ -347,4 +318,9 @@ public class EventsActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    private void subscribeToTopic() {
+        String mail = loggedUser.getEmail().replace("@", "_");
+        FirebaseMessaging.getInstance().subscribeToTopic("eventInvitationFor-" + mail);
+        FirebaseMessaging.getInstance().subscribeToTopic("eventConfirmationFor-" + mail);
+    }
 }

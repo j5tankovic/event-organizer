@@ -2,6 +2,7 @@ package rs.ac.uns.ftn.pma.event_organizer.activity;
 
 import android.content.Intent;
 import android.net.Uri;
+import android.provider.CalendarContract;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -43,12 +44,13 @@ public class InvitationsActivity extends AppCompatActivity {
     public static final String EVENT = "rs.ac.uns.ftn.pma.event_organizer.EVENT";
     private ListView listView;
     private ArrayList<Invitation> testDataInvitations=new ArrayList<>();
-    private DatabaseReference databaseReferenceInvitations;
+    private DatabaseReference databaseReferenceEvents;
     private FirebaseDatabase firebaseDatabase;
     private InvitationsAdapter adapter;
     private FirebaseAuth mAuth;
     private DatabaseReference databaseReference;
     private User loggedUser = new User();
+    private List<Event> events = new ArrayList<Event>();
 
 
     @Override
@@ -64,6 +66,7 @@ public class InvitationsActivity extends AppCompatActivity {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot user: dataSnapshot.getChildren()) {
                     loggedUser = user.getValue(User.class);
+                    addEventsListener();
                  }
             }
             @Override
@@ -72,20 +75,7 @@ public class InvitationsActivity extends AppCompatActivity {
             }
         });
 
-        firebaseDatabase = FirebaseDatabase.getInstance();
-        databaseReferenceInvitations=firebaseDatabase.getReference().child("invitations");
-        databaseReferenceInvitations.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                getAllInvitations((Map<String,Object>)dataSnapshot.getValue());
-            }
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                System.out.println("The read failed: " + databaseError.getCode());
-            }
-        });
-
-        adapter = new InvitationsAdapter(this,R.layout.activity_invitation_list_view, testDataInvitations );
+        adapter = new InvitationsAdapter(this,R.layout.activity_invitation_list_view, testDataInvitations);
         listView = (ListView) findViewById(R.id.invitations_list);
         listView.setAdapter(adapter);
 
@@ -103,70 +93,31 @@ public class InvitationsActivity extends AppCompatActivity {
         });
     }
 
-    public void getInvitations(List<Invitation> allInvitations){
+    public void addEventsListener() {
+        databaseReferenceEvents = FirebaseDatabase.getInstance().getReference("events");
 
-        for(Invitation inv:allInvitations){
-            if(inv.getInvitedUser()!=null) {
-                if (inv.getInvitedUser().getEmail().equals(loggedUser.getEmail())) {
-                    testDataInvitations.add(inv);
-                    adapter.notifyDataSetChanged();
+        databaseReferenceEvents.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                testDataInvitations.clear();
+                for(DataSnapshot snapshot: dataSnapshot.getChildren()) {
+                    Event e = snapshot.getValue(Event.class);
+                    if (e.getInvitations() != null) {
+                        for (Invitation invitation: e.getInvitations().values()) {
+                            if (invitation.getInvitedUser().getEmail().equals(loggedUser.getEmail())) {
+                                testDataInvitations.add(invitation);
+                                adapter.notifyDataSetChanged();
+                            }
+                        }
+                    }
                 }
             }
-        }
-    }
 
-    public void getAllInvitations(Map<String,Object> invitations){
-        List<Invitation> allInvitations=new ArrayList<>();
-        if(invitations!=null)
-        for (Map.Entry<String, Object> entry : invitations.entrySet()){
-            Map singleInvitation = (Map) entry.getValue();
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
 
-            Invitation newInvitation=new Invitation();
-            newInvitation.setId((String)singleInvitation.get("id"));
-
-            if(singleInvitation.get("status").equals("ACCEPTED"))
-                newInvitation.setStatus(InvitationStatus.ACCEPTED);
-            else if(singleInvitation.get("status").equals("REJECTED"))
-                newInvitation.setStatus(InvitationStatus.REJECTED);
-            else
-                newInvitation.setStatus(InvitationStatus.PENDING);
-
-            Map eventMap= (Map) singleInvitation.get("event");
-            Event newEvent=new Event();
-            newEvent.setId((String)eventMap.get("id"));
-            newEvent.setDescription((String)eventMap.get("description"));
-
-            EventCategory newEventCat=new EventCategory();
-            Map eventCat=(Map) eventMap.get("eventCategory");
-            newEventCat.setName((String)eventCat.get("name"));
-            newEvent.setEventCategory(newEventCat);
-
-            Map date=(Map)eventMap.get("startDateTime");
-            Date startTime=new Date((long)date.get("time"));
-            newEvent.setStartDateTime(startTime);
-            Map dateEnd=(Map)eventMap.get("endDateTime");
-            Date endTime=new Date((long)dateEnd.get("time"));
-            newEvent.setEndDateTime(endTime);
-
-            newEvent.setImage((String)eventMap.get("image"));
-
-            newEvent.setName((String)eventMap.get("name"));
-            newInvitation.setEvent(newEvent);
-
-            Map creatorMap=(Map)eventMap.get("creator");
-            User creator=new User();
-            creator.setName((String)creatorMap.get("name"));
-            creator.setLastName((String)creatorMap.get("lastName"));
-            newEvent.setCreator(creator);
-
-            Map userMap=(Map)singleInvitation.get("invitedUser");
-            User newUser=new User();
-            newUser.setEmail((String)userMap.get("email"));
-            newInvitation.setInvitedUser(newUser);
-
-            allInvitations.add(newInvitation);
-        }
-        getInvitations(allInvitations);
+            }
+        });
     }
 
 }

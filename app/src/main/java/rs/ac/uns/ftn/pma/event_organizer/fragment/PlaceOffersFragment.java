@@ -95,6 +95,7 @@ public class PlaceOffersFragment extends Fragment {
             }
         });
 
+
         DatabaseReference dbReferencePlaces = FirebaseDatabase.getInstance().getReference("events")
                 .child(selectedEvent.getId()).child("potentialPlaces");
         dbReferencePlaces.addChildEventListener(new ChildEventListener() {

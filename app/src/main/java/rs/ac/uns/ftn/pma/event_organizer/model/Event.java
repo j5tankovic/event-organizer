@@ -21,6 +21,7 @@ public class Event implements Serializable{
     private String image;
     private HashMap<String, ShoppingItem> shoppingItemList;
     private HashMap<String, PlaceOffer> potentialPlaces;
+    private HashMap<String, Invitation> invitations;
     private PlaceOffer finalPlace;
     private EventCategory eventCategory;
     private User creator;
@@ -138,6 +139,14 @@ public class Event implements Serializable{
 
     public void setCreator(User creator) {
         this.creator = creator;
+    }
+
+    public HashMap<String, Invitation> getInvitations() {
+        return invitations;
+    }
+
+    public void setInvitations(HashMap<String, Invitation> invitations) {
+        this.invitations = invitations;
     }
 
     @Override
