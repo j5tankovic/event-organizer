@@ -22,6 +22,7 @@ public class Event implements Serializable{
     private HashMap<String, ShoppingItem> shoppingItemList;
     private HashMap<String, PlaceOffer> potentialPlaces;
     private HashMap<String, Invitation> invitations;
+    private HashMap<String, Invitation> invitationsByMail;
     private PlaceOffer finalPlace;
     private EventCategory eventCategory;
     private User creator;
@@ -147,6 +148,14 @@ public class Event implements Serializable{
 
     public void setInvitations(HashMap<String, Invitation> invitations) {
         this.invitations = invitations;
+    }
+
+    public HashMap<String, Invitation> getInvitationsByMail() {
+        return invitationsByMail;
+    }
+
+    public void setInvitationsByMail(HashMap<String, Invitation> invitationsByMail) {
+        this.invitationsByMail = invitationsByMail;
     }
 
     @Override

@@ -9,8 +9,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import java.util.List;
 
+
 import rs.ac.uns.ftn.pma.event_organizer.model.Invitation;
-import rs.ac.uns.ftn.pma.event_organizer.model.User;
 import rs.ac.uns.ftn.pma.event_organizer.R;
 import rs.ac.uns.ftn.pma.event_organizer.model.enums.InvitationStatus;
 
@@ -46,7 +46,10 @@ public class PeopleOverviewAdapter extends RecyclerView.Adapter<PeopleOverviewAd
     public void onBindViewHolder(@NonNull PeopleOverviewAdapter.ViewHolder holder, int position) {
         int pos=position+1;
 
-        holder.userEmail.setText(pos+". "+invitations.get(position).getInvitedUser().getEmail());
+        if(invitations.get(position).getInvitedUser().getUsername()!=null)
+            holder.userEmail.setText(pos+". "+invitations.get(position).getInvitedUser().getUsername());
+        else
+            holder.userEmail.setText(pos+". "+invitations.get(position).getInvitedUser().getEmail());
 
         if(invitations.get(position).getStatus().equals(InvitationStatus.ACCEPTED))
             holder.img.setImageResource(R.drawable.ic_status_accepted_24dp);
