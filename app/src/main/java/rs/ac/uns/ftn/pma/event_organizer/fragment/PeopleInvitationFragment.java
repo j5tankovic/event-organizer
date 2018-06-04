@@ -41,6 +41,8 @@ import static android.app.Activity.RESULT_OK;
 public class PeopleInvitationFragment extends Fragment {
     View view;
     private List<Invitation> testData = new ArrayList<>();
+    private List<Invitation> testDataMail = new ArrayList<>();
+    private List<Invitation> allInvitations = new ArrayList<>();
     private RecyclerView recyclerView;
     private RecyclerView.Adapter adapter;
     private RecyclerView.LayoutManager layoutManager;
@@ -56,7 +58,7 @@ public class PeopleInvitationFragment extends Fragment {
         view = inflater.inflate(R.layout.fragment_people_invitation, container, false);
         recyclerView = view.findViewById(R.id.invitation_people_rv);
         layoutManager = new LinearLayoutManager(getContext());
-        adapter = new PeopleInvitationAdapter(testData);
+        adapter = new PeopleInvitationAdapter(allInvitations);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
 
@@ -68,10 +70,44 @@ public class PeopleInvitationFragment extends Fragment {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 testData.clear();
+                allInvitations.clear();
                 for (DataSnapshot snapshot: dataSnapshot.getChildren()) {
                    Invitation invitation = snapshot.getValue(Invitation.class);
                    testData.add(invitation);
+                   allInvitations.add(invitation);
                    adapter.notifyDataSetChanged();
+                }
+                for(Invitation inv:testDataMail) {
+                    allInvitations.add(inv);
+                    adapter.notifyDataSetChanged();
+
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+        DatabaseReference dbReferenceMail = FirebaseDatabase.getInstance().getReference("events")
+                .child(event.getId()).child("invitationsByMail");
+
+        dbReferenceMail.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                testDataMail.clear();
+                allInvitations.clear();
+                for (DataSnapshot snapshot: dataSnapshot.getChildren()) {
+                    Invitation invitation = snapshot.getValue(Invitation.class);
+                    testDataMail.add(invitation);
+                    allInvitations.add(snapshot.getValue(Invitation.class));
+                    adapter.notifyDataSetChanged();
+                }
+                for(Invitation inv:testData) {
+                    allInvitations.add(inv);
+                    adapter.notifyDataSetChanged();
+
                 }
             }
 
