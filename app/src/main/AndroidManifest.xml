@@ -19,45 +19,61 @@
 
         <activity android:name=".activity.LoginActivity">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+                <action android:name="android.intent.action.MAIN"
+                        android:screenOrientation="portrait"/>
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activity.MainActivity" />
-        <activity android:name=".activity.EventsActivity" />
+        <activity android:name=".activity.MainActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".activity.EventsActivity"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.AddNewEventActivity"
+            android:screenOrientation="portrait"
             android:parentActivityName=".activity.EventsActivity" />
         <activity
             android:name=".activity.EventActivity"
+            android:screenOrientation="portrait"
             android:parentActivityName=".activity.EventsActivity" />
         <activity android:name=".activity.RegisterActivity" />
         <activity
             android:name=".activity.PlaceOfferOverviewActivity"
+            android:screenOrientation="portrait"
             android:parentActivityName=".activity.EventActivity" />
         <activity
             android:name=".activity.ShoppingItemOverviewActivity"
+            android:screenOrientation="portrait"
             android:parentActivityName=".activity.EventActivity" />
         <activity
             android:name=".activity.NewPlaceOfferActivity"
             android:label="New place offer"
+            android:screenOrientation="portrait"
             android:parentActivityName=".activity.EventActivity" />
         <activity
             android:name=".activity.NewShoppingItemActivity"
             android:label="New shopping item"
+            android:screenOrientation="portrait"
             android:parentActivityName=".activity.EventActivity" />
         <activity
             android:name=".activity.EditPlaceOfferActivity"
+            android:screenOrientation="portrait"
             android:parentActivityName=".activity.PlaceOfferOverviewActivity" />
         <activity
             android:name=".activity.EditShoppingItemActivity"
+            android:screenOrientation="portrait"
             android:parentActivityName=".activity.ShoppingItemOverviewActivity" />
-        <activity android:name=".activity.InvitationListViewActivity" />
-        <activity android:name=".activity.InvitationsActivity" />
-        <activity android:name=".activity.InvitationActivity" />
-        <activity android:name=".activity.UserProfileActivity" />
-        <activity android:name=".activity.UpdateUserProfileActivity"></activity>
+        <activity android:name=".activity.InvitationListViewActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".activity.InvitationsActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".activity.InvitationActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".activity.UserProfileActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".activity.UpdateUserProfileActivity"
+            android:screenOrientation="portrait"></activity>
 
         <service android:name=".services.FCMService">
             <intent-filter>
