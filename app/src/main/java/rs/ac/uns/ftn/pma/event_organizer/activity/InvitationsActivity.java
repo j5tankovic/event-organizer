@@ -6,6 +6,7 @@ import android.provider.CalendarContract;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
@@ -23,11 +24,13 @@ import rs.ac.uns.ftn.pma.event_organizer.adapter.InvitationsAdapter;
 import rs.ac.uns.ftn.pma.event_organizer.model.Event;
 import rs.ac.uns.ftn.pma.event_organizer.model.EventCategory;
 import rs.ac.uns.ftn.pma.event_organizer.model.Invitation;
+import rs.ac.uns.ftn.pma.event_organizer.model.PlaceOffer;
 import rs.ac.uns.ftn.pma.event_organizer.model.User;
 import rs.ac.uns.ftn.pma.event_organizer.model.enums.InvitationStatus;
 import rs.ac.uns.ftn.pma.event_organizer.services.AuthentificationService;
 import rs.ac.uns.ftn.pma.event_organizer.services.GlideApp;
 
+import com.google.android.gms.location.places.Place;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -57,6 +60,17 @@ public class InvitationsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_invitations);
+
+        Toolbar t = (Toolbar) findViewById(R.id.my_invitations_toolbar);
+        setSupportActionBar(t);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        t.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+
         mAuth = FirebaseAuth.getInstance();
 
         databaseReference = FirebaseDatabase.getInstance().getReference("users");
@@ -102,9 +116,17 @@ public class InvitationsActivity extends AppCompatActivity {
                 testDataInvitations.clear();
                 for(DataSnapshot snapshot: dataSnapshot.getChildren()) {
                     Event e = snapshot.getValue(Event.class);
+                    DataSnapshot p=snapshot.child("finalPlace");
+                    PlaceOffer placeOffer=null;
+                    for(DataSnapshot s:p.getChildren()){
+                        placeOffer=s.getValue(PlaceOffer.class);
+                       }
+
                     if (e.getInvitations() != null) {
                         for (Invitation invitation: e.getInvitations().values()) {
                             if (invitation.getInvitedUser().getEmail().equals(loggedUser.getEmail())) {
+                                e.setFinalPlace(placeOffer);
+                                invitation.setEvent(e);
                                 testDataInvitations.add(invitation);
                                 adapter.notifyDataSetChanged();
                             }

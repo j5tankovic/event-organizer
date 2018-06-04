@@ -47,7 +47,10 @@ public static class ViewHolder extends RecyclerView.ViewHolder {
     public void onBindViewHolder(@NonNull PeopleInvitationAdapter.ViewHolder holder, int position) {
         holder.userEmail.setText(invitations.get(position).getInvitedUser().getEmail());
         int pos=position+1;
-        holder.userEmail.setText(pos+". "+invitations.get(position).getInvitedUser().getEmail());
+        if(invitations.get(position).getInvitedUser().getUsername()!=null)
+            holder.userEmail.setText(pos+". "+invitations.get(position).getInvitedUser().getUsername());
+        else
+            holder.userEmail.setText(pos+". "+invitations.get(position).getInvitedUser().getEmail());
         //src - deppending on status of invitation
         if(invitations.get(position).getStatus().equals(InvitationStatus.ACCEPTED))
             holder.img.setImageResource(R.drawable.ic_status_accepted_24dp);

@@ -83,10 +83,10 @@ public class GeneralInvitationFragment extends Fragment implements OnMapReadyCal
                 mapViewBundle = savedInstanceState.getBundle(MAP_VIEW_BUNDLE_KEY);
             }
 
-       //     mapView = view.findViewById(R.id.invitation_info_mapview);
+            mapView = view.findViewById(R.id.invitation_info_mapview);
             mapView.onCreate(mapViewBundle);
             mapView.getMapAsync(this);
-       //     ((TextView)view.findViewById(R.id.invitation_info_location)).setText(event.getFinalPlace().getLocationName());
+            ((TextView)view.findViewById(R.id.invitation_info_location)).setText(event.getFinalPlace().getLocationName());
         }
 
         imageView = view.findViewById(R.id.invitation_image);
