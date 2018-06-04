@@ -41,6 +41,12 @@ public class EditPlaceOfferActivity extends AppCompatActivity {
 
         Toolbar newPlaceOfferToolbar = findViewById(R.id.edit_placeoffer_toolbar);
         setSupportActionBar(newPlaceOfferToolbar);
+        newPlaceOfferToolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
 
         ActionBar ab = getSupportActionBar();
         ab.setDisplayHomeAsUpEnabled(true);

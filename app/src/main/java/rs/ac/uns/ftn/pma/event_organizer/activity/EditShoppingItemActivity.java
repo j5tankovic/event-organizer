@@ -44,6 +44,12 @@ public class EditShoppingItemActivity extends AppCompatActivity {
 
         Toolbar newPlaceOfferToolbar = findViewById(R.id.edit_shoppingitem_toolbar);
         setSupportActionBar(newPlaceOfferToolbar);
+        newPlaceOfferToolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
 
         ActionBar ab = getSupportActionBar();
         ab.setDisplayHomeAsUpEnabled(true);

@@ -10,6 +10,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.TextView;
 
 import com.google.firebase.database.DatabaseReference;
@@ -38,6 +39,12 @@ public class ShoppingItemOverviewActivity extends AppCompatActivity {
 
         Toolbar placeOfferToolbar = findViewById(R.id.shoppingitem_toolbar);
         setSupportActionBar(placeOfferToolbar);
+        placeOfferToolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
 
         ActionBar ab = getSupportActionBar();
         ab.setDisplayHomeAsUpEnabled(true);
