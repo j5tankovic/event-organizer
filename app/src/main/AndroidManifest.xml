@@ -57,13 +57,17 @@
         <activity android:name=".activity.InvitationsActivity" />
         <activity android:name=".activity.InvitationActivity" />
         <activity android:name=".activity.UserProfileActivity" />
-        <activity android:name=".activity.UpdateUserProfileActivity"></activity>
+        <activity android:name=".activity.UpdateUserProfileActivity" />
 
         <service android:name=".services.FCMService">
             <intent-filter>
-                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
+
+        <activity
+            android:name=".activity.SettingsActivity"
+            android:label="@string/title_activity_settings"></activity>
     </application>
 
 </manifest>
