@@ -14,11 +14,9 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.ImageButton;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -28,7 +26,6 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -38,7 +35,6 @@ import rs.ac.uns.ftn.pma.event_organizer.R;
 import rs.ac.uns.ftn.pma.event_organizer.activity.EventsActivity;
 import rs.ac.uns.ftn.pma.event_organizer.adapter.PeopleOverviewAdapter;
 import rs.ac.uns.ftn.pma.event_organizer.model.Event;
-import rs.ac.uns.ftn.pma.event_organizer.model.EventCategory;
 import rs.ac.uns.ftn.pma.event_organizer.model.Invitation;
 import rs.ac.uns.ftn.pma.event_organizer.model.User;
 import rs.ac.uns.ftn.pma.event_organizer.model.enums.InvitationStatus;
@@ -57,6 +53,7 @@ public class PeopleOverviewFragment extends Fragment {
     private List<User> allUsers = new ArrayList<>();
     private List<Invitation> allInvitations = new ArrayList<>();
     private List<Invitation> eventInvitations = new ArrayList<>();
+    private List<Invitation> eventInvitationsMail=new ArrayList<>();
     private Event selectedEvent;
     private FirebaseAuth mAuth;
     private User loggedUser = new User();
@@ -72,7 +69,7 @@ public class PeopleOverviewFragment extends Fragment {
         view = inflater.inflate(R.layout.fragment_people_overview, container, false);
         recyclerView = view.findViewById(R.id.people_rv);
         layoutManager = new LinearLayoutManager(getContext());
-        adapter = new PeopleOverviewAdapter(eventInvitations);
+        adapter = new PeopleOverviewAdapter(allInvitations);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
         recyclerView.addItemDecoration(new DividerItemDecoration(getContext(), LinearLayoutManager.VERTICAL));
@@ -101,10 +98,40 @@ public class PeopleOverviewFragment extends Fragment {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 eventInvitations.clear();
+                allInvitations.clear();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     eventInvitations.add(snapshot.getValue(Invitation.class));
+                    allInvitations.add(snapshot.getValue(Invitation.class));
                     adapter.notifyDataSetChanged();
                 }
+                for(Invitation inv:eventInvitationsMail) {
+                    allInvitations.add(inv);
+                    adapter.notifyDataSetChanged();
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+        DatabaseReference dbReference1 = FirebaseDatabase.getInstance().getReference("events")
+                .child(selectedEvent.getId()).child("invitationsByMail");
+        dbReference1.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                eventInvitationsMail.clear();
+                allInvitations.clear();
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    eventInvitationsMail.add(snapshot.getValue(Invitation.class));
+                    allInvitations.add(snapshot.getValue(Invitation.class));
+                    adapter.notifyDataSetChanged();
+                }
+               for(Invitation inv:eventInvitations) {
+                   allInvitations.add(inv);
+                   adapter.notifyDataSetChanged();
+               }
             }
 
             @Override
@@ -152,9 +179,19 @@ public class PeopleOverviewFragment extends Fragment {
                         if (!m.matches()) {
                             Toast.makeText(getContext(), "User with username " + email + " doens't exist.", Toast.LENGTH_SHORT).show();
                         } else {
+                            boolean invited=false;
+                            for(Invitation i:eventInvitationsMail){
+                                if(i.getInvitedUser().getEmail().equals(email))
+                                    invited=true;
+                            }
+                            if(invited==true){
+                                Toast.makeText(getContext(), "User with email " + email + " is already invited.", Toast.LENGTH_SHORT).show();
+                            }else{
                             Intent i = new Intent(Intent.ACTION_SENDTO, Uri.fromParts(
                                     "mailto", email, null));
                             i.putExtra(Intent.EXTRA_SUBJECT, "Invitation");
+
+                            Invitation newInvitation=createNewInvitationMail(email,selectedEvent);
 
                             StringBuilder sb = new StringBuilder();
                             sb.append("Dear Friend, ");
@@ -172,6 +209,11 @@ public class PeopleOverviewFragment extends Fragment {
                                 sb.append(" at ");
                                 sb.append(selectedEvent.getFinalPlace().getLocationName());
                             }
+                            sb.append(". If you want to attend, please click link: ");
+                            sb.append("https://us-central1-event-organizer-ftn.cloudfunctions.net/invitationAccepting/events/"+String.valueOf(selectedEvent.getId())+"/invitationsByMail/"+String.valueOf(newInvitation.getId())+"/ACCEPTED");
+                            sb.append('\n');
+                            sb.append("And for rejecting, please click link: ");
+                            sb.append("https://us-central1-event-organizer-ftn.cloudfunctions.net/invitationAccepting/events/"+String.valueOf(selectedEvent.getId())+"/invitationsByMail/"+String.valueOf(newInvitation.getId())+"/REJECTED");
                             sb.append('\n');
                             sb.append('\n');
                             sb.append("Regards,");
@@ -179,11 +221,18 @@ public class PeopleOverviewFragment extends Fragment {
                             sb.append(selectedEvent.getCreator().getName() + " " + selectedEvent.getCreator().getLastName() + "!");
                             i.putExtra(Intent.EXTRA_TEXT, sb.toString());
                             try {
+
                                 startActivity(Intent.createChooser(i, "Send mail..."));
+                                DatabaseReference invitations = FirebaseDatabase.getInstance().getReference("events").child(selectedEvent.getId())
+                                        .child("invitationsByMail");
+                                invitations.child(newInvitation.getId()).setValue(newInvitation);
+                                eventInvitationsMail.add(newInvitation);
+                                allInvitations.add(newInvitation);
+
                             } catch (android.content.ActivityNotFoundException ex) {
                                 Toast.makeText(getContext(), "There are no email clients installed.", Toast.LENGTH_SHORT).show();
                             }
-                        }
+                        }}
                     } else {
                         boolean invited = false;
                         if (foundedUser.getEmail().equals(loggedUser.getEmail())) {
@@ -215,13 +264,30 @@ public class PeopleOverviewFragment extends Fragment {
         newInvitation.setEvent(event);
         newInvitation.setStatus(InvitationStatus.PENDING);
 
-//        databaseReference.child(invitationId).setValue(newInvitation);
         DatabaseReference invitations = FirebaseDatabase.getInstance().getReference("events").child(selectedEvent.getId())
                 .child("invitations");
         String key = invitations.push().getKey();
         newInvitation.setId(key);
         invitations.child(key).setValue(newInvitation);
         eventInvitations.add(newInvitation);
+        allInvitations.add(newInvitation);
+    }
+
+    public  Invitation createNewInvitationMail(String email, Event event){
+
+        Invitation newInvitation = new Invitation();
+        User user=new User();
+        user.setEmail(email);
+        newInvitation.setInvitedUser(user);
+        newInvitation.setEvent(event);
+        newInvitation.setStatus(InvitationStatus.PENDING);
+
+        DatabaseReference invitations = FirebaseDatabase.getInstance().getReference("events").child(selectedEvent.getId())
+                .child("invitationsByMail");
+        String key = invitations.push().getKey();
+        newInvitation.setId(key);
+
+        return newInvitation;
     }
 
     public User findUserByEmail(String email) {
