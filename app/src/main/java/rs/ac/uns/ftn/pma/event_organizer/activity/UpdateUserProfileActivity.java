@@ -140,7 +140,7 @@ public class UpdateUserProfileActivity extends AppCompatActivity {
                 databaseReference.child(username.getText().toString()).child("lastName").setValue(lastName.getText().toString());
                 databaseReference.child(username.getText().toString()).child("name").setValue(firstName.getText().toString());
                 if (password.getText().toString().equals(repeatPassword.getText().toString())){
-                    databaseReference.child(password.getText().toString()).child("password").setValue(password.getText().toString());
+                    databaseReference.child(username.getText().toString()).child("password").setValue(password.getText().toString());
                 }
                 else{
                     password.setError("Repeated password is not the same");
