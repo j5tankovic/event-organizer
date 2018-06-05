@@ -7,7 +7,7 @@
 - Jasna Stankovic [j5tankovic](https://github.com/j5tankovic)
 
 ## Project specification: [doc](https://docs.google.com/document/d/16-gw_cYzYcnbuF_Kho8TTZxEIXUSxCK0DSHsVAUcg0I/edit?usp=sharing)  
-## Demo video:
+## Demo video: [demo](https://drive.google.com/file/d/1v4Y3rqUfW-HjFRyJ7W1_CKBpDVn-wcfJ/view?usp=sharing)
 
 ## Firebase setup
 This application heavily relies on Firebase features. Primary is Firebase Database, then Firebase Storage, Authentication and Cloud Functions.  
